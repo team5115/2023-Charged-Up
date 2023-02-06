@@ -1,0 +1,18 @@
+If the limelight isn't working...
+
+The IP should be 10.51.15.62:PORT
+PORT of 5801 is config, 5800 is camera
+
+For Flashing Firmware on limelight:
+Make sure to use a Micro-USB that is NOT power only; it must support data.
+If balenaEtcher can't find the limelight, make sure the cable supports data, maybe by testing with another piece of hardware.
+
+For Networking limelight:
+Use a switch/hub!!! Fixes a lot of problems because it ensures that all devices are on the same network if they are all connected to the hub.
+Using Angry IP Scanner to scan for things on the network to ensure the limelight is connected.
+
+Limelight Info lights:
+Green light quickly flashing beens its connected
+Yellow light solid means it has a STATIC IP
+Yellow light flashing means it doesn't have static IP: if it's connected to the network, it might have dynamic ip
+it should have static, so ensure it does when connecting

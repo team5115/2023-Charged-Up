@@ -1,0 +1,88 @@
+package frc.team5115.Classes.Hardware;
+
+import static frc.team5115.Constants.*;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxRelativeEncoder;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+
+public class HardwareDrivetrain{
+    // tell electrical to make pdp ids the same as can ids
+
+    private static final double kP = 8.86763;
+
+    private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(kS, kV, kA);
+    //Switch to internal PID loops (faster run time)    
+    private final PIDController leftPID = new PIDController(kP, 0, 0);
+    private final PIDController rightPID = new PIDController(kP, 0, 0);
+
+    private final CANSparkMax frontLeft = new CANSparkMax(FRONT_LEFT_MOTOR_ID, MotorType.kBrushless);
+    private final CANSparkMax frontRight = new CANSparkMax(FRONT_RIGHT_MOTOR_ID, MotorType.kBrushless);
+    private final CANSparkMax backLeft = new CANSparkMax(BACK_LEFT_MOTOR_ID, MotorType.kBrushless);
+    private final CANSparkMax backRight = new CANSparkMax(BACK_RIGHT_MOTOR_ID, MotorType.kBrushless);
+
+    private final RelativeEncoder leftEncoder = frontLeft.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
+    private final RelativeEncoder rightEncoder = frontRight.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
+
+    public HardwareDrivetrain(){
+        resetEncoders();
+        frontRight.setInverted(true);
+    }
+
+    /**
+     * @param motorID of the motor to get an encoder of.
+     * @return a reference to an encoder matching the id
+     */
+    public RelativeEncoder getEncoder(int motorID){
+        switch (motorID) {
+            case BACK_LEFT_MOTOR_ID:
+            case FRONT_LEFT_MOTOR_ID:
+                return leftEncoder;
+            
+            case BACK_RIGHT_MOTOR_ID:
+            case FRONT_RIGHT_MOTOR_ID:
+                return rightEncoder;
+                
+            default:
+                throw new Error("Encoder ID " + motorID + " is invalid!");
+        }
+    }
+
+    public void plugandChugDrive(double frontLeftSpeed, double frontRightSpeed, double backLeftSpeed, double backRightSpeed){
+        frontLeft.set(frontLeftSpeed);
+        frontRight.set(frontRightSpeed);
+        backLeft.set(backLeftSpeed);
+        backRight.set(backRightSpeed);
+    }
+
+    /**
+     * Sets the speeds of the motors. Uses feedforward and PID.
+     * 
+     * @param leftSpeed the speed for the left motors in meters per second
+     * @param rightSpeed the speed for the right motors in meters per second
+     * @param leftAcceleration the feedforward goal for left acceleration
+     * @param rightAcceleration the feedforward goal for right acceleration
+     */
+    public void plugandFFDrive(double leftSpeed, double rightSpeed) {
+        
+        double leftVoltage = feedforward.calculate(leftSpeed);
+        double rightVoltage = feedforward.calculate(rightSpeed);
+        leftVoltage += leftPID.calculate(leftEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, leftSpeed);
+        rightVoltage += rightPID.calculate(rightEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, rightSpeed);
+
+        leftVoltage = Math.min(leftVoltage, DRIVE_MOTOR_MAX_VOLTAGE);
+        rightVoltage = Math.min(rightVoltage, DRIVE_MOTOR_MAX_VOLTAGE);
+
+        backLeft.follow(frontLeft);
+        backRight.follow(frontRight);
+        frontLeft.setVoltage(leftVoltage);
+        frontRight.setVoltage(rightVoltage);
+    }
+
+    public void resetEncoders(){
+        leftEncoder.setPosition(0);
+        rightEncoder.setPosition(0);
+    }
+}
