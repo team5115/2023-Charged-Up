@@ -4,8 +4,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxRelativeEncoder;
-
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class HardwareIntakeMotor extends SubsystemBase{
@@ -15,10 +13,11 @@ public class HardwareIntakeMotor extends SubsystemBase{
     private RelativeEncoder TurningEncoder;
     private RelativeEncoder TopWinchEncoder;
     private RelativeEncoder BottomWinchEncoder;
-    private double startingTurnValue = 0;
-    private double rotatingGearRatio = ((1/49)*(1/42)*(10/48));
+    //private double encoderConstant = 1/49;
+    private double startingTurnValue = -90;
+    private double rotatingGearRatio = ((1/42)*(10/48));
     private double winchGearRatio = 1/7;
-    private double WinchDiameter = 0.75*12; //Only example of ft, easier to determine length of the rod
+    private double WinchDiameter = 0.75; //Only example of in, easier to determine length of the rod
 
     public HardwareIntakeMotor(){
         intakeTop = new CANSparkMax(5, MotorType.kBrushless);   
@@ -42,20 +41,26 @@ public class HardwareIntakeMotor extends SubsystemBase{
         intakeTurn.set(speed);
     }
 
+    public void stop(){
+        setTopWinch(0);
+        setBottomWinch(0);
+        setTurn(0);
+    }
+
     public double getTurnCurrent(){
         return intakeTurn.getOutputCurrent();
     }
     
     public double getTurnEncoder(){
-        return (TurningEncoder.getPosition()-startingTurnValue);
+        return (TurningEncoder.getPosition());
     }
 
     public double getTopEncoder(){
-        return (TopWinchEncoder.getPosition()-startingTurnValue);
+        return (TopWinchEncoder.getPosition());
     }
 
     public double getBottomEncoder(){
-        return (BottomWinchEncoder.getPosition()-startingTurnValue);
+        return (BottomWinchEncoder.getPosition());
     }
 
     public double getVelocity(){
@@ -79,29 +84,21 @@ public class HardwareIntakeMotor extends SubsystemBase{
     }
 
     public double getTopWinchLength() {
-        return getTopEncoder()*winchGearRatio*(1/WinchDiameter);
+        return getTopEncoder()*winchGearRatio*(WinchDiameter*2*Math.PI);
     }
 
     public double getBottomWinchLength() {
-        return getBottomEncoder()*winchGearRatio*(1/WinchDiameter);
+        return getBottomEncoder()*winchGearRatio*(WinchDiameter*2*Math.PI);
     }
 
     public double getArmDeg(){
-       return (getTurnEncoder())*(360/(rotatingGearRatio));
+       return (getTurnEncoder())*(360/(rotatingGearRatio))-startingTurnValue;
     } 
 
     public double getArmRad(){
         return (getArmDeg()/180)*Math.PI;
     }
 
-    public double getTopArmLength(){
-        return 0.0;
-    }
-
-    public double getBottomArmLength(){
-        return 0.0;
-    }
-    
     public double getBCenterOfMass(double length){
         return (4917*length+11.1384);
     }
