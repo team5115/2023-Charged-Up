@@ -70,6 +70,13 @@ public class Drivetrain extends SubsystemBase{
         throttle.toggleSlowMode();
     }
 
+    @Deprecated
+    public void TankDriveOld(double forward, double turn){
+        leftSpeed = (forward + turn);
+        rightSpeed = (forward - turn);
+        drivetrain.plugandChugDrive(leftSpeed, rightSpeed, leftSpeed, rightSpeed);
+    }
+
     /**
      * Drive the robot using a tankdrive setup.
      * @param forward is for driving forward/backward: positive is forward, negative is backward
@@ -89,6 +96,7 @@ public class Drivetrain extends SubsystemBase{
         drivetrain.plugandFFDrive(leftSpeed, rightSpeed);
     }
 
+    @Deprecated
     public void TankDriveToAngle(double angleDegrees) { 
         double rotationDegrees = navx.getNavxRotationDeg();
         System.out.println(rotationDegrees);
@@ -100,7 +108,7 @@ public class Drivetrain extends SubsystemBase{
     }
 
     public void TankDriveToTrajectoryState(Trajectory.State tState) {
-        ChassisSpeeds adjustedSpeeds = ramseteController.calculate(poseEstimator.getEstimatedPosition(), tState);
+        ChassisSpeeds adjustedSpeeds = ramseteController.calculate(UpdateOdometry(), tState);
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(adjustedSpeeds);
         leftSpeed = wheelSpeeds.leftMetersPerSecond;
         rightSpeed = wheelSpeeds.rightMetersPerSecond;
@@ -132,6 +140,16 @@ public class Drivetrain extends SubsystemBase{
     public void autoDriveForward(){
         drivetrain.plugandFFDrive(1, 1);
     }
+
+    @Deprecated
+    public void autoDriveF(){
+        drivetrain.plugandChugDrive(0.3, -0.3, 0.3, -0.3);
+    }
+
+    @Deprecated
+    public void autoDriveB(){
+        drivetrain.plugandChugDrive(-0.3, 0.3, -0.3, 0.3);
+    }
     /**
      * Drive backward at 1 m/s
      */
@@ -140,9 +158,10 @@ public class Drivetrain extends SubsystemBase{
     }
     /**
      * Drive all motors at a specific voltage
-     * @param volts voltage to drive at
+     * @param percent voltage to drive at
      */
 
+    @Deprecated
     public void AdjustAngle(){
         double xangle = 0; 
         double detector = 0;
@@ -180,6 +199,7 @@ public class Drivetrain extends SubsystemBase{
     //     return d;
     // }
 
+    @Deprecated
     public void AdjustDistance(){
         double dectector = 0;
         if(dectector == 1){
@@ -188,7 +208,6 @@ public class Drivetrain extends SubsystemBase{
             rightSpd = -(d - HUB_DISTANCE)*hD;
             */
             double yangle = 0; 
-
             leftSpeed = -(TARGET_ANGLE - yangle)*hD;
             leftSpeed = Math.max(-0.3, Math.min(0.3, leftSpeed));
             rightSpeed = leftSpeed;

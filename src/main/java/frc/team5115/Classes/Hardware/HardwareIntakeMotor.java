@@ -71,25 +71,32 @@ public class HardwareIntakeMotor extends SubsystemBase{
         return intakeTurn.getFault(f);
     }
 
-    public void resetEncoders(){
+    public void zeroEncoders(){
         TurningEncoder.setPosition(startingTurnValue);
         BottomWinchEncoder.setPosition(0);
         TopWinchEncoder.setPosition(0);
     }
 
-    public void resetEncoders(Double angle){
-        TurningEncoder.setPosition(angle);
-        BottomWinchEncoder.setPosition(0);
-        TopWinchEncoder.setPosition(0);
-    }
-
+    /** 
+     * Returns the length of the Top Winch
+     * @return the length of the Top Winch, converted from rots to in
+     */
     public double getTopWinchLength() {
         return getTopEncoder()*winchGearRatio*(WinchDiameter*2*Math.PI);
     }
 
+    /** 
+     * Returns the length of the Bottom Winch
+     * @return the length of the Bottm Winch, converted from rots to in
+     */
     public double getBottomWinchLength() {
         return getBottomEncoder()*winchGearRatio*(WinchDiameter*2*Math.PI);
     }
+
+    /** 
+     * Returns the angle of the turning arm
+     * @return the angle the arm turned
+     */
 
     public double getArmDeg(){
        return (getTurnEncoder())*(360/(rotatingGearRatio))-startingTurnValue;

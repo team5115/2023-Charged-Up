@@ -9,12 +9,9 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
 public class HardwareDrivetrain{
-    // tell electrical to make pdp ids the same as can ids
-
     private static final double kP = 8.86763;
 
     private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(kS, kV, kA);
-    //Switch to internal PID loops (faster run time)    
     private final PIDController leftPID = new PIDController(kP, 0, 0);
     private final PIDController rightPID = new PIDController(kP, 0, 0);
 
@@ -49,6 +46,16 @@ public class HardwareDrivetrain{
                 throw new Error("Encoder ID " + motorID + " is invalid!");
         }
     }
+
+    /**
+     * Sets the voltages of the indvidiual motors, without PID for mecanum compatability
+     * 
+     * @param frontLeftSpeed the speed of the front left motor     
+     * @param frontRightSpeed the speed of the front right motor
+     * @param backLeftSpeed the speed of the back left motor     
+     * @param backRightSpeed the speed of the back right motor
+     * @return a reference to an encoder matching the id
+     */
 
     public void plugandChugDrive(double frontLeftSpeed, double frontRightSpeed, double backLeftSpeed, double backRightSpeed){
         frontLeft.set(frontLeftSpeed);

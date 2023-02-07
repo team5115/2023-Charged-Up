@@ -29,6 +29,7 @@ public class ThrottleControl{
     public void toggleSlowMode() {
         isSlowModeEnabled = !isSlowModeEnabled;
     }
+
     /**
      * @param isThrottleSwitched set to true to use secondary throttle, false to use primary throttle
      */

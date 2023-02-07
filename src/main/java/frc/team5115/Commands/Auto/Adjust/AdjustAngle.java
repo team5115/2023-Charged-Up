@@ -3,10 +3,9 @@ package frc.team5115.Commands.Auto.Adjust;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team5115.Classes.Software.Drivetrain;
 
+@Deprecated
 public class AdjustAngle extends CommandBase {
     Drivetrain drivetrain;
-
-      
 
     public AdjustAngle(Drivetrain drivetrain) {
         this.drivetrain = drivetrain;

@@ -21,12 +21,12 @@ public class FollowTrajectory extends CommandBase {
         this.drivetrain = drivetrain;
         trajectory = generateTrajectory();
         timer = new Timer();
+        timer.start();
     }
 
     @Override
     public void initialize() {
         timer.reset();
-        timer.start();
     }
 
     @Override

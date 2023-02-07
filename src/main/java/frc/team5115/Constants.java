@@ -7,7 +7,7 @@ import edu.wpi.first.math.util.Units;
 
 public class Constants{
 
-    public static final boolean MECANUM = true; 
+    public static final boolean MECANUM = false; 
   
     //motor ids
     public static final byte FRONT_LEFT_MOTOR_ID = 1;
@@ -50,22 +50,4 @@ public class Constants{
 
     }
 
-
-   // public static final StartingConfiguration startingConfiguration = StartingConfiguration.Middle;
-
-    /*public enum Pipeline {
-        DriveCamera, Balls, GreenLedMode;
-        public int getPipelineNumber() {
-            switch(this) {
-                case DriveCamera:
-                    return 0;
-                case Balls:
-                    return 3;
-                case GreenLedMode:
-                    return 2;
-            }
-            return -1;
-        }
-    }
-    */
 }

@@ -23,18 +23,17 @@ public class IntakeTurn extends CommandBase{
     }
 
     public void execute(){
-        intake.turnController(angle);
+        intake.turnSetAngle(angle);
         System.out.println(intake.getTurnDeg());
     }
 
     public void end(boolean interrupted){
-        intake.stop();
         System.out.println("Stopped");
     }
 
     public boolean isFinished() {
         if((Math.abs(intake.getTurnDeg()-angle)<0.1)){
-            if(innerTimer.get() > 1) return true;
+            if(innerTimer.get() > 0.5) return true;
         }
         else innerTimer.reset();
 
@@ -43,6 +42,5 @@ public class IntakeTurn extends CommandBase{
         }
         return false;
       }
-
 
 }

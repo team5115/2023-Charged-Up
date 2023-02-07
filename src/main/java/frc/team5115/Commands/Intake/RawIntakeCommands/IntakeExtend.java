@@ -23,19 +23,18 @@ public class IntakeExtend extends CommandBase{
     }
 
     public void execute(){
-        intake.topWinchController(length);
-        intake.bottomWinchController(length);
+        intake.topWinchSetLength(length);
+        intake.bottomWinchSetLength(length);
         System.out.println(intake.getBottomWinchLength() + " " + intake.getTopWinchLength());
     }
 
     public void end(boolean interrupted){
-        intake.stop();
         System.out.println("Stopped");
     }
 
     public boolean isFinished() {
         if((Math.abs(intake.getBottomWinchLength()-length)<0.1) && (intake.getTopWinchLength()-length)<0.1){
-            if(innerTimer.get() > 1) return true;
+            if(innerTimer.get() > 0.5) return true;
         }
         else innerTimer.reset();
 

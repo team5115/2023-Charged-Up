@@ -7,6 +7,9 @@ import edu.wpi.first.math.controller.PIDController;
 
 public class IntakeMotor extends SubsystemBase{
     private HardwareIntakeMotor intake;
+    private double topLength = 0;
+    private double bottomLength = 0;
+    private double angle = -90;
     private PIDController turnController = new PIDController(0, 0, 0);
     private PIDController topWinchController = new PIDController(0, 0, 0);
     private PIDController bottomWinchController = new PIDController(0, 0, 0);
@@ -15,16 +18,34 @@ public class IntakeMotor extends SubsystemBase{
         intake = new HardwareIntakeMotor();
     }
 
-    public void topWinchController(double length){
-        topWinchController.calculate(intake.getTopWinchLength(), length);
+    public void topWinchController(){
+        topWinchController.calculate(intake.getTopWinchLength(), topLength);
     }
 
-    public void bottomWinchController(double length){
-        bottomWinchController.calculate(intake.getBottomWinchLength(), length);
+    public void topWinchSetLength(double length){
+        this.topLength = length;
     }
 
-    public void turnController(double length){
-        turnController.calculate(intake.getArmDeg(), length);
+    public void bottomWinchController(){
+        bottomWinchController.calculate(intake.getBottomWinchLength(), bottomLength);
+    }
+
+    public void bottomWinchSetLength(double length){
+        this.bottomLength = length;
+    }
+
+    public void turnController(){
+        turnController.calculate(intake.getArmDeg(), angle);
+    }
+
+    public void turnSetAngle(double angle){
+        this.angle = angle;
+    }
+
+    public void updateController(){
+        turnController();
+        topWinchController();
+        bottomWinchController();
     }
 
     public double getTurnDeg(){
@@ -41,6 +62,10 @@ public class IntakeMotor extends SubsystemBase{
     
     public double getSpeed(){
         return intake.getVelocity();
+    }
+
+    public void zeroArm(){
+        intake.zeroEncoders();
     }
 
     public boolean getFault(CANSparkMax.FaultID f){
