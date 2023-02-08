@@ -116,17 +116,17 @@ public class Drivetrain extends SubsystemBase{
     }
 
     public Pose2d UpdateOdometry() {
+        poseEstimator.update(navx.getRotation2D(),
+            drivetrain.getEncoder(FRONT_LEFT_MOTOR_ID).getPosition(),
+            drivetrain.getEncoder(FRONT_RIGHT_MOTOR_ID).getPosition()
+        );
+
         Optional<EstimatedRobotPose> result = photonVision.getEstimatedGlobalPose();
         if (result.isPresent()) {
             EstimatedRobotPose camPose = result.get();
             poseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
             return poseEstimator.getEstimatedPosition();
         }
-
-        poseEstimator.update(navx.getRotation2D(),
-            drivetrain.getEncoder(FRONT_LEFT_MOTOR_ID).getPosition(),
-            drivetrain.getEncoder(FRONT_RIGHT_MOTOR_ID).getPosition()
-        );
         return poseEstimator.getEstimatedPosition();
     }
 

@@ -56,7 +56,7 @@ public class HardwareDrivetrain{
      * @param backRightSpeed the speed of the back right motor
      * @return a reference to an encoder matching the id
      */
-
+    @Deprecated
     public void plugandChugDrive(double frontLeftSpeed, double frontRightSpeed, double backLeftSpeed, double backRightSpeed){
         frontLeft.set(frontLeftSpeed);
         frontRight.set(frontRightSpeed);
