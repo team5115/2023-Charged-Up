@@ -20,11 +20,11 @@ public class IntakeExtend extends CommandBase{
     public void initialize() {
         timer.reset();
         innerTimer.reset();
+        intake.topWinchSetLength(length);
+        intake.bottomWinchSetLength(length);
     }
 
     public void execute(){
-        intake.topWinchSetLength(length);
-        intake.bottomWinchSetLength(length);
         System.out.println(intake.getBottomWinchLength() + " " + intake.getTopWinchLength());
     }
 

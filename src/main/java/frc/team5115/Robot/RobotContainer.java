@@ -53,13 +53,14 @@ public class RobotContainer {
 
     public void autoPeriod(){
        drivetrain.UpdateOdometry();
+       //intakeMotor.updateController();
     }
 
     public void teleopPeriodic(){
-        intakeMotor.updateController();
+        //intakeMotor.updateController();
         drivetrain.UpdateOdometry();
         double forward = -joy.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
         double turn = joy.getRawAxis(JOY_Z_AXIS_ID);
-        drivetrain.TankDrive(forward, turn);
+        drivetrain.TankDriveOld(forward, turn);
     }
 }

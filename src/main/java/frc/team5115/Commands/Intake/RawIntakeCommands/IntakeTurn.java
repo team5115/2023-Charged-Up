@@ -20,10 +20,10 @@ public class IntakeTurn extends CommandBase{
     public void initialize() {
         timer.reset();
         innerTimer.reset();
+        intake.turnSetAngle(angle);
     }
 
     public void execute(){
-        intake.turnSetAngle(angle);
         System.out.println(intake.getTurnDeg());
     }
 

@@ -26,14 +26,18 @@ public class PhotonVision extends SubsystemBase{
         ArrayList<AprilTag> aprilTagList = new ArrayList<AprilTag>();
 
         // Add all the april tags
+
+        //Red Grid
         aprilTagList.add(GenerateAprilTag(1, +7.243604, -2.936589, 180));
         aprilTagList.add(GenerateAprilTag(2, +7.243604, -1.260189, 180));
         aprilTagList.add(GenerateAprilTag(3, +7.243604, +0.416211, 180));
 
+        //Blue Grid
         aprilTagList.add(GenerateAprilTag(8, -7.243604, -2.936589, 000));
         aprilTagList.add(GenerateAprilTag(7, -7.243604, -1.260189, 000));
         aprilTagList.add(GenerateAprilTag(6, -7.243604, +0.416211, 000));
 
+        //Substations
         aprilTagList.add(GenerateAprilTag(4, +7.908830, +2.741613, 180));
         aprilTagList.add(GenerateAprilTag(5, -7.908830, +2.741613, 000));
 
