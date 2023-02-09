@@ -22,7 +22,7 @@ public class Constants{
     //X-Box
     public static final byte JOY_X_AXIS_ID = 0;
     public static final byte JOY_Y_AXIS_ID = 1;
-    public static final byte JOY_Z_AXIS_ID = 2; 
+    public static final byte JOY_Z_AXIS_ID = 4; 
 
     // NEW Feedforward
     public static final double kS = 0.18296; 
@@ -43,8 +43,8 @@ public class Constants{
     }
 
      public static class VisionConstants {
-        public static final String leftCameraName = "Stereo_Vision_1";
-        public static final String rightCameraName = "HD_USB_Camera";
+        public static final String leftCameraName = null;
+        public static final String rightCameraName = null;
         public static final Transform3d robotToCamL = new Transform3d( new Translation3d(0.5, 0.0, 0.5), new Rotation3d( 0, 0, 0)); 
         public static final Transform3d robotToCamR = new Transform3d( new Translation3d(0.5, 0.0, 0.5), new Rotation3d( 0, 0, 0)); 
 

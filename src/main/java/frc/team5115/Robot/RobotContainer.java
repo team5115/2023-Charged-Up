@@ -5,22 +5,25 @@ import static frc.team5115.Constants.*;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.team5115.Classes.Software.Drivetrain;
-import frc.team5115.Classes.Software.IntakeMotor;
-import frc.team5115.Classes.Software.PhotonVision;
+import frc.team5115.Classes.Software.*;
+import frc.team5115.Classes.Hardware.*;
 import frc.team5115.Commands.Auto.AutoCommandGroup;
 import frc.team5115.Commands.Intake.CombinedIntakeCommands.*;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj.DigitalOutput;
 
 public class RobotContainer {
     private final Drivetrain drivetrain;
     private final PhotonVision photonVision;
+    private final Pneumatic pneum;
     public final Joystick joy = new Joystick(0);
     private final Timer timer;
     private final IntakeMotor intakeMotor;
     private final AutoCommandGroup autoCommandGroup;
+    private DigitalOutput digitalOutput = new DigitalOutput(0);
 
     public RobotContainer() {
+        pneum = new Pneumatic();
         photonVision = new PhotonVision();
         drivetrain = new Drivetrain(photonVision);
         intakeMotor = new IntakeMotor();
@@ -31,7 +34,9 @@ public class RobotContainer {
     }
 
     public void configureButtonBindings() {
-        new JoystickButton(joy, 1).onTrue(new HighCone(intakeMotor));
+        //new JoystickButton(joy, 1).onTrue(new HighCone(intakeMotor));
+        new JoystickButton(joy, 1).onTrue(new InstantCommand(pneum :: open));
+        new JoystickButton(joy, 2).onTrue(new InstantCommand(pneum :: close));
         //new JoystickButton( joy, 3).whileTrue(new InstantCommand(intakeMotor :: stop)).onFalse(new InstantCommand(intakeMotor :: stop));
         //new JoystickButton( joy, 4).whileTrue(new InstantCommand(intakeMotor :: stop)).onFalse(new InstantCommand(intakeMotor :: stop));
     }
@@ -39,7 +44,12 @@ public class RobotContainer {
     public void startTeleop(){
         if(autoCommandGroup != null) autoCommandGroup.cancel();
         drivetrain.resetNAVx();
+        digitalOutput.set(true);
         System.out.println("Starting teleop");
+    }
+
+    public void disabledInit(){
+        digitalOutput.set(false);
     }
 
     public void stopEverything(){
@@ -52,13 +62,13 @@ public class RobotContainer {
     }
 
     public void autoPeriod(){
-       drivetrain.UpdateOdometry();
+       //drivetrain.UpdateOdometry();
        //intakeMotor.updateController();
     }
 
     public void teleopPeriodic(){
         //intakeMotor.updateController();
-        drivetrain.UpdateOdometry();
+        //drivetrain.UpdateOdometry();
         double forward = -joy.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
         double turn = joy.getRawAxis(JOY_Z_AXIS_ID);
         drivetrain.TankDriveOld(forward, turn);
