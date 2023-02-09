@@ -14,15 +14,11 @@ public class Pneumatic extends SubsystemBase{
     }
 
     public void open(){
-        
-        System.out.println(intake.isFwdSolenoidDisabled());
-         intake.set(Value.kForward);
+        intake.set(Value.kForward);
     }
 
     public void close(){
-        System.out.println(intake.isFwdSolenoidDisabled());
-         intake.set(Value.kReverse);
-
+        intake.set(Value.kReverse);
     }
     
 }
