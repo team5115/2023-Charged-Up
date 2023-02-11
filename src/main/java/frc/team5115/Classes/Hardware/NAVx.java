@@ -9,35 +9,51 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 public class NAVx implements Subsystem {
 
     private final AHRS ahrs = new AHRS();
-    private double angleAtReset = 0;
+    private double yawAtReset = 0;
+    private double pitchAtReset = 0;
     
     public NAVx() {
         checkForConnection();
         ahrs.reset();
     }
 
-    public void resetNAVX(){
-        angleAtReset = getNavxRotationDeg();
+    public void resetYaw(){
+        yawAtReset = getYawDeg();
+    }
+    public void resetPitch() {
+        pitchAtReset = getPitchDeg();
+    }
+    public void resetNAVx() {
+        resetYaw();
+        resetPitch();
         checkForConnection();
     }
 
     /**
      * @return the yaw of the navx from the last reset, ranging from -180 to 180 degrees 
      */
-    public double getNavxRotationDeg(){
-        double angle = ahrs.getYaw() - angleAtReset;
-        if(angle > 180) {
+    public double getYawDeg() {
+        double angle = ahrs.getYaw() - yawAtReset;
+        if (angle > 180) {
             return -360 + angle;
         }
         return angle;
     }
 
-    public double getNavxRotationRad() {
-        return Units.degreesToRadians(getNavxRotationDeg());
+    public double getPitchDeg() {
+        double angle = ahrs.getPitch() - pitchAtReset;
+        if (angle > 180) {
+            return -360 + angle;
+        }
+        return angle;
     }
 
-    public Rotation2d getRotation2D() {
-        return Rotation2d.fromDegrees(getNavxRotationDeg());
+    public double getYawRad() {
+        return Units.degreesToRadians(getYawDeg());
+    }
+
+    public Rotation2d getYawRotation2D() {
+        return Rotation2d.fromDegrees(getYawDeg());
     }
 
     public boolean checkForConnection() {

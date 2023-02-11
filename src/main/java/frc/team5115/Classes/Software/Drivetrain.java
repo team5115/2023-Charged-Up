@@ -29,6 +29,7 @@ public class Drivetrain extends SubsystemBase{
     public NetworkTableEntry tv;
     private final ThrottleControl throttle;
     private final PIDController anglePID;
+    private final PIDController dockPID;
     private final RamseteController ramseteController;
     private final DifferentialDriveKinematics kinematics;
     private final HardwareDrivetrain drivetrain;
@@ -47,11 +48,12 @@ public class Drivetrain extends SubsystemBase{
         this.photonVision = photonVision;
         throttle = new ThrottleControl(3, -3, 0.2);
         anglePID = new PIDController(0.0144, 0.0001, 0.0015);
+        dockPID = new PIDController(0.01, 0, 0);
         drivetrain = new HardwareDrivetrain();
         ramseteController = new RamseteController();
         kinematics = new DifferentialDriveKinematics(TRACKING_WIDTH_METERS);
         navx = new NAVx();
-        poseEstimator = new DifferentialDrivePoseEstimator(kinematics, navx.getRotation2D(), 0.0, 0.0, new Pose2d());
+        poseEstimator = new DifferentialDrivePoseEstimator(kinematics, navx.getYawRotation2D(), 0.0, 0.0, new Pose2d());
     }
 
     public void stop() {
@@ -113,7 +115,7 @@ public class Drivetrain extends SubsystemBase{
 
     @Deprecated
     public void TankDriveToAngle(double angleDegrees) { 
-        double rotationDegrees = navx.getNavxRotationDeg();
+        double rotationDegrees = navx.getYawDeg();
         System.out.println(rotationDegrees);
         double turn = MathUtil.clamp(anglePID.calculate(rotationDegrees, angleDegrees), -1, 1);
         leftSpeed = turn;
@@ -131,7 +133,7 @@ public class Drivetrain extends SubsystemBase{
     }
 
     public Pose2d UpdateOdometry() {
-        poseEstimator.update(navx.getRotation2D(),
+        poseEstimator.update(navx.getYawRotation2D(),
             drivetrain.getEncoder(FRONT_LEFT_MOTOR_ID).getPosition(),
             drivetrain.getEncoder(FRONT_RIGHT_MOTOR_ID).getPosition()
         );
@@ -145,8 +147,21 @@ public class Drivetrain extends SubsystemBase{
         return poseEstimator.getEstimatedPosition();
     }
 
+    /**
+     * Drive to attempt a dock and get the pitch to 0
+     * @return if the robot is currently flat and not trying to move
+     */
+    public boolean UpdateDocking() {
+        double pitch = navx.getPitchDeg();
+        double forward = dockPID.calculate(pitch, 0);
+        System.out.println("Would be docking @ " + forward + "m/s");
+        //drivetrain.plugandFFDrive(forward, forward);
+        
+        return Math.abs(pitch) < 0.5;
+    }
+
     public void resetNAVx(){
-        navx.resetNAVX();
+        navx.resetNAVx();
     }
 
     /**
