@@ -27,19 +27,46 @@ public class HardwareArm extends SubsystemBase{
         TurningEncoder = intakeTurn.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
         TopWinchEncoder = intakeTop.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
         BottomWinchEncoder = intakeTop.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
+        TurningEncoder.setPositionConversionFactor(1);
+        TopWinchEncoder.setPositionConversionFactor(1);
+        BottomWinchEncoder.setPositionConversionFactor(1);
+        TurningEncoder.setVelocityConversionFactor(1);
+        TopWinchEncoder.setVelocityConversionFactor(1);
+        BottomWinchEncoder.setVelocityConversionFactor(1);
+
     }
 
     public void setTopWinch(double speed){
+        if(speed>.15){
+            speed = .15;
+        }
+        else if(speed<-0.15){
+            speed = -0.15;
+        }
         intakeTop.set(speed);
     }
 
     public void setBottomWinch(double speed){
+        if(speed != speed) {
+            speed = 0;
+        }
+        if(speed>.15){
+            speed = .15;
+        }
+        else if(speed<-0.15){
+            speed = -0.15;
+        }
         intakeBottom.set(speed);
     }
 
     public void setTurn(double speed){
-        double turnSpeed = Math.min(Math.max(speed, -0.15), .15);
-        intakeTurn.set(turnSpeed);
+        if(speed>.15){
+            speed = .15;
+        }
+        else if(speed<0){
+            speed = 0;
+        }
+        intakeTurn.set(speed);
     }
 
     public void stop(){
@@ -90,7 +117,7 @@ public class HardwareArm extends SubsystemBase{
     }
 
     public void zeroEncoders(){
-        TurningEncoder.setPosition(startingTurnValue);
+        TurningEncoder.setPosition(0);
         BottomWinchEncoder.setPosition(0);
         TopWinchEncoder.setPosition(0);
     }
@@ -117,11 +144,11 @@ public class HardwareArm extends SubsystemBase{
      */
 
     public double getArmDeg(){
-       return (getTurnEncoder())*(360/(rotatingGearRatio));
-    } 
+        return getTurnEncoder() * (360.0 / (48.0 * 49.0 / 10.0));
+    }
 
     public double getArmRad(){
-        return (getArmDeg()/180)*Math.PI;
+        return Math.toRadians(getArmDeg());
     }
 
     public double getBCenterOfMass(double length){

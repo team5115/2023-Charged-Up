@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.DigitalOutput;
 public class RobotContainer {
     private final Drivetrain drivetrain;
     private final PhotonVision photonVision;
-    private final Pneumatic pneum;
+    private final HardwareIntake pneum;
     public final Joystick joy = new Joystick(0);
     private final Timer timer;
     private final Arm arm;
@@ -24,7 +24,7 @@ public class RobotContainer {
     //private DigitalOutput digitalOutput = new DigitalOutput(0);
 
     public RobotContainer() {
-        pneum = new Pneumatic();
+        pneum = new HardwareIntake();
         photonVision = new PhotonVision();
         drivetrain = new Drivetrain(photonVision);
         arm = new Arm();
@@ -36,7 +36,7 @@ public class RobotContainer {
     }
 
     public void configureButtonBindings() {
-        //new JoystickButton(joy, 1).whileTrue(highCone).onFalse( new InstantCommand(arm :: stop));
+       // new JoystickButton(joy, 1).whileTrue(new InstantCommand(arm :: setTurnSpeed)).onFalse( new InstantCommand(arm :: stop));
        // new JoystickButton(joy, 2).whileTrue(new InstantCommand(arm :: setTopWinchSpeed)).onFalse( new InstantCommand(intake :: stop));
        // new JoystickButton(joy, 3).whileTrue(new InstantCommand(arm :: setBottomWinchSpeed)).onFalse( new InstantCommand(intake :: stop));
 
@@ -51,6 +51,7 @@ public class RobotContainer {
         if(autoCommandGroup != null) autoCommandGroup.cancel();
         drivetrain.resetNAVx();
         //digitalOutput.set(true);
+        arm.zeroArm();
         System.out.println("Starting teleop");
     }
 
@@ -69,15 +70,14 @@ public class RobotContainer {
 
     public void autoPeriod(){
        //drivetrain.UpdateOdometry();
-       //intakeMotor.updateController();
+       //arm.updateController();
     }
 
     public void teleopPeriodic(){
         //drivetrain.UpdateOdometry();
-        //intakeMotor.updateController();
+        arm.updateController();
         double forward = -joy.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
         double turn = joy.getRawAxis(JOY_Z_AXIS_ID);
-        drivetrain.TankDriveOld(forward, turn);
-        //arm.updateController();
+        //drivetrain.TankDriveOld(forward, turn);
     }
 }

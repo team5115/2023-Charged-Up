@@ -1,28 +1,25 @@
 package frc.team5115.Classes.Hardware;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import static frc.team5115.Constants.*;
+import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class HardwareIntake extends SubsystemBase{
-    private TalonSRX intake;
-    private double intakeSpeed = .2;
+    private DoubleSolenoid intake;
+    private PneumaticsControlModule pcm;
+    //PCM IS 10 this season YOU HAVE TO LABEL THE MODULE/CAN ID in everything you instantiate
 
     public HardwareIntake(){
-        intake = new TalonSRX(8);    
+        pcm = new PneumaticsControlModule(10);
+        intake = new DoubleSolenoid(10, PneumaticsModuleType.CTREPCM, 1, 0);
     }
 
-    public void forwardIntake(){
-        intake.set(ControlMode.PercentOutput, intakeSpeed);
+    public void open(){
+        intake.set(Value.kForward);
     }
 
-    public void reverseIntake(){
-        intake.set(ControlMode.PercentOutput, -intakeSpeed);
-    }
-
-    public void stop(){
-        intake.set(ControlMode.PercentOutput, 0);
+    public void close(){
+        intake.set(Value.kReverse);
     }
     
 }

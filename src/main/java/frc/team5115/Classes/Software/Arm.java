@@ -9,9 +9,9 @@ public class Arm extends SubsystemBase{
     private HardwareArm intake;
     private double topLength = 0;
     private double bottomLength = 0;
-    private double angle = 0;
-    private double speed = 0.15;
-    private PIDController turnController = new PIDController(0.01, 0, 0);
+    private double angle = 40;
+    private double speed = 0.25;
+    private PIDController turnController = new PIDController(0.029, 0.001, 0);
     private PIDController topWinchController = new PIDController(0, 0, 0);
     private PIDController bottomWinchController = new PIDController(0, 0, 0);
 
@@ -28,8 +28,7 @@ public class Arm extends SubsystemBase{
     }
 
     public void setTurnSpeed(){
-        double turnSpeed = Math.min(Math.max(speed, -0.15), .15);
-        intake.setTurn(turnSpeed);
+        intake.setTurn(speed);
     }
 
     public void topWinchController(){
@@ -50,6 +49,8 @@ public class Arm extends SubsystemBase{
 
     public void turnController(){
         intake.setTurn(turnController.calculate(intake.getArmDeg(), angle));
+        System.out.println("Output Current" + intake.getTurnCurrent());
+        System.out.println("Encoder Value: " + Math.round(intake.getTurnEncoder()) + ", The Estimated Angle: "+  Math.round(getTurnDeg()) + ", and PID Value: "+ turnController.calculate(intake.getArmDeg(), angle));
     }
 
     public void turnSetAngle(double angle){
