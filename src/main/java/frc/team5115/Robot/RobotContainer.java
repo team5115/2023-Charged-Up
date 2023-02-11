@@ -18,25 +18,31 @@ public class RobotContainer {
     private final Pneumatic pneum;
     public final Joystick joy = new Joystick(0);
     private final Timer timer;
-    private final IntakeMotor intakeMotor;
+    private final Arm arm;
+    private final HighCone highCone;
     private final AutoCommandGroup autoCommandGroup;
-    private DigitalOutput digitalOutput = new DigitalOutput(0);
+    //private DigitalOutput digitalOutput = new DigitalOutput(0);
 
     public RobotContainer() {
         pneum = new Pneumatic();
         photonVision = new PhotonVision();
         drivetrain = new Drivetrain(photonVision);
-        intakeMotor = new IntakeMotor();
-        autoCommandGroup = new AutoCommandGroup(drivetrain, intakeMotor);
+        arm = new Arm();
+        highCone = new HighCone(arm);
+        autoCommandGroup = new AutoCommandGroup(drivetrain, arm);
         timer = new Timer();
         timer.reset();
         configureButtonBindings();
     }
 
     public void configureButtonBindings() {
+        //new JoystickButton(joy, 1).whileTrue(highCone).onFalse( new InstantCommand(arm :: stop));
+       // new JoystickButton(joy, 2).whileTrue(new InstantCommand(arm :: setTopWinchSpeed)).onFalse( new InstantCommand(intake :: stop));
+       // new JoystickButton(joy, 3).whileTrue(new InstantCommand(arm :: setBottomWinchSpeed)).onFalse( new InstantCommand(intake :: stop));
+
         //new JoystickButton(joy, 1).onTrue(new HighCone(intakeMotor));
-        new JoystickButton(joy, 1).onTrue(new InstantCommand(pneum :: open));
-        new JoystickButton(joy, 2).onTrue(new InstantCommand(pneum :: close));
+        //new JoystickButton(joy, 1).onTrue(new InstantCommand(pneum :: open));
+        //new JoystickButton(joy, 2).onTrue(new InstantCommand(pneum :: close));
         //new JoystickButton( joy, 3).whileTrue(new InstantCommand(intakeMotor :: stop)).onFalse(new InstantCommand(intakeMotor :: stop));
         //new JoystickButton( joy, 4).whileTrue(new InstantCommand(intakeMotor :: stop)).onFalse(new InstantCommand(intakeMotor :: stop));
     }
@@ -44,21 +50,21 @@ public class RobotContainer {
     public void startTeleop(){
         if(autoCommandGroup != null) autoCommandGroup.cancel();
         drivetrain.resetNAVx();
-        digitalOutput.set(true);
+        //digitalOutput.set(true);
         System.out.println("Starting teleop");
     }
 
     public void disabledInit(){
-        digitalOutput.set(false);
+        //digitalOutput.set(false);
     }
 
     public void stopEverything(){
         drivetrain.stop();
-        intakeMotor.stop();
+        arm.stop();
     }
 
     public void startAuto(){
-        if(autoCommandGroup != null) autoCommandGroup.schedule();
+        //if(autoCommandGroup != null) autoCommandGroup.schedule();
     }
 
     public void autoPeriod(){
@@ -67,10 +73,11 @@ public class RobotContainer {
     }
 
     public void teleopPeriodic(){
-        //intakeMotor.updateController();
         //drivetrain.UpdateOdometry();
+        //intakeMotor.updateController();
         double forward = -joy.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
         double turn = joy.getRawAxis(JOY_Z_AXIS_ID);
         drivetrain.TankDriveOld(forward, turn);
+        //arm.updateController();
     }
 }

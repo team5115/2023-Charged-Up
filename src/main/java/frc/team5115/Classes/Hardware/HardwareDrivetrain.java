@@ -64,6 +64,13 @@ public class HardwareDrivetrain{
         backRight.set(backRightSpeed);
     }
 
+    public void PlugandVoltDrive(double frontLeftVoltage, double frontRightVoltage, double backLeftVoltage, double backRightVoltage){
+        frontLeft.setVoltage(frontLeftVoltage);
+        frontRight.setVoltage(frontRightVoltage);
+        backLeft.setVoltage(backLeftVoltage);
+        backRight.setVoltage(backRightVoltage);
+    }
+
     /**
      * Sets the speeds of the motors. Uses feedforward and PID.
      * 

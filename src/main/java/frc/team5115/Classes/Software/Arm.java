@@ -2,20 +2,34 @@ package frc.team5115.Classes.Software;
 
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.team5115.Classes.Hardware.HardwareIntakeMotor;
+import frc.team5115.Classes.Hardware.HardwareArm;
 import edu.wpi.first.math.controller.PIDController;
 
-public class IntakeMotor extends SubsystemBase{
-    private HardwareIntakeMotor intake;
+public class Arm extends SubsystemBase{
+    private HardwareArm intake;
     private double topLength = 0;
     private double bottomLength = 0;
-    private double angle = -90;
-    private PIDController turnController = new PIDController(0, 0, 0);
+    private double angle = 0;
+    private double speed = 0.15;
+    private PIDController turnController = new PIDController(0.01, 0, 0);
     private PIDController topWinchController = new PIDController(0, 0, 0);
     private PIDController bottomWinchController = new PIDController(0, 0, 0);
 
-    public IntakeMotor(){
-        intake = new HardwareIntakeMotor();
+    public Arm(){
+        intake = new HardwareArm();
+    }
+
+    public void setTopWinchSpeed(){
+        intake.setTopWinch(speed);
+    }
+
+    public void setBottomWinchSpeed(){
+        intake.setBottomWinch(speed);
+    }
+
+    public void setTurnSpeed(){
+        double turnSpeed = Math.min(Math.max(speed, -0.15), .15);
+        intake.setTurn(turnSpeed);
     }
 
     public void topWinchController(){
@@ -35,7 +49,7 @@ public class IntakeMotor extends SubsystemBase{
     }
 
     public void turnController(){
-        turnController.calculate(intake.getArmDeg(), angle);
+        intake.setTurn(turnController.calculate(intake.getArmDeg(), angle));
     }
 
     public void turnSetAngle(double angle){
@@ -44,8 +58,8 @@ public class IntakeMotor extends SubsystemBase{
 
     public void updateController(){
         turnController();
-        topWinchController();
-        bottomWinchController();
+        //topWinchController();
+        //bottomWinchController();
     }
 
     public double getTurnDeg(){
@@ -60,8 +74,8 @@ public class IntakeMotor extends SubsystemBase{
         return intake.getBottomWinchLength();
     }
     
-    public double getSpeed(){
-        return intake.getVelocity();
+    public double getArmSpeed(){
+        return intake.getTurnVelocity();
     }
 
     public void zeroArm(){

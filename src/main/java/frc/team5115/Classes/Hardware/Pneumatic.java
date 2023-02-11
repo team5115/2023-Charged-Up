@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 public class Pneumatic extends SubsystemBase{
     private DoubleSolenoid intake;
     private PneumaticsControlModule pcm;
+    //PCM IS 10 this season YOU HAVE TO LABEL THE MODULE/CAN ID in everything you instantiate
 
     public Pneumatic(){
         pcm = new PneumaticsControlModule(10);

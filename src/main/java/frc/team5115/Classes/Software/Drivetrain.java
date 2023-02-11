@@ -72,6 +72,21 @@ public class Drivetrain extends SubsystemBase{
 
     @Deprecated
     public void TankDriveOld(double forward, double turn){
+        if(forward>0.5){
+            forward = 0.3;
+        }
+
+        else if(forward<0){
+            forward = 0;
+        }
+
+        if(turn>0.5){
+            turn = 0.5;
+        }
+        else if(turn < -0.5){
+            turn = -0.5;
+        }
+
         leftSpeed = (forward + turn);
         rightSpeed = (forward - turn);
         drivetrain.plugandChugDrive(leftSpeed, rightSpeed, leftSpeed, rightSpeed);

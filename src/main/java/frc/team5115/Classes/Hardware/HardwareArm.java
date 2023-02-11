@@ -6,7 +6,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxRelativeEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class HardwareIntakeMotor extends SubsystemBase{
+public class HardwareArm extends SubsystemBase{
     private CANSparkMax intakeTop;
     private CANSparkMax intakeBottom;
     private CANSparkMax intakeTurn;
@@ -14,12 +14,12 @@ public class HardwareIntakeMotor extends SubsystemBase{
     private RelativeEncoder TopWinchEncoder;
     private RelativeEncoder BottomWinchEncoder;
     //private double encoderConstant = 1/49;
-    private double startingTurnValue = -90;
-    private double rotatingGearRatio = ((1/42)*(10/48));
+    private double startingTurnValue = 0;
+    private double rotatingGearRatio = ((1/49)*(10/48));
     private double winchGearRatio = 1/7;
     private double WinchDiameter = 0.75; //Only example of in, easier to determine length of the rod
 
-    public HardwareIntakeMotor(){
+    public HardwareArm(){
         intakeTop = new CANSparkMax(5, MotorType.kBrushless);   
         intakeBottom = new CANSparkMax(6, MotorType.kBrushless);    
         intakeTurn = new CANSparkMax(7, MotorType.kBrushless);    
@@ -38,15 +38,16 @@ public class HardwareIntakeMotor extends SubsystemBase{
     }
 
     public void setTurn(double speed){
-        intakeTurn.set(speed);
+        double turnSpeed = Math.min(Math.max(speed, -0.15), .15);
+        intakeTurn.set(turnSpeed);
     }
 
     public void stop(){
-        setTopWinch(0);
-        setBottomWinch(0);
+        //setTopWinch(0);
+        //setBottomWinch(0);
         setTurn(0);
     }
-
+    
     public double getTurnCurrent(){
         return intakeTurn.getOutputCurrent();
     }
@@ -63,8 +64,25 @@ public class HardwareIntakeMotor extends SubsystemBase{
         return (BottomWinchEncoder.getPosition());
     }
 
-    public double getVelocity(){
-        return TurningEncoder.getVelocity();
+    public double getTurnVelocity(){
+        return (TurningEncoder.getVelocity());
+    }
+
+    public double getTopVelocity(){
+        return (TopWinchEncoder.getVelocity());
+    }
+
+    public double getBottomVelocity(){
+        return (BottomWinchEncoder.getVelocity());
+    }
+
+
+    public String getEncoders(){
+        return ("Bottom Winch Val:" + BottomWinchEncoder.getPosition() + " Top Winch Val:" + TopWinchEncoder.getPosition() + " Turn Motor Val:" + TurningEncoder.getPosition());
+    }
+
+    public String getVelocities(){
+        return ("Bottom Winch Velocity:" + BottomWinchEncoder.getVelocity() + " Top Winch Val:" + TopWinchEncoder.getVelocity() + " Turn Motor Val:" + TurningEncoder.getVelocity());
     }
 
     public boolean getFault(CANSparkMax.FaultID f){
@@ -99,7 +117,7 @@ public class HardwareIntakeMotor extends SubsystemBase{
      */
 
     public double getArmDeg(){
-       return (getTurnEncoder())*(360/(rotatingGearRatio))-startingTurnValue;
+       return (getTurnEncoder())*(360/(rotatingGearRatio));
     } 
 
     public double getArmRad(){

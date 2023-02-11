@@ -5,15 +5,14 @@ import frc.team5115.Classes.Software.Arm;
 import frc.team5115.Commands.Intake.RawIntakeCommands.IntakeExtend;
 import frc.team5115.Commands.Intake.RawIntakeCommands.IntakeTurn;
 
-public class HighCone extends ParallelCommandGroup {
+public class Resting extends ParallelCommandGroup {
   Arm intake;
 
-  public HighCone(Arm intake){
+  public Resting(Arm intake){
       this.intake = intake;
       addCommands(
         //new IntakeExtend(intake, 0),
-        new IntakeTurn(intake, 10)
-        //new IntakeExtend(intake, 22)
+        new IntakeTurn(intake, 0)
           );
     }
 

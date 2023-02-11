@@ -3,15 +3,15 @@ package frc.team5115.Commands.Auto.Adjust;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team5115.Classes.Software.Drivetrain;
-import frc.team5115.Classes.Software.IntakeMotor;
+import frc.team5115.Classes.Software.Arm;
 
 @Deprecated
 public class AdjustDistance extends CommandBase {
     Drivetrain drivetrain;
-    IntakeMotor intake;
+    Arm intake;
     Timer timer;
 
-    public AdjustDistance(Drivetrain drivetrain, IntakeMotor intake) {
+    public AdjustDistance(Drivetrain drivetrain, Arm intake) {
         this.drivetrain = drivetrain;
         this.intake = intake;
         timer = new Timer();
