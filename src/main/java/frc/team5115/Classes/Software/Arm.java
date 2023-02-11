@@ -11,7 +11,7 @@ public class Arm extends SubsystemBase{
     private double bottomLength = 0;
     private double angle = 40;
     private double speed = 0.25;
-    private PIDController turnController = new PIDController(0.029, 0.001, 0);
+    private PIDController turnController = new PIDController(0.029, 0.0005, 0.01);
     private PIDController topWinchController = new PIDController(0, 0, 0);
     private PIDController bottomWinchController = new PIDController(0, 0, 0);
 
@@ -21,6 +21,10 @@ public class Arm extends SubsystemBase{
 
     public void setTopWinchSpeed(){
         intake.setTopWinch(speed);
+    }
+
+    public void setNegTopWinchSpeed(){
+        intake.setTopWinch(-speed);
     }
 
     public void setBottomWinchSpeed(){

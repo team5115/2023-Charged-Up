@@ -45,6 +45,10 @@ public class FollowTrajectory extends CommandBase {
         return timer.get() >= trajectory.getTotalTimeSeconds();
     }
     
+    /**
+     * Create a trajectory that will drive the robot from where it is along a hard-coded path to an end position.
+     * @return a trajectory that starts at current robot position and follow hard-coded path
+     */
     private Trajectory generateTrajectory() {
         TrajectoryConfig config = new TrajectoryConfig(3, 3);
         Pose2d endPose = new Pose2d(10, 2, Rotation2d.fromDegrees(0));

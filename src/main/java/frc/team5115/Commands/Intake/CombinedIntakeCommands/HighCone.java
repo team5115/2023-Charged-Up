@@ -12,7 +12,7 @@ public class HighCone extends ParallelCommandGroup {
       this.intake = intake;
       addCommands(
         //new IntakeExtend(intake, 0),
-        new IntakeTurn(intake, 10)
+        new IntakeTurn(intake, 20)
         //new IntakeExtend(intake, 22)
           );
     }

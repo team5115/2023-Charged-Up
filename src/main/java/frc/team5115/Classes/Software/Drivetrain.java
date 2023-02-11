@@ -60,6 +60,14 @@ public class Drivetrain extends SubsystemBase{
         drivetrain.plugandFFDrive(0, 0);
     }
 
+    public double getLeftDistance(){
+        return drivetrain.getEncoder(1).getPosition()*NEO_ENCODER_CALIBRATION;
+        }
+
+        public double getRightDistance(){
+            return drivetrain.getEncoder(2).getPosition()*NEO_ENCODER_CALIBRATION;
+            }
+
     public void resetEncoders() {
         drivetrain.resetEncoders();
     }
@@ -75,7 +83,7 @@ public class Drivetrain extends SubsystemBase{
     @Deprecated
     public void TankDriveOld(double forward, double turn){
         if(forward>0.5){
-            forward = 0.3;
+            forward = 0.5;
         }
 
         else if(forward<0){
@@ -138,12 +146,14 @@ public class Drivetrain extends SubsystemBase{
             drivetrain.getEncoder(FRONT_RIGHT_MOTOR_ID).getPosition()
         );
 
+        /*
         Optional<EstimatedRobotPose> result = photonVision.getEstimatedGlobalPose();
         if (result.isPresent()) {
             EstimatedRobotPose camPose = result.get();
             poseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
             return poseEstimator.getEstimatedPosition();
         }
+        */
         return poseEstimator.getEstimatedPosition();
     }
 

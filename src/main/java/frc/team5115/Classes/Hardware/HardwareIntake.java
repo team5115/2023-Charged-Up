@@ -11,7 +11,7 @@ public class HardwareIntake extends SubsystemBase{
 
     public HardwareIntake(){
         pcm = new PneumaticsControlModule(10);
-        intake = new DoubleSolenoid(10, PneumaticsModuleType.CTREPCM, 1, 0);
+        intake = new DoubleSolenoid(10, PneumaticsModuleType.CTREPCM, 0, 1);
     }
 
     public void open(){
