@@ -4,9 +4,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 public class HardwareIntake extends SubsystemBase{
     private DoubleSolenoid intake;
     private PneumaticsControlModule pcm;
+    private TalonSRX intakeL = new TalonSRX(9);
+    private TalonSRX intakeR = new TalonSRX(8);
     //PCM IS 10 this season YOU HAVE TO LABEL THE MODULE/CAN ID in everything you instantiate
 
     public HardwareIntake(){
@@ -16,6 +21,16 @@ public class HardwareIntake extends SubsystemBase{
 
     public void open(){
         intake.set(Value.kForward);
+    }
+
+    public void TurnLeftMotor(){
+        intakeL.set(ControlMode.PercentOutput, -0.3);
+        intakeR.set(ControlMode.PercentOutput,-0.3);
+    }
+
+    public void StopLeftMotor(){
+        intakeL.set(ControlMode.PercentOutput, 0);
+        intakeR.set(ControlMode.PercentOutput,0);
     }
 
     public void close(){

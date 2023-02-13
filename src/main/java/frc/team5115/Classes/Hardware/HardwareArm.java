@@ -37,6 +37,9 @@ public class HardwareArm extends SubsystemBase{
     }
 
     public void setTopWinch(double speed){
+        if(speed != speed) {
+            speed = 0;
+        }
         if(speed>.15){
             speed = .15;
         }
@@ -70,9 +73,9 @@ public class HardwareArm extends SubsystemBase{
     }
 
     public void stop(){
-        //setTopWinch(0);
-        //setBottomWinch(0);
-        setTurn(0);
+        setTopWinch(0);
+        setBottomWinch(0);
+        //setTurn(0);
     }
     
     public double getTurnCurrent(){
@@ -117,7 +120,6 @@ public class HardwareArm extends SubsystemBase{
     }
 
     public void zeroEncoders(){
-        TurningEncoder.setPosition(0);
         BottomWinchEncoder.setPosition(0);
         TopWinchEncoder.setPosition(0);
     }

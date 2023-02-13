@@ -21,6 +21,7 @@ public class Arm extends SubsystemBase{
 
     public void setTopWinchSpeed(){
         intake.setTopWinch(speed);
+ 
     }
 
     public void setNegTopWinchSpeed(){
@@ -29,6 +30,10 @@ public class Arm extends SubsystemBase{
 
     public void setBottomWinchSpeed(){
         intake.setBottomWinch(speed);
+    }
+
+    public void setNegBottomWinchSpeed(){
+        intake.setBottomWinch(-speed);
     }
 
     public void setTurnSpeed(){

@@ -176,12 +176,15 @@ public class Drivetrain extends SubsystemBase{
     }
 
     public boolean UpdateMoving(double dist, double startleftDist, double startRightDist) {
-        double loc = ((getLeftDistance()+getRightDistance())/2);
-        double forward = movingPID.calculate(loc, dist);
-        System.out.println("Would be moving @ " + forward + " m/s");
-        //drivetrain.plugandFFDrive(forward, forward);
+        double locL = getLeftDistance();
+        double forwardL = movingPID.calculate(locL, startleftDist+dist);
+        double locR = getRightDistance();
+        double forwardR = movingPID.calculate(locR, startRightDist+dist);
+        
+        System.out.println("Would be moving @ " + (forwardL+forwardR)/2 + " m/s");
+        //drivetrain.plugandFFDrive(forwardL, forwardR);
 
-        return Math.abs(loc-dist) < 0.1;
+        return false;
     }
 
     public boolean UpdateTurning(double angle) {
@@ -195,6 +198,10 @@ public class Drivetrain extends SubsystemBase{
 
     public void resetNAVx(){
         navx.resetNAVx();
+    }
+
+    public double getPitchDeg() {
+        return navx.getPitchDeg();
     }
 
     /**

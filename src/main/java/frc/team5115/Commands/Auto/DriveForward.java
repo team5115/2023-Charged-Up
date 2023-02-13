@@ -39,19 +39,19 @@ public class DriveForward extends CommandBase{
 
     @Override
     public void end(boolean interrupted){
-        System.out.println("finished charging");
+        System.out.println("finished moving");
     }
 
     @Override
     public boolean isFinished() {
         // timeout if the command has been running for too long
         if (grandTimer.get() > 10) {
-            System.out.println("Docking attempt timed out after 10 seconds");
+            System.out.println("Moving attempt timed out after 10 s");
             return true;
         }
         // finish if docked for more than the minimum dock time
         if (dockedTimer.get() > 0.5) {
-            System.out.println("Successfully docked");
+            System.out.println("Successfully moved");
             return true;
         }
         return false;
