@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team5115.Classes.Acessory.ThrottleControl;
 import frc.team5115.Classes.Hardware.HardwareDrivetrain;
 import frc.team5115.Classes.Hardware.NAVx;
+import edu.wpi.first.math.VecBuilder;
 
 public class Drivetrain extends SubsystemBase{
     
@@ -30,6 +31,8 @@ public class Drivetrain extends SubsystemBase{
     private final ThrottleControl throttle;
     private final PIDController anglePID;
     private final PIDController dockPID;
+    private final PIDController movingPID;
+    private final PIDController turningPID;
     private final RamseteController ramseteController;
     private final DifferentialDriveKinematics kinematics;
     private final HardwareDrivetrain drivetrain;
@@ -49,11 +52,15 @@ public class Drivetrain extends SubsystemBase{
         throttle = new ThrottleControl(3, -3, 0.2);
         anglePID = new PIDController(0.0144, 0.0001, 0.0015);
         dockPID = new PIDController(0.01, 0, 0);
+        movingPID = new PIDController(0.01, 0, 0);
+        turningPID = new PIDController(0.01, 0, 0);
         drivetrain = new HardwareDrivetrain();
         ramseteController = new RamseteController();
         kinematics = new DifferentialDriveKinematics(TRACKING_WIDTH_METERS);
         navx = new NAVx();
-        poseEstimator = new DifferentialDrivePoseEstimator(kinematics, navx.getYawRotation2D(), 0.0, 0.0, new Pose2d());
+        poseEstimator = new DifferentialDrivePoseEstimator(kinematics, navx.getYawRotation2D(), 0.0, 0.0, new Pose2d(FieldConstants.startX, FieldConstants.startY, FieldConstants.startAngle), 
+        VecBuilder.fill(1, 1, 1),
+        VecBuilder.fill(0, 0, 0));
     }
 
     public void stop() {
@@ -146,14 +153,12 @@ public class Drivetrain extends SubsystemBase{
             drivetrain.getEncoder(FRONT_RIGHT_MOTOR_ID).getPosition()
         );
 
-        /*
         Optional<EstimatedRobotPose> result = photonVision.getEstimatedGlobalPose();
         if (result.isPresent()) {
             EstimatedRobotPose camPose = result.get();
             poseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
             return poseEstimator.getEstimatedPosition();
         }
-        */
         return poseEstimator.getEstimatedPosition();
     }
 
@@ -164,10 +169,28 @@ public class Drivetrain extends SubsystemBase{
     public boolean UpdateDocking() {
         double pitch = navx.getPitchDeg();
         double forward = dockPID.calculate(pitch, 0);
-        System.out.println("Would be docking @ " + forward + "m/s");
+        System.out.println("Would be docking @ " + forward + " m/s");
         //drivetrain.plugandFFDrive(forward, forward);
         
         return Math.abs(pitch) < 0.5;
+    }
+
+    public boolean UpdateMoving(double dist, double startleftDist, double startRightDist) {
+        double loc = ((getLeftDistance()+getRightDistance())/2);
+        double forward = movingPID.calculate(loc, dist);
+        System.out.println("Would be moving @ " + forward + " m/s");
+        //drivetrain.plugandFFDrive(forward, forward);
+
+        return Math.abs(loc-dist) < 0.1;
+    }
+
+    public boolean UpdateTurning(double angle) {
+        double currentAngle = (navx.getPitchDeg());
+        double turn = turningPID.calculate(currentAngle, angle);
+        System.out.println("Would be turning @ " + turn + " m/s");
+        //drivetrain.plugandFFDrive(forward, -forward);
+
+        return Math.abs(angle-currentAngle) < 0.1;
     }
 
     public void resetNAVx(){

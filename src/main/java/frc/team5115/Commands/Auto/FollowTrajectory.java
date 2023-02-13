@@ -17,12 +17,35 @@ public class FollowTrajectory extends CommandBase {
     private final Trajectory trajectory;
     private final Timer timer;
 
-    public FollowTrajectory(Drivetrain drivetrain) {
+    public FollowTrajectory(Drivetrain drivetrain, double x, double y, double theta, ArrayList<Translation2d> interiorWaypoints) {
         this.drivetrain = drivetrain;
-        trajectory = generateTrajectory();
+        trajectory = generateTrajectory(interiorWaypoints, x, y, theta);
         timer = new Timer();
         timer.start();
     }
+
+    public FollowTrajectory(Drivetrain drivetrain, Pose2d endPose, ArrayList<Translation2d> interiorWaypoints) {
+        this.drivetrain = drivetrain;
+        trajectory = generateTrajectory(interiorWaypoints, endPose);
+        timer = new Timer();
+        timer.start();
+    }
+
+
+    public FollowTrajectory(Drivetrain drivetrain, double x, double y, double theta) {
+        this.drivetrain = drivetrain;
+        trajectory = generateTrajectory(x, y, theta);
+        timer = new Timer();
+        timer.start();
+    }
+
+    public FollowTrajectory(Drivetrain drivetrain, Pose2d endPose) {
+        this.drivetrain = drivetrain;
+        trajectory = generateTrajectory(endPose);
+        timer = new Timer();
+        timer.start();
+    }
+
 
     @Override
     public void initialize() {
@@ -47,16 +70,62 @@ public class FollowTrajectory extends CommandBase {
     
     /**
      * Create a trajectory that will drive the robot from where it is along a hard-coded path to an end position.
+     * @param interiorWaypoints an ArrayList of Translation2d waypoints that the robot has to pass.
+     * @param x the final x position the robot will go to.
+     * @param y the final y position the robot will go to.
+     * @param theta the final orentation of the robot.
+     * 
+     * @return a trajectory that starts at current robot position and follow hard-coded path
+     * Example for how to use Interior Waypoints: 
+     * ArrayList<Translation2d> interiorWaypoints = new ArrayList<Translation2d>();
+     * interiorWaypoints.add(new Translation2d(x, y)); 
+     * Be sure to check that your taking in the x and y coordinate and not the distance and angle by checking the Javadocs of the method.
+     */
+    private Trajectory generateTrajectory(ArrayList<Translation2d> interiorWaypoints, double x, double y, double theta) {
+        TrajectoryConfig config = new TrajectoryConfig(3, 3);
+        Pose2d endPose = new Pose2d(x, y, Rotation2d.fromDegrees(theta));
+        return TrajectoryGenerator.generateTrajectory(drivetrain.UpdateOdometry(), interiorWaypoints, endPose, config);
+    }
+
+    /**
+     * Create a trajectory that will drive the robot from where it is along a hard-coded path to an end position.
+     * @param interiorWaypoints an ArrayList of Translation2d waypoints that the robot has to pass.
+     * @param endPose the Pose2d object that contains the final x and y position, and orientation of the robot.
+     * 
+     * @return a trajectory that starts at current robot position and follow hard-coded path
+     * Example for how to use Interior Waypoints: 
+     * ArrayList<Translation2d> interiorWaypoints = new ArrayList<Translation2d>();
+     * interiorWaypoints.add(new Translation2d(x, y)); 
+     * Be sure to check that your taking in the x and y coordinate and not the distance and angle by checking the Javadocs of the method.
+     */
+    private Trajectory generateTrajectory(ArrayList<Translation2d> interiorWaypoints, Pose2d endPose) {
+        TrajectoryConfig config = new TrajectoryConfig(3, 3);
+        return TrajectoryGenerator.generateTrajectory(drivetrain.UpdateOdometry(), interiorWaypoints, endPose, config);
+    }
+
+    /**
+     * Create a trajectory that will drive the robot from where it is along a hard-coded path to an end position.
+     * @param x the final x position the robot will go to.
+     * @param y the final y position the robot will go to.
+     * @param theta the final orentation of the robot.
+     * 
      * @return a trajectory that starts at current robot position and follow hard-coded path
      */
-    private Trajectory generateTrajectory() {
-        TrajectoryConfig config = new TrajectoryConfig(3, 3);
-        Pose2d endPose = new Pose2d(10, 2, Rotation2d.fromDegrees(0));
+    private Trajectory generateTrajectory(double x, double y, double theta) {
         ArrayList<Translation2d> interiorWaypoints = new ArrayList<Translation2d>();
-        interiorWaypoints.add(new Translation2d(3, 2.5));
-        interiorWaypoints.add(new Translation2d(5, 2));
-        interiorWaypoints.add(new Translation2d(7, 1.5));
-    
+        TrajectoryConfig config = new TrajectoryConfig(3, 3);
+        Pose2d endPose = new Pose2d(x, y, Rotation2d.fromDegrees(theta));
+        return TrajectoryGenerator.generateTrajectory(drivetrain.UpdateOdometry(), interiorWaypoints, endPose, config);
+    }
+
+    /**
+     * Create a trajectory that will drive the robot from where it is along a hard-coded path to an end position.
+     * @param endPose the Pose2d object that contains the final x and y position, and orientation of the robot.
+     * @return a trajectory that starts at current robot position and follow hard-coded path
+     */
+    private Trajectory generateTrajectory(Pose2d endPose) {
+        ArrayList<Translation2d> interiorWaypoints = new ArrayList<Translation2d>();
+        TrajectoryConfig config = new TrajectoryConfig(3, 3);
         return TrajectoryGenerator.generateTrajectory(drivetrain.UpdateOdometry(), interiorWaypoints, endPose, config);
     }
 }

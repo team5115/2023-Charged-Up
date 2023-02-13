@@ -78,6 +78,6 @@ public class RobotContainer {
         arm.updateController();
         double forward = -joy.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
         double turn = joy.getRawAxis(JOY_Z_AXIS_ID);
-        //drivetrain.TankDriveOld(forward, turn);
+        drivetrain.TankDriveOld(forward, turn);
     }
 }
