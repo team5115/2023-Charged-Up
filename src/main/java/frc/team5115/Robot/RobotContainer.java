@@ -37,10 +37,10 @@ public class RobotContainer {
 
     public void configureButtonBindings() {
        //new JoystickButton(joy, 1).whileTrue((highCone)).onFalse( new InstantCommand(arm :: stop));
-        new JoystickButton(joy, 1).whileTrue(new InstantCommand(arm :: setTopWinchSpeed)).onFalse( new InstantCommand(arm :: stop));
-        new JoystickButton(joy, 2).whileTrue(new InstantCommand(arm :: setNegTopWinchSpeed)).onFalse( new InstantCommand(arm :: stop));
-        new JoystickButton(joy, 1).whileTrue(new InstantCommand(arm :: setBottomWinchSpeed)).onFalse( new InstantCommand(arm :: stop));
-        new JoystickButton(joy, 2).whileTrue(new InstantCommand(arm :: setNegBottomWinchSpeed)).onFalse( new InstantCommand(arm :: stop));
+       // new JoystickButton(joy, 1).whileTrue(new InstantCommand(arm :: setTopWinchSpeed)).onFalse( new InstantCommand(arm :: stop));
+       // new JoystickButton(joy, 2).whileTrue(new InstantCommand(arm :: setNegTopWinchSpeed)).onFalse( new InstantCommand(arm :: stop));
+       // new JoystickButton(joy, 1).whileTrue(new InstantCommand(arm :: setBottomWinchSpeed)).onFalse( new InstantCommand(arm :: stop));
+       // new JoystickButton(joy, 2).whileTrue(new InstantCommand(arm :: setNegBottomWinchSpeed)).onFalse( new InstantCommand(arm :: stop));
 
         //new JoystickButton(joy, 1).onTrue(HighCone);
         //new JoystickButton(joy, 1).onTrue(new InstantCommand(pneum :: open));
@@ -77,9 +77,9 @@ public class RobotContainer {
 
     public void teleopPeriodic(){
         //drivetrain.UpdateOdometry();
-        arm.updateController();
+        //arm.updateController();
         double forward = -joy.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
         double turn = joy.getRawAxis(JOY_Z_AXIS_ID);
-        //drivetrain.TankDriveOld(forward, turn);
+        drivetrain.TankDriveOld(forward, turn);
     }
 }

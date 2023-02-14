@@ -28,7 +28,7 @@ public class DriveUntilDock extends CommandBase {
             System.out.println("Drive until dock timed out");
             return true;
         }
-        if (drivetrain.getPitchDeg() > 10) {
+        if (drivetrain.getPitchDeg() > 5) {
             return true;
         }
         return false;
