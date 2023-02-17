@@ -5,6 +5,9 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxRelativeEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.controller.*;
+import edu.wpi.first.math.util.Units;
+
 
 public class HardwareArm extends SubsystemBase{
     private CANSparkMax intakeTop;
@@ -13,8 +16,15 @@ public class HardwareArm extends SubsystemBase{
     private RelativeEncoder TurningEncoder;
     private RelativeEncoder TopWinchEncoder;
     private RelativeEncoder BottomWinchEncoder;
+    private final double Ks = 0.16443;
+    private final double Kv = 4.4168;
+    private final double Ka = 0.10645;
+    private final double Kg = 0.4716;
+    private final double startingAngle = -1.4802; //Rads
+    private boolean FF = false;
+    private final ArmFeedforward arm = new ArmFeedforward(Ks, Kg, Kv, Ka);
     //private double encoderConstant = 1/49;
-    private double startingTurnValue = 0;
+    private double startingTurnValue = 0; 
     private double rotatingGearRatio = ((1/49)*(10/48));
     private double winchGearRatio = 1/7;
     private double WinchDiameter = 0.75; //Only example of in, easier to determine length of the rod
@@ -22,11 +32,21 @@ public class HardwareArm extends SubsystemBase{
     public HardwareArm(){
         intakeTop = new CANSparkMax(5, MotorType.kBrushless);   
         intakeBottom = new CANSparkMax(6, MotorType.kBrushless);    
-        intakeTurn = new CANSparkMax(7, MotorType.kBrushless);    
+        intakeTurn = new CANSparkMax(7, MotorType.kBrushless);  
+
+        intakeBottom.setInverted(true);
+        intakeTop.setInverted(true);
+        
+        //intakeTop.setSmartCurrentLimit(40, 40);
+        //intakeBottom.setSmartCurrentLimit(40, 40);
+        intakeTurn.setSmartCurrentLimit(80, 80);
+
+        //intakeBottom.follow(intakeTop);
  
         TurningEncoder = intakeTurn.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
         TopWinchEncoder = intakeTop.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
-        BottomWinchEncoder = intakeTop.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
+        BottomWinchEncoder = intakeBottom.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
+
         TurningEncoder.setPositionConversionFactor(1);
         TopWinchEncoder.setPositionConversionFactor(1);
         BottomWinchEncoder.setPositionConversionFactor(1);
@@ -40,11 +60,11 @@ public class HardwareArm extends SubsystemBase{
         if(speed != speed) {
             speed = 0;
         }
-        if(speed>.15){
-            speed = .15;
+        if(speed>.5){
+            speed = .5;
         }
-        else if(speed<-0.15){
-            speed = -0.15;
+        else if(speed<-0.5){
+            speed = -0.5;
         }
         intakeTop.set(speed);
     }
@@ -53,34 +73,54 @@ public class HardwareArm extends SubsystemBase{
         if(speed != speed) {
             speed = 0;
         }
-        if(speed>.15){
-            speed = .15;
+        if(speed>.5){
+            speed = .5;
         }
-        else if(speed<-0.15){
-            speed = -0.15;
+        else if(speed<-0.5){
+            speed = -0.5;
         }
         intakeBottom.set(speed);
     }
 
     public void setTurn(double speed){
-        if(speed>.15){
-            speed = .15;
+        //TURN ONLY IF THE ARMS ARE WITHDREW
+
+        if(speed != speed) {
+            speed = 0;
+        }
+
+        if(speed>.37){
+            speed = 0.37;
         }
         else if(speed<0){
             speed = 0;
         }
+        if(FF){
+            intakeTurn.setVoltage(arm.calculate((getArmRad()), speed));
+        }
+        else{
         intakeTurn.set(speed);
+        }
     }
 
     public void stop(){
-        setTopWinch(0);
-        setBottomWinch(0);
+        //setTopWinch(0);
+        //setBottomWinch(0);
         //setTurn(0);
     }
     
     public double getTurnCurrent(){
         return intakeTurn.getOutputCurrent();
     }
+
+    public double getTopCurrent(){
+        return intakeTop.getOutputCurrent();
+    }
+    
+    public double getBottomCurrent(){
+        return intakeBottom.getOutputCurrent();
+    }
+    
     
     public double getTurnEncoder(){
         return (TurningEncoder.getPosition());
@@ -99,11 +139,11 @@ public class HardwareArm extends SubsystemBase{
     }
 
     public double getTopVelocity(){
-        return (TopWinchEncoder.getVelocity());
+        return -(TopWinchEncoder.getVelocity());
     }
 
     public double getBottomVelocity(){
-        return (BottomWinchEncoder.getVelocity());
+        return -(BottomWinchEncoder.getVelocity());
     }
 
 
@@ -122,14 +162,24 @@ public class HardwareArm extends SubsystemBase{
     public void zeroEncoders(){
         BottomWinchEncoder.setPosition(0);
         TopWinchEncoder.setPosition(0);
+        TurningEncoder.setPosition(0);
     }
+
+public void setEncoders(double Length){
+    BottomWinchEncoder.setPosition((7*Length)/((0.75*3.14159)));
+    TopWinchEncoder.setPosition((7*Length)/((0.75*3.14159)));
+    TurningEncoder.setPosition(10/(360.0 / (48.0 * 49.0 / 10.0)));
+    // TurningEncoder.setPosition(Units.radiansToDegrees(startingAngle)/(360.0 / (48.0 * 49.0 / 10.0)));
+}
 
     /** 
      * Returns the length of the Top Winch
      * @return the length of the Top Winch, converted from rots to in
      */
     public double getTopWinchLength() {
-        return getTopEncoder()*winchGearRatio*(WinchDiameter*2*Math.PI);
+        System.out.println((getTopEncoder()/7)*(0.75*3.14159));
+        return (getTopEncoder()/7)*(0.75*3.14159);
+    
     }
 
     /** 
@@ -137,7 +187,8 @@ public class HardwareArm extends SubsystemBase{
      * @return the length of the Bottm Winch, converted from rots to in
      */
     public double getBottomWinchLength() {
-        return getBottomEncoder()*winchGearRatio*(WinchDiameter*2*Math.PI);
+        System.out.println((getBottomEncoder()/7)*(0.75*3.14159));
+        return (getBottomEncoder()/7)*(0.75*3.14159);
     }
 
     /** 
@@ -151,6 +202,7 @@ public class HardwareArm extends SubsystemBase{
 
     public double getArmRad(){
         return Math.toRadians(getArmDeg());
+        //return Math.toRadians(getArmDeg() + startingAngle);
     }
 
     public double getBCenterOfMass(double length){

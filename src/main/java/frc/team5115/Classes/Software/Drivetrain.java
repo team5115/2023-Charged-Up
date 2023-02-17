@@ -107,7 +107,7 @@ public class Drivetrain extends SubsystemBase{
         leftSpeed = (forward + turn);
         rightSpeed = (forward - turn);
 
-        System.out.println(leftSpeed*12);
+        //System.out.println(leftSpeed*12);
         drivetrain.PlugandVoltDrive(leftSpeed*12, rightSpeed*12, leftSpeed*12, rightSpeed*12);
     }
 

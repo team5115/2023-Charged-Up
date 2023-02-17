@@ -21,7 +21,8 @@ public class RobotContainer {
     private final Arm arm;
     private final HighCone highCone;
     private final AutoCommandGroup autoCommandGroup;
-    //private DigitalOutput digitalOutput = new DigitalOutput(0);
+    private DigitalOutput digitalOutput = new DigitalOutput(0);
+    private DigitalOutput digitalOutput2 = new DigitalOutput(1);
 
     public RobotContainer() {
         intake = new HardwareIntake();
@@ -36,7 +37,9 @@ public class RobotContainer {
     }
 
     public void configureButtonBindings() {
-       //new JoystickButton(joy, 1).whileTrue((highCone)).onFalse( new InstantCommand(arm :: stop));
+       new JoystickButton(joy, 1).onTrue(new InstantCommand(arm :: In));
+       new JoystickButton(joy, 2).onTrue(new InstantCommand(arm :: Out));
+
        // new JoystickButton(joy, 1).whileTrue(new InstantCommand(arm :: setTopWinchSpeed)).onFalse( new InstantCommand(arm :: stop));
        // new JoystickButton(joy, 2).whileTrue(new InstantCommand(arm :: setNegTopWinchSpeed)).onFalse( new InstantCommand(arm :: stop));
        // new JoystickButton(joy, 1).whileTrue(new InstantCommand(arm :: setBottomWinchSpeed)).onFalse( new InstantCommand(arm :: stop));
@@ -51,9 +54,8 @@ public class RobotContainer {
 
     public void startTeleop(){
         if(autoCommandGroup != null) autoCommandGroup.cancel();
-        drivetrain.resetNAVx();
+        //drivetrain.resetNAVx();
         //digitalOutput.set(true);
-        arm.zeroArm();
         System.out.println("Starting teleop");
     }
 
@@ -72,14 +74,14 @@ public class RobotContainer {
 
     public void autoPeriod(){
        //drivetrain.UpdateOdometry();
-       //arm.updateController();
+       arm.updateController();
     }
 
     public void teleopPeriodic(){
         //drivetrain.UpdateOdometry();
-        //arm.updateController();
+        arm.updateController();
         double forward = -joy.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
         double turn = joy.getRawAxis(JOY_Z_AXIS_ID);
-        drivetrain.TankDriveOld(forward, turn);
+        //drivetrain.TankDriveOld(forward, turn);
     }
 }
