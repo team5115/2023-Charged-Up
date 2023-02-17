@@ -2,31 +2,38 @@ package frc.team5115.Robot;
 
 import static frc.team5115.Constants.*;
 
+import javax.print.Doc;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.team5115.Classes.Software.*;
+import frc.team5115.Classes.Acessory.JoyAxisBoolSupplier;
 import frc.team5115.Classes.Hardware.*;
 import frc.team5115.Commands.Auto.AutoCommandGroup;
+import frc.team5115.Commands.Auto.DockAuto.DockCommandGroup;
 import frc.team5115.Commands.Intake.CombinedIntakeCommands.*;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj.DigitalOutput;
 
 public class RobotContainer {
-    private final Drivetrain drivetrain;
+    private final Joystick joy;
     private final PhotonVision photonVision;
+    private final Drivetrain drivetrain;
+    private final DockCommandGroup dockSequence;
     // private final HardwareIntake intake;
-    public final Joystick joy = new Joystick(0);
     // private final Timer timer;
     // private final Arm arm;
     // private final HighCone highCone;
     // private final AutoCommandGroup autoCommandGroup;
-    //private DigitalOutput digitalOutput = new DigitalOutput(0);
 
     public RobotContainer() {
-        // intake = new HardwareIntake();
+        joy = new Joystick(0);
         photonVision = new PhotonVision();
         drivetrain = new Drivetrain(photonVision);
+        dockSequence = new DockCommandGroup(drivetrain);
+        // intake = new HardwareIntake();
         // arm = new Arm();
         // highCone = new HighCone(arm);
         // autoCommandGroup = new AutoCommandGroup(drivetrain, arm);
@@ -37,6 +44,7 @@ public class RobotContainer {
 
     public void configureButtonBindings() {
         new JoystickButton(joy, 1).onTrue(new InstantCommand(drivetrain :: toggleSlowMode));
+        new JoystickButton(joy, 2).onTrue(new InstantCommand(dockSequence :: schedule));
        //new JoystickButton(joy, 1).whileTrue((highCone)).onFalse( new InstantCommand(arm :: stop));
        // new JoystickButton(joy, 1).whileTrue(new InstantCommand(arm :: setTopWinchSpeed)).onFalse( new InstantCommand(arm :: stop));
        // new JoystickButton(joy, 2).whileTrue(new InstantCommand(arm :: setNegTopWinchSpeed)).onFalse( new InstantCommand(arm :: stop));
@@ -52,14 +60,12 @@ public class RobotContainer {
 
     public void startTeleop(){
         // if(autoCommandGroup != null) autoCommandGroup.cancel();
-        drivetrain.resetNAVx();
-        // //digitalOutput.set(true);
         // arm.zeroArm();
+        drivetrain.resetNAVx();
         System.out.println("Starting teleop");
     }
 
     public void disabledInit(){
-        //digitalOutput.set(false);
     }
 
     public void stopEverything(){
