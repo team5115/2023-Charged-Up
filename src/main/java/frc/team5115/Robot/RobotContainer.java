@@ -15,27 +15,28 @@ import edu.wpi.first.wpilibj.DigitalOutput;
 public class RobotContainer {
     private final Drivetrain drivetrain;
     private final PhotonVision photonVision;
-    private final HardwareIntake intake;
+    // private final HardwareIntake intake;
     public final Joystick joy = new Joystick(0);
-    private final Timer timer;
-    private final Arm arm;
-    private final HighCone highCone;
-    private final AutoCommandGroup autoCommandGroup;
+    // private final Timer timer;
+    // private final Arm arm;
+    // private final HighCone highCone;
+    // private final AutoCommandGroup autoCommandGroup;
     //private DigitalOutput digitalOutput = new DigitalOutput(0);
 
     public RobotContainer() {
-        intake = new HardwareIntake();
+        // intake = new HardwareIntake();
         photonVision = new PhotonVision();
         drivetrain = new Drivetrain(photonVision);
-        arm = new Arm();
-        highCone = new HighCone(arm);
-        autoCommandGroup = new AutoCommandGroup(drivetrain, arm);
-        timer = new Timer();
-        timer.reset();
+        // arm = new Arm();
+        // highCone = new HighCone(arm);
+        // autoCommandGroup = new AutoCommandGroup(drivetrain, arm);
+        // timer = new Timer();
+        // timer.reset();
         configureButtonBindings();
     }
 
     public void configureButtonBindings() {
+        new JoystickButton(joy, 1).onTrue(new InstantCommand(drivetrain :: toggleSlowMode));
        //new JoystickButton(joy, 1).whileTrue((highCone)).onFalse( new InstantCommand(arm :: stop));
        // new JoystickButton(joy, 1).whileTrue(new InstantCommand(arm :: setTopWinchSpeed)).onFalse( new InstantCommand(arm :: stop));
        // new JoystickButton(joy, 2).whileTrue(new InstantCommand(arm :: setNegTopWinchSpeed)).onFalse( new InstantCommand(arm :: stop));
@@ -50,10 +51,10 @@ public class RobotContainer {
     }
 
     public void startTeleop(){
-        if(autoCommandGroup != null) autoCommandGroup.cancel();
+        // if(autoCommandGroup != null) autoCommandGroup.cancel();
         drivetrain.resetNAVx();
-        //digitalOutput.set(true);
-        arm.zeroArm();
+        // //digitalOutput.set(true);
+        // arm.zeroArm();
         System.out.println("Starting teleop");
     }
 
@@ -63,7 +64,7 @@ public class RobotContainer {
 
     public void stopEverything(){
         drivetrain.stop();
-        arm.stop();
+        // arm.stop();
     }
 
     public void startAuto(){
@@ -80,6 +81,6 @@ public class RobotContainer {
         //arm.updateController();
         double forward = -joy.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
         double turn = joy.getRawAxis(JOY_Z_AXIS_ID);
-        drivetrain.TankDriveOld(forward, turn);
+        drivetrain.TankDrive(forward, turn);
     }
 }

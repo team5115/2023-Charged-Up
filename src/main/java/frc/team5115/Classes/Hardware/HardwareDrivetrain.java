@@ -9,11 +9,25 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
 public class HardwareDrivetrain{
-    private static final double kP = 8.86763;
 
-    private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(kS, kV, kA);
-    private final PIDController leftPID = new PIDController(kP, 0, 0);
-    private final PIDController rightPID = new PIDController(kP, 0, 0);
+    // Testbed feedforward and feedback (pid) values
+    private final double leftKs = 0.13897;
+    private final double leftKv = 4.2144;
+    private final double leftKa = 0.13016;
+    
+    private final double rightKs = 0.14681;
+    private final double rightKv = 4.1954;
+    private final double rightKa = 0.12313;
+
+    private final double Kp = 2.5979;
+    private final double Ki = 0;
+    private final double Kd = 0;
+    // END of testbed values
+
+    private final SimpleMotorFeedforward leftFeedForward = new SimpleMotorFeedforward(leftKs, leftKv, leftKa);
+    private final SimpleMotorFeedforward rightFeedForward = new SimpleMotorFeedforward(rightKs, rightKv, rightKa);
+    private final PIDController leftPID = new PIDController(Kp, Ki, Kd);
+    private final PIDController rightPID = new PIDController(Kp, Ki, Kd);
 
     private final CANSparkMax frontLeft = new CANSparkMax(FRONT_LEFT_MOTOR_ID, MotorType.kBrushless);
     private final CANSparkMax frontRight = new CANSparkMax(FRONT_RIGHT_MOTOR_ID, MotorType.kBrushless);
@@ -81,10 +95,10 @@ public class HardwareDrivetrain{
      */
     public void plugandFFDrive(double leftSpeed, double rightSpeed) {
         
-        double leftVoltage = feedforward.calculate(leftSpeed);
-        double rightVoltage = feedforward.calculate(rightSpeed);
-        //leftVoltage += leftPID.calculate(leftEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, leftSpeed);
-        //rightVoltage += rightPID.calculate(rightEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, rightSpeed);
+        double leftVoltage = leftFeedForward.calculate(leftSpeed);
+        double rightVoltage = rightFeedForward.calculate(rightSpeed);
+        leftVoltage += leftPID.calculate(leftEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, leftSpeed);
+        rightVoltage += rightPID.calculate(rightEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, rightSpeed);
 
         leftVoltage = Math.min(leftVoltage, DRIVE_MOTOR_MAX_VOLTAGE);
         rightVoltage = Math.min(rightVoltage, DRIVE_MOTOR_MAX_VOLTAGE);
