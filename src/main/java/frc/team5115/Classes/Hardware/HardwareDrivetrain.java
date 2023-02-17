@@ -97,8 +97,14 @@ public class HardwareDrivetrain{
         
         double leftVoltage = leftFeedForward.calculate(leftSpeed);
         double rightVoltage = rightFeedForward.calculate(rightSpeed);
-        leftVoltage += leftPID.calculate(leftEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, leftSpeed);
-        rightVoltage += rightPID.calculate(rightEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, rightSpeed);
+        // leftVoltage += leftPID.calculate(leftEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, leftSpeed);
+        // rightVoltage += rightPID.calculate(rightEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, rightSpeed);
+        // double leftPidPart = leftPID.calculate(leftEncoder.getVelocity(), leftSpeed); 
+        // double rightPidPart = rightPID.calculate(-rightEncoder.getVelocity(), rightSpeed);
+        // leftVoltage += leftPidPart;
+        // rightVoltage += rightPidPart;
+        // System.out.print("Left PID: " + leftPidPart);
+        // System.out.println(" | Right PID: " + rightPidPart);
 
         leftVoltage = Math.min(leftVoltage, DRIVE_MOTOR_MAX_VOLTAGE);
         rightVoltage = Math.min(rightVoltage, DRIVE_MOTOR_MAX_VOLTAGE);
