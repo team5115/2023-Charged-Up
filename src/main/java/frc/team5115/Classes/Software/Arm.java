@@ -84,8 +84,8 @@ public class Arm extends SubsystemBase{
             System.out.println("Top too far ahead & ");
                 if(topSpeed< 0 && bottomSpeed<0){
                     System.out.print("Bottom Stopped");
-                    intake.setBottomWinch(bottomSpeed);
-                    intake.setTopWinch(0);
+                    intake.setBottomWinch(0);
+                    intake.setTopWinch(topSpeed);
                 }
                 else if(topSpeed<0 && bottomSpeed>0){
                     System.out.print("Both Stopped");
