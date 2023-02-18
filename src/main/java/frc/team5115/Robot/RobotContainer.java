@@ -46,7 +46,7 @@ public class RobotContainer {
     public void configureButtonBindings() {
         new JoystickButton(joy, 1).onTrue(new InstantCommand(drivetrain :: toggleSlowMode));
         new JoystickButton(joy, 2).onTrue(dockSequence);
-        new Trigger(new JoyAxisBoolSupplier(joy, 3, 1.5)).onTrue(new InstantCommand(this :: enableDriving)).onFalse(new InstantCommand(this :: disableDriving));
+        new JoystickButton(joy, 6).onTrue(new InstantCommand(this :: enableDriving)).onFalse(new InstantCommand(this :: disableDriving));
        //new JoystickButton(joy, 1).whileTrue((highCone)).onFalse( new InstantCommand(arm :: stop));
        // new JoystickButton(joy, 1).whileTrue(new InstantCommand(arm :: setTopWinchSpeed)).onFalse( new InstantCommand(arm :: stop));
        // new JoystickButton(joy, 2).whileTrue(new InstantCommand(arm :: setNegTopWinchSpeed)).onFalse( new InstantCommand(arm :: stop));

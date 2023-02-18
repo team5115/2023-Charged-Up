@@ -40,8 +40,8 @@ public class Dock extends CommandBase{
     @Override
     public boolean isFinished() {
         // timeout if the command has been running for too long
-        if (grandTimer.get() > 10) {
-            System.out.println("Docking attempt timed out after 10 seconds");
+        if (grandTimer.get() > 60) {
+            System.out.println("Docking attempt timed out after 60 seconds");
             return true;
         }
         // finish if docked for more than the minimum dock time

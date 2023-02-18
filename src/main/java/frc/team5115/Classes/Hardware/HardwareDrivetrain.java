@@ -10,16 +10,16 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
 public class HardwareDrivetrain{
 
-    // Testbed feedforward and feedback (pid) values
-    private final double leftKs = 0.13897;
-    private final double leftKv = 4.2144;
-    private final double leftKa = 0.13016;
+    // Testbed feedforward and feedback (pid) values - 6 inch diameter on testbed
+    private final double leftKs = 0.090949;
+    private final double leftKv = 2.783;
+    private final double leftKa = 0.16477;
     
-    private final double rightKs = 0.14681;
-    private final double rightKv = 4.1954;
-    private final double rightKa = 0.12313;
+    private final double rightKs = 0.099706;
+    private final double rightKv = 2.8314;
+    private final double rightKa = 0.14565;
 
-    private final double Kp = 0.0;
+    private final double Kp = 0; // 3.7203 according to sysid
     private final double Ki = 0.0;
     private final double Kd = 0.0;
     // END of testbed values

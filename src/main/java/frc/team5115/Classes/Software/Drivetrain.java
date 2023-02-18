@@ -51,7 +51,7 @@ public class Drivetrain extends SubsystemBase{
         this.photonVision = photonVision;
         throttle = new ThrottleControl(3, -3, 0.2);
         anglePID = new PIDController(0.0144, 0.0001, 0.0015);
-        dockPID = new PIDController(0.1, 0, 0);
+        dockPID = new PIDController(0.01, 0, 0);
         movingPID = new PIDController(0.01, 0, 0);
         turningPID = new PIDController(0.01, 0, 0);
         drivetrain = new HardwareDrivetrain();
