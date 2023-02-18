@@ -123,7 +123,7 @@ public class Arm extends SubsystemBase{
                 else{
                     System.out.print("Top Stopped");
                     intake.setTopWinch(0);
-                    intake.setBottomWinch(bottomSpeed);
+                    intake.setBottomWinch(0);
                 }
             }
         else{
