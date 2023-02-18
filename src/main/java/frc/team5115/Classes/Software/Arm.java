@@ -74,7 +74,7 @@ public class Arm extends SubsystemBase{
         intake.setTurn(turnController.calculate(intake.getArmDeg(), angle));
         //System.out.println("Output Current" + intake.getTurnCurrent());
         //System.out.println("Current in Amps: " + intake.getTurnCurrent() + ", The Estimated Angle: "+  Math.round(getTurnDeg()) + ", and PID Value: "+ turnController.calculate(intake.getArmDeg(), angle));
-        
+        /* 
         double bottomSpeed = bottomWinchController.calculate(intake.getBottomWinchLength(), bottomLength);
         double topSpeed = topWinchController.calculate(intake.getTopWinchLength(), topLength);
         //System.out.println("Top Length: " + intake.getTopWinchLength() + " Bottom Length: " + intake.getBottomWinchLength());
@@ -131,6 +131,7 @@ public class Arm extends SubsystemBase{
         intake.setTopWinch(topSpeed);
         intake.setBottomWinch(bottomSpeed);
         }
+        */
     }
 
     public void turnSetAngle(double angle){

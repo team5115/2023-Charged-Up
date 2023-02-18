@@ -37,8 +37,8 @@ public class RobotContainer {
     }
 
     public void configureButtonBindings() {
-       new JoystickButton(joy, 1).onTrue(new InstantCommand(arm :: In));
-       new JoystickButton(joy, 2).onTrue(new InstantCommand(arm :: Out));
+       //new JoystickButton(joy, 1).onTrue(new InstantCommand(arm :: In));
+       //new JoystickButton(joy, 2).onTrue(new InstantCommand(arm :: Out));
 
        // new JoystickButton(joy, 1).whileTrue(new InstantCommand(arm :: setTopWinchSpeed)).onFalse( new InstantCommand(arm :: stop));
        // new JoystickButton(joy, 2).whileTrue(new InstantCommand(arm :: setNegTopWinchSpeed)).onFalse( new InstantCommand(arm :: stop));

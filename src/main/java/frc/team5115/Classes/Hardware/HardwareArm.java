@@ -4,6 +4,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxRelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.controller.*;
 import edu.wpi.first.math.util.Units;
@@ -34,8 +36,13 @@ public class HardwareArm extends SubsystemBase{
         intakeBottom = new CANSparkMax(6, MotorType.kBrushless);    
         intakeTurn = new CANSparkMax(7, MotorType.kBrushless);  
 
-        intakeBottom.setInverted(true);
+        intakeBottom.setInverted(false);
         intakeTop.setInverted(true);
+
+        intakeTop.setIdleMode(IdleMode.kBrake);
+        intakeBottom.setIdleMode(IdleMode.kBrake);
+        intakeTurn.setIdleMode(IdleMode.kBrake);
+
         
         //intakeTop.setSmartCurrentLimit(40, 40);
         //intakeBottom.setSmartCurrentLimit(40, 40);
@@ -168,7 +175,7 @@ public class HardwareArm extends SubsystemBase{
 public void setEncoders(double Length){
     BottomWinchEncoder.setPosition((7*Length)/((0.75*3.14159)));
     TopWinchEncoder.setPosition((7*Length)/((0.75*3.14159)));
-    TurningEncoder.setPosition(10/(360.0 / (48.0 * 49.0 / 10.0)));
+    TurningEncoder.setPosition(0/(360.0 / (48.0 * 49.0 / 10.0)));
     // TurningEncoder.setPosition(Units.radiansToDegrees(startingAngle)/(360.0 / (48.0 * 49.0 / 10.0)));
 }
 
