@@ -23,7 +23,7 @@ public class DriveUntilDock extends CommandBase {
 
     @Override
     public void execute() {
-        drivetrain.autoDriveForward(0.7);
+        drivetrain.autoDriveForward(0.75);
         System.out.println("hasn't found it yet @ " + drivetrain.getPitchDeg() + " degrees");
     }
 

@@ -8,6 +8,7 @@ public class Dock extends CommandBase{
     private Timer grandTimer;
     private Timer dockedTimer;
     private Drivetrain drivetrain;
+    private double encoderDistanceAtStart;
 
     public Dock(Drivetrain drivetrain) {
         this.drivetrain = drivetrain;
@@ -18,13 +19,14 @@ public class Dock extends CommandBase{
 
     @Override
     public void initialize() {
+        encoderDistanceAtStart = drivetrain.getLeftDistance();
         grandTimer.reset();
     }
 
     @Override
     public void execute() {
         boolean balanced = drivetrain.UpdateDocking();
-        System.out.println("balanced? " + balanced);
+        System.out.println("dist from start: " + (drivetrain.getLeftDistance() - encoderDistanceAtStart));
         if (balanced) {
             dockedTimer.start();
         } else {
@@ -45,8 +47,8 @@ public class Dock extends CommandBase{
             return true;
         }
         // finish if docked for more than the minimum dock time
-        if (dockedTimer.get() > 2) {
-            System.out.println("Successfully docked");
+        if (dockedTimer.get() > 3) {
+            System.out.println("Successfully docked @ " + drivetrain.getPitchDeg());
             return true;
         }
         return false;
