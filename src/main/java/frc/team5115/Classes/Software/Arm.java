@@ -88,7 +88,7 @@ public class Arm extends SubsystemBase{
                     intake.setTopWinch(topSpeed);
                 }
                 else if(topSpeed<0 && bottomSpeed>0){
-                    System.out.print("Both Stopped");
+                    System.out.print("Top Stopped");
                     intake.setTopWinch(0);
                     intake.setBottomWinch(bottomSpeed);
                 }
@@ -106,7 +106,7 @@ public class Arm extends SubsystemBase{
             else if(intake.getBottomWinchLength() - intake.getTopWinchLength() >1){
                 System.out.println("Bottom too far ahead");
                 if(topSpeed< 0 && bottomSpeed<0){
-                    System.out.print("Bottom Stopped");
+                    System.out.print("Top Stopped");
                     intake.setTopWinch(0);
                     intake.setBottomWinch(bottomSpeed);
                 }
@@ -116,14 +116,14 @@ public class Arm extends SubsystemBase{
                     intake.setBottomWinch(bottomSpeed);
                 }
                 else if(topSpeed>0  && bottomSpeed>0){
-                    System.out.print("Top Stopped");
+                    System.out.print("Bottom Stopped");
                     intake.setTopWinch(topSpeed);
                     intake.setBottomWinch(0);
                 }
                 else{
-                    System.out.print("Both Stopped");
+                    System.out.print("Top Stopped");
                     intake.setTopWinch(0);
-                    intake.setBottomWinch(0);
+                    intake.setBottomWinch(bottomSpeed);
                 }
             }
         else{
