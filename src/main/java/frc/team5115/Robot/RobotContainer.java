@@ -27,6 +27,7 @@ public class RobotContainer {
     // private final Arm arm;
     // private final HighCone highCone;
     // private final AutoCommandGroup autoCommandGroup;
+    private boolean drivingEnabled;
 
     public RobotContainer() {
         joy = new Joystick(0);
@@ -44,7 +45,8 @@ public class RobotContainer {
 
     public void configureButtonBindings() {
         new JoystickButton(joy, 1).onTrue(new InstantCommand(drivetrain :: toggleSlowMode));
-        new JoystickButton(joy, 2).onTrue(new InstantCommand(dockSequence :: schedule));
+        new JoystickButton(joy, 2).onTrue(dockSequence);
+        new Trigger(new JoyAxisBoolSupplier(joy, 3, 1.5)).onTrue(new InstantCommand(this :: enableDriving)).onFalse(new InstantCommand(this :: disableDriving));
        //new JoystickButton(joy, 1).whileTrue((highCone)).onFalse( new InstantCommand(arm :: stop));
        // new JoystickButton(joy, 1).whileTrue(new InstantCommand(arm :: setTopWinchSpeed)).onFalse( new InstantCommand(arm :: stop));
        // new JoystickButton(joy, 2).whileTrue(new InstantCommand(arm :: setNegTopWinchSpeed)).onFalse( new InstantCommand(arm :: stop));
@@ -56,6 +58,13 @@ public class RobotContainer {
         //new JoystickButton(joy, 2).onTrue(new InstantCommand(pneum :: close));
         //new JoystickButton( joy, 3).whileTrue(new InstantCommand(intakeMotor :: stop)).onFalse(new InstantCommand(intakeMotor :: stop));
         //new JoystickButton( joy, 4).whileTrue(new InstantCommand(intakeMotor :: stop)).onFalse(new InstantCommand(intakeMotor :: stop));
+    }
+
+    private void enableDriving() {
+        drivingEnabled = true;
+    }
+    private void disableDriving() {
+        drivingEnabled = false;
     }
 
     public void startTeleop(){
@@ -85,8 +94,11 @@ public class RobotContainer {
     public void teleopPeriodic(){
         //drivetrain.UpdateOdometry();
         //arm.updateController();
-        double forward = -joy.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
-        double turn = joy.getRawAxis(JOY_Z_AXIS_ID);
-        drivetrain.TankDrive(forward, turn);
+        if (drivingEnabled) {
+            double forward = -joy.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
+            double turn = joy.getRawAxis(JOY_Z_AXIS_ID);
+            drivetrain.TankDrive(forward, turn);
+        }
+        // System.out.println(drivetrain.getPitchDeg());
     }
 }

@@ -24,6 +24,7 @@ public class Dock extends CommandBase{
     @Override
     public void execute() {
         boolean balanced = drivetrain.UpdateDocking();
+        System.out.println("balanced? " + balanced);
         if (balanced) {
             dockedTimer.start();
         } else {
@@ -44,7 +45,7 @@ public class Dock extends CommandBase{
             return true;
         }
         // finish if docked for more than the minimum dock time
-        if (dockedTimer.get() > 0.5) {
+        if (dockedTimer.get() > 2) {
             System.out.println("Successfully docked");
             return true;
         }

@@ -19,9 +19,9 @@ public class HardwareDrivetrain{
     private final double rightKv = 4.1954;
     private final double rightKa = 0.12313;
 
-    private final double Kp = 2.5979;
-    private final double Ki = 0;
-    private final double Kd = 0;
+    private final double Kp = 0.0;
+    private final double Ki = 0.0;
+    private final double Kd = 0.0;
     // END of testbed values
 
     private final SimpleMotorFeedforward leftFeedForward = new SimpleMotorFeedforward(leftKs, leftKv, leftKa);
@@ -68,7 +68,6 @@ public class HardwareDrivetrain{
      * @param frontRightSpeed the speed of the front right motor
      * @param backLeftSpeed the speed of the back left motor     
      * @param backRightSpeed the speed of the back right motor
-     * @return a reference to an encoder matching the id
      */
     @Deprecated
     public void plugandChugDrive(double frontLeftSpeed, double frontRightSpeed, double backLeftSpeed, double backRightSpeed){
@@ -90,21 +89,13 @@ public class HardwareDrivetrain{
      * 
      * @param leftSpeed the speed for the left motors in meters per second
      * @param rightSpeed the speed for the right motors in meters per second
-     * @param leftAcceleration the feedforward goal for left acceleration
-     * @param rightAcceleration the feedforward goal for right acceleration
      */
     public void plugandFFDrive(double leftSpeed, double rightSpeed) {
         
         double leftVoltage = leftFeedForward.calculate(leftSpeed);
         double rightVoltage = rightFeedForward.calculate(rightSpeed);
-        // leftVoltage += leftPID.calculate(leftEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, leftSpeed);
-        // rightVoltage += rightPID.calculate(rightEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, rightSpeed);
-        // double leftPidPart = leftPID.calculate(leftEncoder.getVelocity(), leftSpeed); 
-        // double rightPidPart = rightPID.calculate(-rightEncoder.getVelocity(), rightSpeed);
-        // leftVoltage += leftPidPart;
-        // rightVoltage += rightPidPart;
-        // System.out.print("Left PID: " + leftPidPart);
-        // System.out.println(" | Right PID: " + rightPidPart);
+        leftVoltage += leftPID.calculate(leftEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, leftSpeed);
+        rightVoltage += rightPID.calculate(rightEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, rightSpeed);
 
         leftVoltage = Math.min(leftVoltage, DRIVE_MOTOR_MAX_VOLTAGE);
         rightVoltage = Math.min(rightVoltage, DRIVE_MOTOR_MAX_VOLTAGE);

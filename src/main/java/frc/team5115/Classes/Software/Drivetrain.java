@@ -51,7 +51,7 @@ public class Drivetrain extends SubsystemBase{
         this.photonVision = photonVision;
         throttle = new ThrottleControl(3, -3, 0.2);
         anglePID = new PIDController(0.0144, 0.0001, 0.0015);
-        dockPID = new PIDController(0.01, 0, 0);
+        dockPID = new PIDController(0.1, 0, 0);
         movingPID = new PIDController(0.01, 0, 0);
         turningPID = new PIDController(0.01, 0, 0);
         drivetrain = new HardwareDrivetrain();
@@ -166,13 +166,15 @@ public class Drivetrain extends SubsystemBase{
 
     /**
      * Drive to attempt a dock and get the pitch to 0
-     * @return if the robot is currently flat and not trying to move
+     * @return if the robot is currently flat
      */
     public boolean UpdateDocking() {
         double pitch = navx.getPitchDeg();
-        double forward = dockPID.calculate(pitch, 0);
-        System.out.println("Would be docking @ " + forward + " m/s");
-        //drivetrain.plugandFFDrive(forward, forward);
+        // PID loop tries to go towards the setpoint, so in general, a positive currentValue and a 0 setpoint will return negative output
+        // this is why it actually runs at the opposite of what the PID loop says
+        double forward = -dockPID.calculate(pitch, 0);
+        System.out.println("Docking @ " + forward + " m/s");
+        drivetrain.plugandFFDrive(forward, forward);
         
         return Math.abs(pitch) < 0.5;
     }
@@ -207,10 +209,11 @@ public class Drivetrain extends SubsystemBase{
     }
 
     /**
-     * Drive forward at 1 m/s
+     * Drive forward at speed m/s
+     * @param speed
      */
-    public void autoDriveForward(){
-        drivetrain.plugandFFDrive(1, 1);
+    public void autoDriveForward(double speed){
+        drivetrain.plugandFFDrive(speed, speed);
     }
 
     @Deprecated
