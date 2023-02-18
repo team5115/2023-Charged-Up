@@ -95,6 +95,5 @@ public class RobotContainer {
         double forward = -joy.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
         double turn = joy.getRawAxis(JOY_Z_AXIS_ID);
         drivetrain.TankDrive(forward, turn);
-        System.out.println(drivetrain.getLeftDistance());
     }
 }
