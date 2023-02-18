@@ -19,12 +19,13 @@ public class DriveUntilDock extends CommandBase {
     public void initialize() {
         timer.reset();
         timer.start();
+        drivetrain.setThrottleEnabled(false);
     }
 
     @Override
     public void execute() {
-        drivetrain.autoDriveForward(0.75);
-        System.out.println("hasn't found it yet @ " + drivetrain.getPitchDeg() + " degrees");
+        drivetrain.autoDrive(0.75);
+        // System.out.println("hasn't found it yet @ " + drivetrain.getPitchDeg() + " degrees");
     }
 
     @Override

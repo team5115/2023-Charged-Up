@@ -7,6 +7,7 @@ public class ThrottleControl{
     private double primaryThrottle;
     private double secondaryThrottle;
     private double slowModeMultiplier;
+    private boolean enabled;
  
     /**
      * Main use is to multiply getThrottle() by an input [-1, 1] to get a value that is adjusted based on throttle and slow-mode.
@@ -20,6 +21,7 @@ public class ThrottleControl{
         this.slowModeMultiplier = slowModeMultiplier;
         isThrottleSwitched = false;
         isSlowModeEnabled = false;
+        enabled = true;
     }
     
     public void toggleThrottle(){
@@ -37,6 +39,10 @@ public class ThrottleControl{
         this.isThrottleSwitched = isThrottleSwitched;
     }
 
+    public void setThrottleEnabled(boolean enable) {
+        enabled = enable;
+    }
+
     public boolean getThrottleSwitched() {
         return isThrottleSwitched;
     }
@@ -46,7 +52,11 @@ public class ThrottleControl{
      */
     public double getThrottle() {
         // look up ternary operator if this doesn't make sense
-        return (isThrottleSwitched ? secondaryThrottle : primaryThrottle) * (isSlowModeEnabled ? slowModeMultiplier : 1);
+        if (enabled) {
+            return (isThrottleSwitched ? secondaryThrottle : primaryThrottle) * (isSlowModeEnabled ? slowModeMultiplier : 1);
+        } else {
+            return 0;
+        }
     }
  
     public String toString(){

@@ -2,8 +2,6 @@ package frc.team5115.Robot;
 
 import static frc.team5115.Constants.*;
 
-import javax.print.Doc;
-
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -46,7 +44,6 @@ public class RobotContainer {
     public void configureButtonBindings() {
         new JoystickButton(joy, 1).onTrue(new InstantCommand(drivetrain :: toggleSlowMode));
         new JoystickButton(joy, 2).onTrue(dockSequence);
-        new JoystickButton(joy, 6).onTrue(new InstantCommand(this :: enableDriving)).onFalse(new InstantCommand(this :: disableDriving));
        //new JoystickButton(joy, 1).whileTrue((highCone)).onFalse( new InstantCommand(arm :: stop));
        // new JoystickButton(joy, 1).whileTrue(new InstantCommand(arm :: setTopWinchSpeed)).onFalse( new InstantCommand(arm :: stop));
        // new JoystickButton(joy, 2).whileTrue(new InstantCommand(arm :: setNegTopWinchSpeed)).onFalse( new InstantCommand(arm :: stop));
@@ -60,10 +57,10 @@ public class RobotContainer {
         //new JoystickButton( joy, 4).whileTrue(new InstantCommand(intakeMotor :: stop)).onFalse(new InstantCommand(intakeMotor :: stop));
     }
 
-    private void enableDriving() {
+    public void enableDriving() {
         drivingEnabled = true;
     }
-    private void disableDriving() {
+    public void disableDriving() {
         drivingEnabled = false;
     }
 
@@ -72,6 +69,7 @@ public class RobotContainer {
         // arm.zeroArm();
         drivetrain.resetNAVx();
         System.out.println("Starting teleop");
+        enableDriving();
     }
 
     public void disabledInit(){
@@ -94,11 +92,9 @@ public class RobotContainer {
     public void teleopPeriodic(){
         //drivetrain.UpdateOdometry();
         //arm.updateController();
-        if (drivingEnabled) {
-            double forward = -joy.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
-            double turn = joy.getRawAxis(JOY_Z_AXIS_ID);
-            drivetrain.TankDrive(forward, turn);
-        }
-        // System.out.println(drivetrain.getPitchDeg());
+        double forward = -joy.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
+        double turn = joy.getRawAxis(JOY_Z_AXIS_ID);
+        drivetrain.TankDrive(forward, turn);
+        System.out.println(drivetrain.getLeftDistance());
     }
 }
