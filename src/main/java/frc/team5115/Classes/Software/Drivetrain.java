@@ -30,7 +30,6 @@ public class Drivetrain extends SubsystemBase{
     public NetworkTableEntry tv;
     private final ThrottleControl throttle;
     private final PIDController anglePID;
-    private final PIDController dockPID;
     private final PIDController movingPID;
     private final PIDController turningPID;
     private final RamseteController ramseteController;
@@ -51,7 +50,7 @@ public class Drivetrain extends SubsystemBase{
         this.photonVision = photonVision;
         throttle = new ThrottleControl(3, -3, 0.2);
         anglePID = new PIDController(0.0144, 0.0001, 0.0015);
-        dockPID = new PIDController(0.01, 0, 0);
+        
         movingPID = new PIDController(0.01, 0, 0);
         turningPID = new PIDController(0.01, 0, 0);
         drivetrain = new HardwareDrivetrain();
@@ -69,11 +68,11 @@ public class Drivetrain extends SubsystemBase{
 
     public double getLeftDistance(){
         return drivetrain.getEncoder(1).getPosition()*NEO_ENCODER_CALIBRATION;
-        }
+    }
 
-        public double getRightDistance(){
-            return drivetrain.getEncoder(2).getPosition()*NEO_ENCODER_CALIBRATION;
-            }
+    public double getRightDistance(){
+        return drivetrain.getEncoder(2).getPosition()*NEO_ENCODER_CALIBRATION;
+    }
 
     public void resetEncoders() {
         drivetrain.resetEncoders();
@@ -85,6 +84,14 @@ public class Drivetrain extends SubsystemBase{
 
     public void toggleSlowMode() {
         throttle.toggleSlowMode();
+    }
+
+    /**
+     * enable or disable throttle. set to false to make throttle.getThrottle() return 0, true for normal function
+     * @param enable true to allow stuff using throttle to move, false will just make getThrottle return 0
+     */    
+    public void setThrottleEnabled(boolean enable) {
+        throttle.setThrottleEnabled(enable);
     }
 
     @Deprecated
@@ -164,19 +171,6 @@ public class Drivetrain extends SubsystemBase{
         return poseEstimator.getEstimatedPosition();
     }
 
-    /**
-     * Drive to attempt a dock and get the pitch to 0
-     * @return if the robot is currently flat and not trying to move
-     */
-    public boolean UpdateDocking() {
-        double pitch = navx.getPitchDeg();
-        double forward = dockPID.calculate(pitch, 0);
-        System.out.println("Would be docking @ " + forward + " m/s");
-        //drivetrain.plugandFFDrive(forward, forward);
-        
-        return Math.abs(pitch) < 0.5;
-    }
-
     public boolean UpdateMoving(double dist, double startleftDist, double startRightDist) {
         double locL = getLeftDistance();
         double forwardL = movingPID.calculate(locL, startleftDist+dist);
@@ -207,10 +201,11 @@ public class Drivetrain extends SubsystemBase{
     }
 
     /**
-     * Drive forward at 1 m/s
+     * Drive forward at speed m/s
+     * @param speed
      */
-    public void autoDriveForward(){
-        drivetrain.plugandFFDrive(1, 1);
+    public void autoDrive(double speed){
+        drivetrain.plugandFFDrive(speed, speed);
     }
 
     @Deprecated
