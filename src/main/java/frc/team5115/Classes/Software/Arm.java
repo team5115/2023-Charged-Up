@@ -13,7 +13,7 @@ public class Arm extends SubsystemBase{
     private double speed = 0.25;
     private PIDController turnController = new PIDController(0.05, 0.0, 0.0);
     private PIDController topWinchController = new PIDController(0.05, 0, 0);
-    private PIDController bottomWinchController = new PIDController(0.0045, 0, 0);
+    private PIDController bottomWinchController = new PIDController(0.05, 0, 0);
 
     public Arm(){
         intake = new HardwareArm();
