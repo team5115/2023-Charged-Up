@@ -7,13 +7,13 @@ import edu.wpi.first.math.controller.PIDController;
 
 public class Arm extends SubsystemBase{
     private HardwareArm intake;
-    private double topLength = 23;
-    private double bottomLength = 23;
+    private double topLength = 26;
+    private double bottomLength = 26;
     private double angle = 40;
     private double speed = 0.25;
-    private PIDController turnController = new PIDController(0.05, 0.0001, 0.02);
-    private PIDController topWinchController = new PIDController(0.075, 0, 0);
-    private PIDController bottomWinchController = new PIDController(0.045, 0, 0);
+    private PIDController turnController = new PIDController(0.05, 0.0, 0.0);
+    private PIDController topWinchController = new PIDController(0.05, 0, 0);
+    private PIDController bottomWinchController = new PIDController(0.0045, 0, 0);
 
     public Arm(){
         intake = new HardwareArm();
@@ -69,17 +69,21 @@ public class Arm extends SubsystemBase{
         System.out.println("out" + bottomLength);
     }
 
+    public void print(){
+        System.out.println("ahh");
+    }
+
     public void turnController(){
         //intake.setTurn(0.10);
         intake.setTurn(turnController.calculate(intake.getArmDeg(), angle));
         //System.out.println("Output Current" + intake.getTurnCurrent());
         //System.out.println("Current in Amps: " + intake.getTurnCurrent() + ", The Estimated Angle: "+  Math.round(getTurnDeg()) + ", and PID Value: "+ turnController.calculate(intake.getArmDeg(), angle));
-        /* 
+        
         double bottomSpeed = bottomWinchController.calculate(intake.getBottomWinchLength(), bottomLength);
         double topSpeed = topWinchController.calculate(intake.getTopWinchLength(), topLength);
         //System.out.println("Top Length: " + intake.getTopWinchLength() + " Bottom Length: " + intake.getBottomWinchLength());
         //System.out.println("Turn Current: " + intake.getTurnCurrent() + " Top Current: " + intake.getTopCurrent() + "  Bottom Current: " + intake.getBottomCurrent() + " Turn Speed: " + turnController.calculate(intake.getArmDeg(), angle));
-        
+        /* 
         if(intake.getTopWinchLength() - intake.getBottomWinchLength()>1){
             System.out.println("Top too far ahead & ");
                 if(topSpeed< 0 && bottomSpeed<0){
@@ -89,7 +93,7 @@ public class Arm extends SubsystemBase{
                 }
                 else if(topSpeed<0 && bottomSpeed>0){
                     System.out.print("Top Stopped");
-                    intake.setTopWinch(0);
+                    intake.setTopWinch(topSpeed);
                     intake.setBottomWinch(bottomSpeed);
                 }
                 else if(topSpeed>0  && bottomSpeed>0){
@@ -127,11 +131,11 @@ public class Arm extends SubsystemBase{
                 }
             }
         else{
-            System.out.println("Everything fine");
+            //System.out.println("Everything fine");
+            */
         intake.setTopWinch(topSpeed);
         intake.setBottomWinch(bottomSpeed);
-        }
-        */
+        //}
     }
 
     public void turnSetAngle(double angle){

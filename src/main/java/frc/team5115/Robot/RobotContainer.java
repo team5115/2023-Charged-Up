@@ -39,10 +39,10 @@ public class RobotContainer {
     }
 
     public void configureButtonBindings() {
-        new JoystickButton(joy, 1).onTrue(new InstantCommand(drivetrain :: toggleSlowMode));
-        new JoystickButton(joy, 2).onTrue(dockSequence);
-        //new JoystickButton(joy, 1).onTrue(new InstantCommand(arm :: In));
-        //new JoystickButton(joy, 2).onTrue(new InstantCommand(arm :: Out));
+        //new JoystickButton(joy, 1).onTrue(new InstantCommand(drivetrain :: toggleSlowMode));
+        //new JoystickButton(joy, 2).onTrue(dockSequence);
+        new JoystickButton(joy, 1).onTrue(new InstantCommand(arm :: In));
+        new JoystickButton(joy, 2).onTrue(new InstantCommand(arm :: Out));
         //new JoystickButton(joy, 1).whileTrue((highCone)).onFalse( new InstantCommand(arm :: stop));
     }
 

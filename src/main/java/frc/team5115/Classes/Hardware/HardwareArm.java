@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.controller.*;
 import edu.wpi.first.math.util.Units;
 
-
 public class HardwareArm extends SubsystemBase{
     private CANSparkMax intakeTop;
     private CANSparkMax intakeBottom;
@@ -18,18 +17,17 @@ public class HardwareArm extends SubsystemBase{
     private RelativeEncoder TurningEncoder;
     private RelativeEncoder TopWinchEncoder;
     private RelativeEncoder BottomWinchEncoder;
-    private final double Ks = 0.16443;
-    private final double Kv = 4.4168;
-    private final double Ka = 0.10645;
-    private final double Kg = 0.4716;
-    private final double startingAngle = -1.4802; //Rads
+    private final double Ks = 0.12655;
+    private final double Kv = 4.4235;
+    private final double Ka = 0.1113;
+    private final double Kg = 0.38644;
     private boolean FF = false;
-    private final ArmFeedforward arm = new ArmFeedforward(Ks, Kg, Kv, Ka);
+    private final ArmFeedforward arm = new ArmFeedforward(Ks, Kg, Kv, Ka); // Rad Calibrated
     //private double encoderConstant = 1/49;
-    private double startingTurnValue = 0; 
+    private double startingTurnValue = -Math.PI/2; //Rads
     private double rotatingGearRatio = ((1/49)*(10/48));
     private double winchGearRatio = 1/7;
-    private double WinchDiameter = 0.75; //Only example of in, easier to determine length of the rod
+    private double WinchDiameter = Units.metersToInches(0.12); 
 
     public HardwareArm(){
         intakeTop = new CANSparkMax(5, MotorType.kBrushless);   
@@ -173,10 +171,10 @@ public class HardwareArm extends SubsystemBase{
     }
 
 public void setEncoders(double Length){
-    BottomWinchEncoder.setPosition((7*Length)/((0.75*3.14159)));
-    TopWinchEncoder.setPosition((7*Length)/((0.75*3.14159)));
+    BottomWinchEncoder.setPosition((7*Length)/((WinchDiameter)));
+    TopWinchEncoder.setPosition((7*Length)/((WinchDiameter)));
     TurningEncoder.setPosition(0/(360.0 / (48.0 * 49.0 / 10.0)));
-    // TurningEncoder.setPosition(Units.radiansToDegrees(startingAngle)/(360.0 / (48.0 * 49.0 / 10.0)));
+    // TurningEncoder.setPosition(Units.radiansToDegrees(startingTurnValue)/(360.0 / (48.0 * 49.0 / 10.0)));
 }
 
     /** 
@@ -184,8 +182,8 @@ public void setEncoders(double Length){
      * @return the length of the Top Winch, converted from rots to in
      */
     public double getTopWinchLength() {
-        System.out.println((getTopEncoder()/7)*(0.75*3.14159));
-        return (getTopEncoder()/7)*(0.75*3.14159);
+        //System.out.println((getTopEncoder()/7)*(WinchDiameter*3.14159));
+        return (getTopEncoder()/7)*(WinchDiameter);
     
     }
 
@@ -194,8 +192,8 @@ public void setEncoders(double Length){
      * @return the length of the Bottm Winch, converted from rots to in
      */
     public double getBottomWinchLength() {
-        System.out.println((getBottomEncoder()/7)*(0.75*3.14159));
-        return (getBottomEncoder()/7)*(0.75*3.14159);
+        //System.out.println((getBottomEncoder()/7)*(WinchDiameter*3.14159));
+        return (getBottomEncoder()/7)*(WinchDiameter);
     }
 
     /** 
@@ -209,7 +207,7 @@ public void setEncoders(double Length){
 
     public double getArmRad(){
         return Math.toRadians(getArmDeg());
-        //return Math.toRadians(getArmDeg() + startingAngle);
+        //return Math.toRadians(getArmDeg() + startingTurnValue);
     }
 
     public double getBCenterOfMass(double length){
