@@ -47,7 +47,10 @@ public class NAVx implements Subsystem {
     public double getPitchDeg() {
         // uses roll because the navx is on the side of the robot -- navx roll is robot pitch
         // getRoll() is negated because tilting up (i.e. front of robot is high) should return a positive value out of this function
-        double angle = ahrs.getRoll() - pitchAtReset;
+        // for sideways mount
+        // double angle = ahrs.getRoll() - pitchAtReset;
+        // for flat mount
+        double angle = ahrs.getPitch() - pitchAtReset;
         if (angle > 180) {
             return -360 + angle;
         }

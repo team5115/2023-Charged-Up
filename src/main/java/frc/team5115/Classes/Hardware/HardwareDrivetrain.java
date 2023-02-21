@@ -8,11 +8,25 @@ import com.revrobotics.SparkMaxRelativeEncoder;
 import edu.wpi.first.math.controller.*;
 
 public class HardwareDrivetrain{
-    private static final double kP = 8.86763;
 
-    private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(kS, kV, kA);
-    private final PIDController leftPID = new PIDController(kP, 0, 0);
-    private final PIDController rightPID = new PIDController(kP, 0, 0);
+    // Testbed feedforward and feedback (pid) values - 6 inch diameter on testbed
+    private final double leftKs = 0.090949;
+    private final double leftKv = 2.783;
+    private final double leftKa = 0.16477;
+    
+    private final double rightKs = 0.099706;
+    private final double rightKv = 2.8314;
+    private final double rightKa = 0.14565;
+
+    private final double Kp = 0; // 3.7203 according to sysid
+    private final double Ki = 0.0;
+    private final double Kd = 0.0;
+    // END of testbed values
+
+    private final SimpleMotorFeedforward leftFeedForward = new SimpleMotorFeedforward(leftKs, leftKv, leftKa);
+    private final SimpleMotorFeedforward rightFeedForward = new SimpleMotorFeedforward(rightKs, rightKv, rightKa);
+    private final PIDController leftPID = new PIDController(Kp, Ki, Kd);
+    private final PIDController rightPID = new PIDController(Kp, Ki, Kd);
 
     private final CANSparkMax frontLeft = new CANSparkMax(FRONT_LEFT_MOTOR_ID, MotorType.kBrushless);
     private final CANSparkMax frontRight = new CANSparkMax(FRONT_RIGHT_MOTOR_ID, MotorType.kBrushless);
@@ -53,7 +67,6 @@ public class HardwareDrivetrain{
      * @param frontRightSpeed the speed of the front right motor
      * @param backLeftSpeed the speed of the back left motor     
      * @param backRightSpeed the speed of the back right motor
-     * @return a reference to an encoder matching the id
      */
     @Deprecated
     public void plugandChugDrive(double frontLeftSpeed, double frontRightSpeed, double backLeftSpeed, double backRightSpeed){
@@ -75,15 +88,13 @@ public class HardwareDrivetrain{
      * 
      * @param leftSpeed the speed for the left motors in meters per second
      * @param rightSpeed the speed for the right motors in meters per second
-     * @param leftAcceleration the feedforward goal for left acceleration
-     * @param rightAcceleration the feedforward goal for right acceleration
      */
     public void plugandFFDrive(double leftSpeed, double rightSpeed) {
         
-        double leftVoltage = feedforward.calculate(leftSpeed);
-        double rightVoltage = feedforward.calculate(rightSpeed);
-        //leftVoltage += leftPID.calculate(leftEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, leftSpeed);
-        //rightVoltage += rightPID.calculate(rightEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, rightSpeed);
+        double leftVoltage = leftFeedForward.calculate(leftSpeed);
+        double rightVoltage = rightFeedForward.calculate(rightSpeed);
+        leftVoltage += leftPID.calculate(leftEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, leftSpeed);
+        rightVoltage += rightPID.calculate(rightEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, rightSpeed);
 
         leftVoltage = Math.min(leftVoltage, DRIVE_MOTOR_MAX_VOLTAGE);
         rightVoltage = Math.min(rightVoltage, DRIVE_MOTOR_MAX_VOLTAGE);
