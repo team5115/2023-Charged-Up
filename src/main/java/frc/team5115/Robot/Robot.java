@@ -1,5 +1,6 @@
 package frc.team5115.Robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -24,7 +25,7 @@ public class Robot extends TimedRobot {
     public void disabledInit() {
         robotContainer.disabledInit();
         robotContainer.stopEverything();
-        //CameraServer.startAutomaticCapture();
+        CameraServer.startAutomaticCapture();
     }
 
     @Override
@@ -43,7 +44,7 @@ public class Robot extends TimedRobot {
 
     public void teleopInit () {
         robotContainer.startTeleop();
-        //CameraServer.startAutomaticCapture();
+        CameraServer.startAutomaticCapture();
     }
     
     public void teleopPeriodic () {
@@ -59,7 +60,7 @@ public class Robot extends TimedRobot {
     }
 
     public void practiceInit(){
-        //CameraServer.startAutomaticCapture();
+        CameraServer.startAutomaticCapture();
 
     }
 

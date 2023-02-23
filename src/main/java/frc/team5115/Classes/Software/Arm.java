@@ -11,7 +11,7 @@ public class Arm extends SubsystemBase{
     private double bottomLength = 26;
     private double angle = 40;
     private double speed = 0.25;
-    private PIDController turnController = new PIDController(0.05, 0.0, 0.0);
+    private PIDController turnController = new PIDController(0.055, 0.0, 0.0);
     private PIDController topWinchController = new PIDController(0.05, 0, 0);
     private PIDController bottomWinchController = new PIDController(0.05, 0, 0);
 
@@ -63,10 +63,16 @@ public class Arm extends SubsystemBase{
         System.out.println("in: " + bottomLength);
     }
 
+    //He was wrong
     public void Out(){
         bottomLength = 20;      
         topLength = 20;  
         System.out.println("out" + bottomLength);
+    }
+
+    public void Reset(){
+        bottomLength = 26;
+        topLength = 26;
     }
 
     public void print(){
@@ -142,14 +148,18 @@ public class Arm extends SubsystemBase{
         this.angle = angle;
     }
 
-    public void setArmIn(){
-        angle = 30;
-        System.out.println("in");
+    public void setArmUp(){
+        angle = 55;
+        System.out.println("up");
     }
 
-    public void setArmOut(){
-        angle = 15;
-        System.out.println("out");
+    public void setArmDown(){
+        angle = 20;
+        System.out.println("down");
+    }
+
+    public void setArmStart(){
+        angle = 3;
     }
 
     public void updateController(){

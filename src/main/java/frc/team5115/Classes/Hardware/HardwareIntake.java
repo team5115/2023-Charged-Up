@@ -23,12 +23,17 @@ public class HardwareIntake extends SubsystemBase{
         intake.set(Value.kForward);
     }
 
-    public void TurnLeftMotor(){
-        intakeL.set(ControlMode.PercentOutput, -0.3);
-        intakeR.set(ControlMode.PercentOutput,-0.3);
+    public void TurnIn(){
+        intakeL.set(ControlMode.PercentOutput, +0.3);
+        intakeR.set(ControlMode.PercentOutput, +0.3);
     }
 
-    public void StopLeftMotor(){
+    public void TurnOut(){
+        intakeL.set(ControlMode.PercentOutput, -0.3);
+        intakeR.set(ControlMode.PercentOutput, -0.3);
+    }
+
+    public void StopMotor(){
         intakeL.set(ControlMode.PercentOutput, 0);
         intakeR.set(ControlMode.PercentOutput,0);
     }

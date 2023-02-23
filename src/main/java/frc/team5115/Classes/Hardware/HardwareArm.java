@@ -24,7 +24,7 @@ public class HardwareArm extends SubsystemBase{
     private boolean FF = false;
     private final ArmFeedforward arm = new ArmFeedforward(Ks, Kg, Kv, Ka); // Rad Calibrated
     //private double encoderConstant = 1/49;
-    private double startingTurnValue = -Math.PI/2; //Rads
+    private double startingTurnValue = Units.degreesToRadians(-40); //Rads
     private double rotatingGearRatio = ((1/49)*(10/48));
     private double winchGearRatio = 1/7;
     private double WinchDiameter = Units.metersToInches(0.12); 
@@ -97,8 +97,8 @@ public class HardwareArm extends SubsystemBase{
         if(speed>.37){
             speed = 0.37;
         }
-        else if(speed<0){
-            speed = 0;
+        else if(speed<-0.1){
+            speed = -0.1;
         }
         if(FF){
             intakeTurn.setVoltage(arm.calculate((getArmRad()), speed));

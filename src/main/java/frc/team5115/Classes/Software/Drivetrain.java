@@ -96,26 +96,20 @@ public class Drivetrain extends SubsystemBase{
 
     @Deprecated
     public void TankDriveOld(double forward, double turn){
-        if(forward>0.4){
-            forward = 0.4;
-        }
-
-        else if(forward<0){
-            forward = 0;
-        }
-
-        if(turn>0.4){
-            turn = 0.4;
-        }
-        else if(turn < -0.4){
-            turn = -0.4;
-        }
 
         leftSpeed = (forward + turn);
         rightSpeed = (forward - turn);
-
+        
+        if(leftSpeed > 1){
+            leftSpeed = leftSpeed/leftSpeed;
+            rightSpeed = rightSpeed/leftSpeed;
+        }
+        else if (rightSpeed > 1){
+            rightSpeed = rightSpeed/rightSpeed;
+            leftSpeed = leftSpeed/rightSpeed;
+        }
         //System.out.println(leftSpeed*12);
-        drivetrain.PlugandVoltDrive(leftSpeed*12, rightSpeed*12, leftSpeed*12, rightSpeed*12);
+        drivetrain.plugandChugDrive(leftSpeed, rightSpeed, leftSpeed, rightSpeed*12);
     }
 
     /**
@@ -124,19 +118,34 @@ public class Drivetrain extends SubsystemBase{
      * @param turn is for turning right/left: positive is right, negative is left
      */
     public void TankDrive(double forward, double turn) { 
-        if (throttle.getThrottleSwitched()) {
-            // keep the turning from being switched by throttle switch by switching it back
-            turn = -turn;
-        }
         leftSpeed = (forward + turn);
         rightSpeed = (forward - turn);
 
+        if(leftSpeed > 1){
+            leftSpeed = leftSpeed/leftSpeed;
+            rightSpeed = rightSpeed/leftSpeed;
+        }
+        else if (rightSpeed > 1){
+            rightSpeed = rightSpeed/rightSpeed;
+            leftSpeed = leftSpeed/rightSpeed;
+        }
         leftSpeed *= throttle.getThrottle();
         rightSpeed *= throttle.getThrottle();
-
         drivetrain.plugandFFDrive(leftSpeed, rightSpeed);
     }
 
+    private double[] normalizeSpeeds(double speed1, double speed2) {
+        if(speed1 > 1){
+            speed1 = speed1/speed1;
+            speed2 = speed2/speed1;
+        }
+        else if (speed2 > 1){
+            speed2 = speed2/speed2;
+            speed1 = speed1/speed2;
+        }
+        return new double[] {speed1, speed2};
+    }
+    
     @Deprecated
     public void TankDriveToAngle(double angleDegrees) { 
         double rotationDegrees = navx.getYawDeg();
