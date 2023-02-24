@@ -11,9 +11,9 @@ public class MiddleCone extends ParallelCommandGroup {
   public MiddleCone(Arm intake){
       this.intake = intake;
       addCommands(
-        new IntakeExtend(intake, 0),
+        new IntakeExtend(intake, 0, 0),
         new IntakeTurn(intake, 0),
-        new IntakeExtend(intake, 0)
+        new IntakeExtend(intake, 0, 0)
       );
     }
 

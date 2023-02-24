@@ -4,6 +4,9 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team5115.Classes.Hardware.HardwareArm;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 public class Arm extends SubsystemBase{
     private HardwareArm intake;
@@ -11,9 +14,13 @@ public class Arm extends SubsystemBase{
     private double bottomLength = 26;
     private double angle = 40;
     private double speed = 0.25;
+    private ShuffleboardTab tab = Shuffleboard.getTab("SmartDashboard");
+    private GenericEntry topKp = tab.add("topKp", 0.05).getEntry();
+    private GenericEntry bottomKp = tab.add("bottomKp", 0.065).getEntry();
+    private GenericEntry topAngle = tab.add("topAngle", 40).getEntry();
     private PIDController turnController = new PIDController(0.05, 0.0, 0.0);
-    private PIDController topWinchController = new PIDController(0.05, 0, 0);
-    private PIDController bottomWinchController = new PIDController(0.05, 0, 0);
+    private PIDController topWinchController = new PIDController(topKp.getDouble(0.05), 0, 0);
+    private PIDController bottomWinchController = new PIDController(bottomKp.getDouble(0.05), 0, 0);
 
     public Arm(){
         intake = new HardwareArm();
@@ -58,20 +65,20 @@ public class Arm extends SubsystemBase{
     }
 
     public void In(){
-        bottomLength = 10;      
-        topLength = 10;  
+        bottomLength = 1;      
+        topLength = 0.5;  
         System.out.println("in: " + bottomLength);
     }
 
     //He was wrong
     public void Out(){
-        bottomLength = 20;      
+        bottomLength = 21;      
         topLength = 20;  
         System.out.println("out" + bottomLength);
     }
 
     public void Reset(){
-        bottomLength = 26;
+        bottomLength = 26.25;
         topLength = 26;
     }
 
@@ -88,9 +95,9 @@ public class Arm extends SubsystemBase{
         double bottomSpeed = bottomWinchController.calculate(intake.getBottomWinchLength(), bottomLength);
         double topSpeed = topWinchController.calculate(intake.getTopWinchLength(), topLength);
         //System.out.println("Top Length: " + intake.getTopWinchLength() + " Bottom Length: " + intake.getBottomWinchLength());
-        //System.out.println("Turn Current: " + intake.getTurnCurrent() + " Top Current: " + intake.getTopCurrent() + "  Bottom Current: " + intake.getBottomCurrent() + " Turn Speed: " + turnController.calculate(intake.getArmDeg(), angle));
+        System.out.println("Top Current: " + intake.getTopCurrent() + "  Bottom Current: " + intake.getBottomCurrent() + " Turn Speed: " + turnController.calculate(intake.getArmDeg(), angle));
         /* 
-        if(intake.getTopWinchLength() - intake.getBottomWinchLength()>1){
+        if(intake.getTopWinchLength() - intake.getBottomWinchLength()>0.5){
             System.out.println("Top too far ahead & ");
                 if(topSpeed< 0 && bottomSpeed<0){
                     System.out.print("Bottom Stopped");
@@ -103,7 +110,7 @@ public class Arm extends SubsystemBase{
                     intake.setBottomWinch(bottomSpeed);
                 }
                 else if(topSpeed>0  && bottomSpeed>0){
-                    System.out.print("Top Stopped");
+                    System.out.print("uggg Stopped");
                     intake.setTopWinch(0);
                     intake.setBottomWinch(bottomSpeed);
                 }
@@ -113,7 +120,7 @@ public class Arm extends SubsystemBase{
                     intake.setBottomWinch(bottomSpeed);
                 }
             }
-            else if(intake.getBottomWinchLength() - intake.getTopWinchLength() >1){
+            else if(intake.getBottomWinchLength() - intake.getTopWinchLength() >0.5){
                 System.out.println("Bottom too far ahead");
                 if(topSpeed< 0 && bottomSpeed<0){
                     System.out.print("Top Stopped");
@@ -132,8 +139,8 @@ public class Arm extends SubsystemBase{
                 }
                 else{
                     System.out.print("Top Stopped");
-                    intake.setTopWinch(0);
-                    intake.setBottomWinch(0);
+                    intake.setTopWinch(topSpeed);
+                    intake.setBottomWinch(bottomSpeed);
                 }
             }
         else{
@@ -149,7 +156,7 @@ public class Arm extends SubsystemBase{
     }
 
     public void setArmUp(){
-        angle = 40;
+        angle = topAngle.getDouble(40);
         System.out.println("up");
     }
 

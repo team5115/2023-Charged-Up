@@ -11,7 +11,7 @@ public class Resting extends ParallelCommandGroup {
   public Resting(Arm intake){
       this.intake = intake;
       addCommands(
-        new IntakeExtend(intake, 0),
+        new IntakeExtend(intake, 0, 0),
         new IntakeTurn(intake, 0)
           );
     }

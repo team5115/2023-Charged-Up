@@ -100,16 +100,16 @@ public class Drivetrain extends SubsystemBase{
         leftSpeed = (forward + turn);
         rightSpeed = (forward - turn);
         
-        if(leftSpeed > 1){
-            leftSpeed = leftSpeed/leftSpeed;
-            rightSpeed = rightSpeed/leftSpeed;
+        if(Math.abs(leftSpeed) > 1){
+            leftSpeed = leftSpeed/Math.abs(leftSpeed);
+            rightSpeed = rightSpeed/Math.abs(leftSpeed);
         }
-        else if (rightSpeed > 1){
-            rightSpeed = rightSpeed/rightSpeed;
-            leftSpeed = leftSpeed/rightSpeed;
+        else if (Math.abs(rightSpeed) > 1){
+            rightSpeed = rightSpeed/Math.abs(rightSpeed);
+            leftSpeed = leftSpeed/Math.abs(rightSpeed);
         }
         //System.out.println(leftSpeed*12);
-        drivetrain.plugandChugDrive(leftSpeed, rightSpeed, leftSpeed, rightSpeed*12);
+        drivetrain.plugandChugDrive(leftSpeed, rightSpeed, leftSpeed, rightSpeed);
     }
 
     /**

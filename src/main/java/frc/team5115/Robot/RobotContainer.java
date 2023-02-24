@@ -16,14 +16,20 @@ import frc.team5115.Classes.Software.Drivetrain;
 import frc.team5115.Classes.Software.PhotonVision;
 import frc.team5115.Commands.Auto.AutoCommandGroup;
 import frc.team5115.Commands.Auto.DockAuto.DockCommandGroup;
+import frc.team5115.Commands.Intake.RealExtend;
 import frc.team5115.Commands.Intake.CombinedIntakeCommands.HighCone;
 import frc.team5115.Commands.Intake.CombinedIntakeCommands.HighCube;
 import frc.team5115.Commands.Intake.CombinedIntakeCommands.MiddleCone;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team5115.Commands.Intake.CombinedIntakeCommands.MiddleCube;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 public class RobotContainer {
     private final Timer timer;
-    private final Joystick joy;
+    private final Joystick joy1;
+    private final Joystick joy2;
     private final PhotonVision photonVision;
     private final Drivetrain drivetrain;
     private final HardwareIntake intake;
@@ -37,7 +43,9 @@ public class RobotContainer {
     // private final MiddleCube middleCube;
 
     public RobotContainer() {
-        joy = new Joystick(0);
+        joy1 = new Joystick(0);
+        joy2 = new Joystick(1);
+
         photonVision = new PhotonVision();
         drivetrain = new Drivetrain(photonVision);
         intake = new HardwareIntake();
@@ -52,21 +60,34 @@ public class RobotContainer {
         dockSequence = new DockCommandGroup(drivetrain);
         timer = new Timer();
         timer.reset();
+        
         configureButtonBindings();
     }
 
     public void configureButtonBindings() {
         //new JoystickButton(joy, 1).onTrue(new InstantCommand(drivetrain :: toggleSlowMode));
         //new JoystickButton(joy, 2).onTrue(dockSequence);
-        new JoystickButton(joy, 1).onTrue(new InstantCommand(arm :: In));
-        new JoystickButton(joy, 2).onTrue(new InstantCommand(arm :: Out));
-        new JoystickButton(joy, 3).onTrue(new InstantCommand(arm :: setArmUp));
-        new JoystickButton(joy, 4).onTrue(new InstantCommand(arm :: setArmDown));
-        new JoystickButton(joy, 5).onTrue(new InstantCommand(intake :: TurnOut)).onFalse(new InstantCommand(intake :: StopMotor));
-        new JoystickButton(joy, 6).onTrue(new InstantCommand(intake :: TurnIn)).onFalse(new InstantCommand(intake :: StopMotor));
-        new JoystickButton(joy, 7).onTrue(new InstantCommand(arm :: Reset));
-        new JoystickButton(joy, 8).onTrue(new InstantCommand(arm :: setArmStart));
+        //new JoystickButton(joy1, 1).onTrue(new InstantCommand(arm :: In));
+        //new JoystickButton(joy1, 2).onTrue(new InstantCommand(arm :: Out));
+        new JoystickButton(joy1, 1).onTrue(new RealExtend(arm, 0));
+        new JoystickButton(joy1, 2).onTrue(new RealExtend(arm, 26));
+        new JoystickButton(joy1, 3).onTrue(new InstantCommand(arm :: setArmUp));
+        new JoystickButton(joy1, 4).onTrue(new InstantCommand(arm :: setArmDown));
+        new JoystickButton(joy1, 5).onTrue(new InstantCommand(intake :: TurnOut)).onFalse(new InstantCommand(intake :: StopMotor));
+        new JoystickButton(joy1, 6).onTrue(new InstantCommand(intake :: TurnIn)).onFalse(new InstantCommand(intake :: StopMotor));
+        new JoystickButton(joy1, 7).onTrue(new InstantCommand(arm :: Reset));
+        new JoystickButton(joy1, 8).onTrue(new InstantCommand(arm :: setArmStart));
+        /* 
+        new JoystickButton(joy2, 1).onTrue(new InstantCommand(arm :: In));
+        new JoystickButton(joy2, 2).onTrue(new InstantCommand(arm :: Out));
+        new JoystickButton(joy2, 3).onTrue(new InstantCommand(arm :: setArmUp));
+        new JoystickButton(joy2, 4).onTrue(new InstantCommand(arm :: setArmDown));
+        new JoystickButton(joy2, 5).onTrue(new InstantCommand(intake :: TurnOut)).onFalse(new InstantCommand(intake :: StopMotor));
+        new JoystickButton(joy2, 6).onTrue(new InstantCommand(intake :: TurnIn)).onFalse(new InstantCommand(intake :: StopMotor));
+        new JoystickButton(joy2, 7).onTrue(new InstantCommand(arm :: Reset));
+        new JoystickButton(joy2, 8).onTrue(new InstantCommand(arm :: setArmStart));
 
+        */
         // BooleanSupplier leftTrigger = new JoyAxisBoolSupplier(joy, 2, 1.5);
         // BooleanSupplier rightTrigger = new JoyAxisBoolSupplier(joy, 3, 1.5);
         // new Trigger(leftTrigger).onTrue((highCube));
@@ -97,14 +118,14 @@ public class RobotContainer {
 
     public void autoPeriod(){
        //drivetrain.UpdateOdometry();
-       arm.updateController();
+       //arm.updateController();
     }
 
     public void teleopPeriodic(){
         //drivetrain.UpdateOdometry();
         arm.updateController();
-        double forward = -joy.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
-        double turn = joy.getRawAxis(JOY_Z_AXIS_ID);
-        drivetrain.TankDriveOld(forward, turn);
+        double forward = -joy1.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
+        double turn = joy1.getRawAxis(JOY_Z_AXIS_ID);
+        //drivetrain.TankDriveOld(forward, turn);
     }
 }

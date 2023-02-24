@@ -84,7 +84,7 @@ public class HardwareArm extends SubsystemBase{
         else if(speed<-0.5){
             speed = -0.5;
         }
-        intakeBottom.set(speed);
+        intakeBottom.set(speed + 0.04);
     }
 
     public void setTurn(double speed){
