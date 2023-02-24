@@ -109,9 +109,9 @@ public class HardwareArm extends SubsystemBase{
     }
 
     public void stop(){
-        //setTopWinch(0);
-        //setBottomWinch(0);
-        //setTurn(0);
+        setTopWinch(0);
+        setBottomWinch(0);
+        setTurn(0);
     }
     
     public double getTurnCurrent(){
@@ -170,10 +170,10 @@ public class HardwareArm extends SubsystemBase{
         TurningEncoder.setPosition(0);
     }
 
-public void setEncoders(double Length){
+public void setEncoders(double Length, double angle){
     BottomWinchEncoder.setPosition((7*Length)/((WinchDiameter)));
     TopWinchEncoder.setPosition((7*Length)/((WinchDiameter)));
-    TurningEncoder.setPosition(0/(360.0 / (48.0 * 49.0 / 10.0)));
+    TurningEncoder.setPosition(angle/(360.0 / (48.0 * 49.0 / 10.0)));
     // TurningEncoder.setPosition(Units.radiansToDegrees(startingTurnValue)/(360.0 / (48.0 * 49.0 / 10.0)));
 }
 

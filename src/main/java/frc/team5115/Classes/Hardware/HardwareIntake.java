@@ -20,17 +20,19 @@ public class HardwareIntake extends SubsystemBase{
     }
 
     public void open(){
-        intake.set(Value.kForward);
+        intake.set(Value.kReverse);
     }
 
     public void TurnIn(){
         intakeL.set(ControlMode.PercentOutput, +0.7);
         intakeR.set(ControlMode.PercentOutput, +0.7);
+        open();
     }
 
     public void TurnOut(){
         intakeL.set(ControlMode.PercentOutput, -0.7);
         intakeR.set(ControlMode.PercentOutput, -0.7);
+        close();
     }
 
     public void StopMotor(){
@@ -39,7 +41,7 @@ public class HardwareIntake extends SubsystemBase{
     }
 
     public void close(){
-        intake.set(Value.kReverse);
+        intake.set(Value.kForward);
     }
     
 }
