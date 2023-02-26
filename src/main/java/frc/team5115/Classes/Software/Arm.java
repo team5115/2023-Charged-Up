@@ -17,11 +17,11 @@ public class Arm extends SubsystemBase{
     private double speed = 0.25;
     private ShuffleboardTab tab = Shuffleboard.getTab("SmartDashboard");
     private GenericEntry topKp = tab.add("topKp", 0.05).getEntry();
-    private GenericEntry bottomKp = tab.add("bottomKp", 0.065).getEntry();
+    private GenericEntry bottomKp = tab.add("bottomKp", 0.05).getEntry();
     private GenericEntry topAngle = tab.add("topAngle", 0).getEntry();
     private PIDController turnController = new PIDController(0.05, 0.0, 0.0);
     private PIDController topWinchController = new PIDController(topKp.getDouble(0.05), 0, 0);
-    private PIDController bottomWinchController = new PIDController(bottomKp.getDouble(0.065), 0, 0);
+    private PIDController bottomWinchController = new PIDController(bottomKp.getDouble(0.05), 0, 0);
     public boolean armcontrol = false;
 
     public Arm(HardwareArm x){
@@ -97,50 +97,50 @@ public class Arm extends SubsystemBase{
         double bottomSpeed = bottomWinchController.calculate(intake.getBottomWinchLength(), bottomLength);
         double topSpeed = topWinchController.calculate(intake.getTopWinchLength(), topLength);
         //System.out.println("Top Length: " + intake.getTopWinchLength() + " Bottom Length: " + intake.getBottomWinchLength());
-        System.out.println("Top Current: " + intake.getTopCurrent() + "  Bottom Current: " + intake.getBottomCurrent() + " Turn Speed: " + turnController.calculate(intake.getArmDeg(), angle));
+        //System.out.println("Top Current: " + intake.getTopCurrent() + "  Bottom Current: " + intake.getBottomCurrent() + " Turn Speed: " + turnController.calculate(intake.getArmDeg(), angle));
         /* 
         if(intake.getTopWinchLength() - intake.getBottomWinchLength()>0.5){
-            System.out.println("Top too far ahead & ");
+            System.out.print("Top too far ahead & ");
                 if(topSpeed< 0 && bottomSpeed<0){
-                    System.out.print("Bottom Stopped");
+                    System.out.println("Bottom Stopped");
                     intake.setBottomWinch(0);
                     intake.setTopWinch(topSpeed);
                 }
                 else if(topSpeed<0 && bottomSpeed>0){
-                    System.out.print("Top Stopped");
+                    System.out.println("Neither Stopped");
                     intake.setTopWinch(topSpeed);
                     intake.setBottomWinch(bottomSpeed);
                 }
                 else if(topSpeed>0  && bottomSpeed>0){
-                    System.out.print("uggg Stopped");
+                    System.out.println("top Stopped");
                     intake.setTopWinch(0);
                     intake.setBottomWinch(bottomSpeed);
                 }
                 else{
-                    System.out.print("Neither Stopped");
+                    System.out.println("none Stopped");
                     intake.setTopWinch(topSpeed);
                     intake.setBottomWinch(bottomSpeed);
                 }
             }
             else if(intake.getBottomWinchLength() - intake.getTopWinchLength() >0.5){
-                System.out.println("Bottom too far ahead");
+                System.out.print("Bottom too far ahead");
                 if(topSpeed< 0 && bottomSpeed<0){
-                    System.out.print("Top Stopped");
+                    System.out.println("Top Stopped");
                     intake.setTopWinch(0);
                     intake.setBottomWinch(bottomSpeed);
                 }
                 else if(topSpeed>0 && bottomSpeed<0){
-                    System.out.print("Neither Stopped");
+                    System.out.println("Neither Stopped");
                     intake.setTopWinch(topSpeed);
                     intake.setBottomWinch(bottomSpeed);
                 }
                 else if(topSpeed>0  && bottomSpeed>0){
-                    System.out.print("Bottom Stopped");
+                    System.out.println("Bottom Stopped");
                     intake.setTopWinch(topSpeed);
                     intake.setBottomWinch(0);
                 }
                 else{
-                    System.out.print("Top Stopped");
+                    System.out.println("none Stopped");
                     intake.setTopWinch(topSpeed);
                     intake.setBottomWinch(bottomSpeed);
                 }
@@ -159,7 +159,7 @@ public class Arm extends SubsystemBase{
     }
 
     public void setArmUp(){
-        angle = 17;
+        angle = 20;
         System.out.println("up");
     }
 

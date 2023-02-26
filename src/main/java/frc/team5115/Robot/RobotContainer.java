@@ -94,6 +94,8 @@ public class RobotContainer {
         new JoystickButton(joy2, 6).onTrue(new InstantCommand(intake :: TurnIn)).onFalse(new InstantCommand(intake :: StopMotor));
         new JoystickButton(joy2, 7).onTrue(new InstantCommand(arm :: Reset));
         new JoystickButton(joy2, 8).onTrue(new InstantCommand(arm :: setArmStart));
+        new JoystickButton(joy1, 9).onTrue(dockSequence);
+
 
         
         // BooleanSupplier leftTrigger = new JoyAxisBoolSupplier(joy, 2, 0.5);

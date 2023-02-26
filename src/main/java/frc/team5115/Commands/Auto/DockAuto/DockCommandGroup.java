@@ -9,7 +9,7 @@ public class DockCommandGroup extends SequentialCommandGroup {
     public DockCommandGroup(Drivetrain drivetrain) {
         this.drivetrain = drivetrain;
         addCommands(
-            new DriveUntilDock(drivetrain, 8),
+            new DriveUntilDock(drivetrain, 2),
             new Dock(drivetrain)
         );
     }
