@@ -21,7 +21,7 @@ public class Arm extends SubsystemBase{
     private GenericEntry topAngle = tab.add("topAngle", 0).getEntry();
     private PIDController turnController = new PIDController(0.05, 0.0, 0.0);
     private PIDController topWinchController = new PIDController(topKp.getDouble(0.05), 0, 0);
-    private PIDController bottomWinchController = new PIDController(bottomKp.getDouble(0.05), 0, 0);
+    private PIDController bottomWinchController = new PIDController(bottomKp.getDouble(0.065), 0, 0);
     public boolean armcontrol = false;
 
     public Arm(HardwareArm x){
@@ -159,7 +159,7 @@ public class Arm extends SubsystemBase{
     }
 
     public void setArmUp(){
-        angle = 10;
+        angle = 17;
         System.out.println("up");
     }
 

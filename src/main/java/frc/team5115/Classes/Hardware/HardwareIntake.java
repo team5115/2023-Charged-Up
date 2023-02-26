@@ -15,6 +15,10 @@ public class HardwareIntake extends SubsystemBase{
     //PCM IS 10 this season YOU HAVE TO LABEL THE MODULE/CAN ID in everything you instantiate
 
     public HardwareIntake(){
+        intakeL.configPeakCurrentLimit(35);
+        intakeL.enableCurrentLimit(true);
+        intakeR.configPeakCurrentLimit(35);
+        intakeR.enableCurrentLimit(true);
         pcm = new PneumaticsControlModule(10);
         intake = new DoubleSolenoid(10, PneumaticsModuleType.CTREPCM, 0, 1);
     }
@@ -24,13 +28,13 @@ public class HardwareIntake extends SubsystemBase{
     }
 
     public void TurnIn(){
-        intakeL.set(ControlMode.PercentOutput, +0.7);
-        intakeR.set(ControlMode.PercentOutput, +0.7);
+        intakeL.set(ControlMode.PercentOutput, +0.1);
+        intakeR.set(ControlMode.PercentOutput, +0.1);
     }
 
     public void TurnOut(){
-        intakeL.set(ControlMode.PercentOutput, -0.7);
-        intakeR.set(ControlMode.PercentOutput, -0.7);
+        intakeL.set(ControlMode.PercentOutput, -0.55);
+        intakeR.set(ControlMode.PercentOutput, -0.55);
     }
 
     public void StopMotor(){
