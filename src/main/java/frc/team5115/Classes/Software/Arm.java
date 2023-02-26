@@ -159,12 +159,12 @@ public class Arm extends SubsystemBase{
     }
 
     public void setArmUp(){
-        angle = topAngle.getDouble(0);
+        angle = 10;
         System.out.println("up");
     }
 
     public void setArmDown(){
-        angle = -20;
+        angle = -40;
         System.out.println("down");
     }
 

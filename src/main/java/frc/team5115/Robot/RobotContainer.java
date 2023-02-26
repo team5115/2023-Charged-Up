@@ -75,6 +75,7 @@ public class RobotContainer {
         //new JoystickButton(joy, 2).onTrue(dockSequence);
         //new JoystickButton(joy1, 1).onTrue(new InstantCommand(arm :: In));
         //new JoystickButton(joy1, 2).onTrue(new InstantCommand(arm :: Out));
+        /* 
         new JoystickButton(joy1, 1).onTrue(new RealExtend(arm, 0));
         new JoystickButton(joy1, 2).onTrue(new RealExtend(arm, 26));
         new JoystickButton(joy1, 3).onTrue(new InstantCommand(arm :: setArmUp));
@@ -83,7 +84,8 @@ public class RobotContainer {
         new JoystickButton(joy1, 6).onTrue(new InstantCommand(intake :: TurnIn)).onFalse(new InstantCommand(intake :: StopMotor));
         new JoystickButton(joy1, 7).onTrue(new InstantCommand(arm :: moveTop));
         new JoystickButton(joy1, 8).onTrue(new InstantCommand(arm :: moveBottom));
-        /* 
+        */
+        
         new JoystickButton(joy2, 1).onTrue(new InstantCommand(arm :: In));
         new JoystickButton(joy2, 2).onTrue(new InstantCommand(arm :: Out));
         new JoystickButton(joy2, 3).onTrue(new InstantCommand(arm :: setArmUp));
@@ -93,7 +95,7 @@ public class RobotContainer {
         new JoystickButton(joy2, 7).onTrue(new InstantCommand(arm :: Reset));
         new JoystickButton(joy2, 8).onTrue(new InstantCommand(arm :: setArmStart));
 
-        */
+        
         // BooleanSupplier leftTrigger = new JoyAxisBoolSupplier(joy, 2, 0.5);
         // BooleanSupplier rightTrigger = new JoyAxisBoolSupplier(joy, 3, 0.5);
         // new Trigger(leftTrigger).onTrue((highCube));
@@ -103,6 +105,7 @@ public class RobotContainer {
     }
 
     public void startTeleop(){
+        arm.armcontrol = false;
         if(autoCommandGroup != null) autoCommandGroup.cancel();
         // arm.zeroArm();
         //digitalOutput.set(true);
@@ -133,6 +136,6 @@ public class RobotContainer {
         if(arm.armcontrol) arm.updateController();
         double forward = -joy1.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
         double turn = joy1.getRawAxis(JOY_Z_AXIS_ID);
-        //drivetrain.TankDriveOld(forward, turn);
+        drivetrain.TankDrive(forward, turn);
     }
 }
