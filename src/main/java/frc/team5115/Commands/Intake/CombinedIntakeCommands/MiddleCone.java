@@ -6,15 +6,14 @@ import frc.team5115.Commands.Intake.RawIntakeCommands.IntakeExtend;
 import frc.team5115.Commands.Intake.RawIntakeCommands.IntakeTurn;
 
 public class MiddleCone extends ParallelCommandGroup {
-  Arm intake;
+    Arm intake;
 
-  public MiddleCone(Arm intake){
-      this.intake = intake;
-      addCommands(
-        new IntakeExtend(intake, 0, 0),
-        new IntakeTurn(intake, 0),
-        new IntakeExtend(intake, 0, 0)
-      );
+    public MiddleCone(Arm intake){
+        this.intake = intake;
+        addCommands(
+            new IntakeExtend(intake, 0, 0),
+            new IntakeTurn(intake, 0),
+            new IntakeExtend(intake, 0, 0)
+        );
     }
-
 }

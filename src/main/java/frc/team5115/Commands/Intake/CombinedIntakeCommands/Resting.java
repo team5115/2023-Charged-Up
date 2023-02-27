@@ -6,14 +6,13 @@ import frc.team5115.Commands.Intake.RawIntakeCommands.IntakeExtend;
 import frc.team5115.Commands.Intake.RawIntakeCommands.IntakeTurn;
 
 public class Resting extends ParallelCommandGroup {
-  Arm intake;
+    Arm intake;
 
-  public Resting(Arm intake){
-      this.intake = intake;
-      addCommands(
-        new IntakeExtend(intake, 0, 0),
-        new IntakeTurn(intake, 0)
-          );
+    public Resting(Arm intake){
+        this.intake = intake;
+        addCommands(
+            new IntakeExtend(intake, 0, 0),
+            new IntakeTurn(intake, 0)
+        );
     }
-
 }

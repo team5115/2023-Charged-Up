@@ -6,15 +6,14 @@ import frc.team5115.Commands.Intake.RawIntakeCommands.IntakeExtend;
 import frc.team5115.Commands.Intake.RawIntakeCommands.IntakeTurn;
 
 public class MiddleCube extends ParallelCommandGroup {
-  Arm intake;
+    Arm intake;
 
-  public MiddleCube(Arm intake){
-      this.intake = intake;
-      addCommands(
-        new IntakeExtend(intake, 0, 0),
-        new IntakeTurn(intake, 0),
-        new IntakeExtend(intake, 0, 0)
-      );
+    public MiddleCube(Arm intake){
+        this.intake = intake;
+        addCommands(
+            new IntakeExtend(intake, 0, 0),
+            new IntakeTurn(intake, 0),
+            new IntakeExtend(intake, 0, 0)
+        );
     }
-
 }

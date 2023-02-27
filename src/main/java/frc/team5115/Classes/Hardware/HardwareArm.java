@@ -21,7 +21,7 @@ public class HardwareArm extends SubsystemBase{
     private final double Kv = 4.4235;
     private final double Ka = 0.1113;
     private final double Kg = 0.38644;
-    private boolean FF = false;
+    public boolean FF = false;
     private final ArmFeedforward arm = new ArmFeedforward(Ks, Kg, Kv, Ka); // Rad Calibrated
     //private double encoderConstant = 1/49;
     private double startingTurnValue = Units.degreesToRadians(-40); //Rads

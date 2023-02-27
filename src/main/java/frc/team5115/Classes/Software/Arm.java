@@ -72,7 +72,6 @@ public class Arm extends SubsystemBase{
         System.out.println("in: " + bottomLength);
     }
 
-    //He was wrong
     public void Out(){
         bottomLength = 21;      
         topLength = 20;  
@@ -82,76 +81,6 @@ public class Arm extends SubsystemBase{
     public void Reset(){
         bottomLength = 26.25;
         topLength = 25.25;
-    }
-
-    public void print(){
-        System.out.println("ahh");
-    }
-
-    public void turnController(){
-        //intake.setTurn(0.10);
-        intake.setTurn(turnController.calculate(intake.getArmDeg(), angle));
-        //System.out.println("Output Current" + intake.getTurnCurrent());
-        //System.out.println("Current in Amps: " + intake.getTurnCurrent() + ", The Estimated Angle: "+  Math.round(getTurnDeg()) + ", and PID Value: "+ turnController.calculate(intake.getArmDeg(), angle));
-        
-        double bottomSpeed = bottomWinchController.calculate(intake.getBottomWinchLength(), bottomLength);
-        double topSpeed = topWinchController.calculate(intake.getTopWinchLength(), topLength);
-        //System.out.println("Top Length: " + intake.getTopWinchLength() + " Bottom Length: " + intake.getBottomWinchLength());
-        //System.out.println("Top Current: " + intake.getTopCurrent() + "  Bottom Current: " + intake.getBottomCurrent() + " Turn Speed: " + turnController.calculate(intake.getArmDeg(), angle));
-        /* 
-        if(intake.getTopWinchLength() - intake.getBottomWinchLength()>0.5){
-            System.out.print("Top too far ahead & ");
-                if(topSpeed< 0 && bottomSpeed<0){
-                    System.out.println("Bottom Stopped");
-                    intake.setBottomWinch(0);
-                    intake.setTopWinch(topSpeed);
-                }
-                else if(topSpeed<0 && bottomSpeed>0){
-                    System.out.println("Neither Stopped");
-                    intake.setTopWinch(topSpeed);
-                    intake.setBottomWinch(bottomSpeed);
-                }
-                else if(topSpeed>0  && bottomSpeed>0){
-                    System.out.println("top Stopped");
-                    intake.setTopWinch(0);
-                    intake.setBottomWinch(bottomSpeed);
-                }
-                else{
-                    System.out.println("none Stopped");
-                    intake.setTopWinch(topSpeed);
-                    intake.setBottomWinch(bottomSpeed);
-                }
-            }
-            else if(intake.getBottomWinchLength() - intake.getTopWinchLength() >0.5){
-                System.out.print("Bottom too far ahead");
-                if(topSpeed< 0 && bottomSpeed<0){
-                    System.out.println("Top Stopped");
-                    intake.setTopWinch(0);
-                    intake.setBottomWinch(bottomSpeed);
-                }
-                else if(topSpeed>0 && bottomSpeed<0){
-                    System.out.println("Neither Stopped");
-                    intake.setTopWinch(topSpeed);
-                    intake.setBottomWinch(bottomSpeed);
-                }
-                else if(topSpeed>0  && bottomSpeed>0){
-                    System.out.println("Bottom Stopped");
-                    intake.setTopWinch(topSpeed);
-                    intake.setBottomWinch(0);
-                }
-                else{
-                    System.out.println("none Stopped");
-                    intake.setTopWinch(topSpeed);
-                    intake.setBottomWinch(bottomSpeed);
-                }
-            }
-        else{
-            //System.out.println("Everything fine");
-            */
-        intake.setTopWinch(topSpeed);
-        intake.setBottomWinch(bottomSpeed);
-        //}
-
     }
 
     public void turnSetAngle(double angle){
@@ -173,9 +102,68 @@ public class Arm extends SubsystemBase{
     }
 
     public void updateController(){
-        turnController();
-        //topWinchController();
-        //bottomWinchController();
+         //intake.setTurn(0.10);
+         intake.setTurn(turnController.calculate(intake.getArmDeg(), angle));
+         //System.out.println("Output Current" + intake.getTurnCurrent());
+         //System.out.println("Current in Amps: " + intake.getTurnCurrent() + ", The Estimated Angle: "+  Math.round(getTurnDeg()) + ", and PID Value: "+ turnController.calculate(intake.getArmDeg(), angle));
+         
+         double bottomSpeed = bottomWinchController.calculate(intake.getBottomWinchLength(), bottomLength);
+         double topSpeed = topWinchController.calculate(intake.getTopWinchLength(), topLength);
+         //System.out.println("Top Length: " + intake.getTopWinchLength() + " Bottom Length: " + intake.getBottomWinchLength());
+         //System.out.println("Top Current: " + intake.getTopCurrent() + "  Bottom Current: " + intake.getBottomCurrent() + " Turn Speed: " + turnController.calculate(intake.getArmDeg(), angle));
+         /* 
+         if(intake.getTopWinchLength() - intake.getBottomWinchLength()>0.5){
+             System.out.print("Top too far ahead & ");
+                 if(topSpeed< 0 && bottomSpeed<0){
+                     System.out.println("Bottom Stopped");
+                     intake.setBottomWinch(0);
+                     intake.setTopWinch(topSpeed);
+                 }
+                 else if(topSpeed<0 && bottomSpeed>0){
+                     System.out.println("Neither Stopped");
+                     intake.setTopWinch(topSpeed);
+                     intake.setBottomWinch(bottomSpeed);
+                 }
+                 else if(topSpeed>0  && bottomSpeed>0){
+                     System.out.println("top Stopped");
+                     intake.setTopWinch(0);
+                     intake.setBottomWinch(bottomSpeed);
+                 }
+                 else{
+                     System.out.println("none Stopped");
+                     intake.setTopWinch(topSpeed);
+                     intake.setBottomWinch(bottomSpeed);
+                 }
+             }
+             else if(intake.getBottomWinchLength() - intake.getTopWinchLength() >0.5){
+                 System.out.print("Bottom too far ahead");
+                 if(topSpeed< 0 && bottomSpeed<0){
+                     System.out.println("Top Stopped");
+                     intake.setTopWinch(0);
+                     intake.setBottomWinch(bottomSpeed);
+                 }
+                 else if(topSpeed>0 && bottomSpeed<0){
+                     System.out.println("Neither Stopped");
+                     intake.setTopWinch(topSpeed);
+                     intake.setBottomWinch(bottomSpeed);
+                 }
+                 else if(topSpeed>0  && bottomSpeed>0){
+                     System.out.println("Bottom Stopped");
+                     intake.setTopWinch(topSpeed);
+                     intake.setBottomWinch(0);
+                 }
+                 else{
+                     System.out.println("none Stopped");
+                     intake.setTopWinch(topSpeed);
+                     intake.setBottomWinch(bottomSpeed);
+                 }
+             }
+         else{
+             //System.out.println("Everything fine");
+             */
+         intake.setTopWinch(topSpeed);
+         intake.setBottomWinch(bottomSpeed);
+         //} 
     }
 
     public double getTurnDeg(){
