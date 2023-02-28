@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxRelativeEncoder;
 import edu.wpi.first.math.controller.*;
+import edu.wpi.first.math.MathUtil;
 
 public class HardwareDrivetrain{
 
@@ -84,7 +85,7 @@ public class HardwareDrivetrain{
     }
 
     /**
-     * Sets the speeds of the motors. Uses feedforward and PID.
+     * Sets the speeds of the motors. Uses feedforward but not PID. (right now PID is broken)
      * 
      * @param leftSpeed the speed for the left motors in meters per second
      * @param rightSpeed the speed for the right motors in meters per second
@@ -93,11 +94,10 @@ public class HardwareDrivetrain{
         
         double leftVoltage = leftFeedForward.calculate(leftSpeed);
         double rightVoltage = rightFeedForward.calculate(rightSpeed);
-        leftVoltage += leftPID.calculate(leftEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, leftSpeed);
-        rightVoltage += rightPID.calculate(rightEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, rightSpeed);
+        // leftVoltage += leftPID.calculate(leftEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, leftSpeed);
+        // rightVoltage += rightPID.calculate(rightEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, rightSpeed);
 
-        leftVoltage = Math.min(leftVoltage, DRIVE_MOTOR_MAX_VOLTAGE);
-        rightVoltage = Math.min(rightVoltage, DRIVE_MOTOR_MAX_VOLTAGE);
+        leftVoltage = MathUtil.clamp(leftVoltage, -DRIVE_MOTOR_MAX_VOLTAGE, DRIVE_MOTOR_MAX_VOLTAGE);
 
         backLeft.follow(frontLeft);
         backRight.follow(frontRight);
