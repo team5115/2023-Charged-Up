@@ -100,14 +100,10 @@ public class Drivetrain extends SubsystemBase{
         leftSpeed = (forward + turn);
         rightSpeed = (forward - turn);
         
-        if(Math.abs(leftSpeed) > 1){
-            leftSpeed = leftSpeed/Math.abs(leftSpeed);
-            rightSpeed = rightSpeed/Math.abs(leftSpeed);
-        }
-        else if (Math.abs(rightSpeed) > 1){
-            rightSpeed = rightSpeed/Math.abs(rightSpeed);
-            leftSpeed = leftSpeed/Math.abs(rightSpeed);
-        }
+        double[] v = normalizeVector(leftSpeed, rightSpeed);
+        leftSpeed = v[0];
+        rightSpeed = v[1];
+
         //System.out.println(leftSpeed*12);
         drivetrain.plugandChugDrive(leftSpeed, rightSpeed, leftSpeed, rightSpeed);
     }
@@ -121,29 +117,21 @@ public class Drivetrain extends SubsystemBase{
         leftSpeed = (forward + turn);
         rightSpeed = (forward - turn);
 
-        if(leftSpeed > 1){
-            leftSpeed = leftSpeed/leftSpeed;
-            rightSpeed = rightSpeed/leftSpeed;
-        }
-        else if (rightSpeed > 1){
-            rightSpeed = rightSpeed/rightSpeed;
-            leftSpeed = leftSpeed/rightSpeed;
-        }
         leftSpeed *= throttle.getThrottle();
         rightSpeed *= throttle.getThrottle();
         drivetrain.plugandFFDrive(leftSpeed, rightSpeed);
     }
 
-    private double[] normalizeSpeeds(double speed1, double speed2) {
-        if(speed1 > 1){
-            speed1 = speed1/speed1;
-            speed2 = speed2/speed1;
+    private double[] normalizeVector(double x, double y) {
+        if(Math.abs(x) > 1){
+            x = x/Math.abs(x);
+            y = y/Math.abs(x);
         }
-        else if (speed2 > 1){
-            speed2 = speed2/speed2;
-            speed1 = speed1/speed2;
+        else if (Math.abs(y) > 1){
+            y = y/Math.abs(y);
+            x = x/Math.abs(y);
         }
-        return new double[] {speed1, speed2};
+        return new double[] {x, y};
     }
     
     @Deprecated
