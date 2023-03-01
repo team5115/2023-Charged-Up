@@ -74,14 +74,14 @@ public class Arm extends SubsystemBase{
 
     //He was wrong
     public void Out(){
-        bottomLength = 21;      
-        topLength = 20;  
+        bottomLength = 23;      
+        topLength = 21;  
         System.out.println("out" + bottomLength);
     }
 
     public void Reset(){
-        bottomLength = 26.25;
-        topLength = 25.25;
+        bottomLength = 25;
+        topLength = 24.5;
     }
 
     public void print(){
@@ -159,12 +159,13 @@ public class Arm extends SubsystemBase{
     }
 
     public void setArmUp(){
-        angle = 18.5;
+        angle = 25.5;
+        //angle = 18.5 for ff
         System.out.println("up");
     }
 
     public void setArmDown(){
-        angle = -40;
+        angle = -35;
         System.out.println("down");
     }
 
