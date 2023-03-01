@@ -13,6 +13,8 @@ public class HardwareIntake extends SubsystemBase{
     private TalonSRX intakeL = new TalonSRX(9);
     private TalonSRX intakeR = new TalonSRX(8);
     //PCM IS 10 this season YOU HAVE TO LABEL THE MODULE/CAN ID in everything you instantiate
+    private final DigitalOutput coneLight;
+    private final DigitalOutput cubeLight;
 
     public HardwareIntake(){
         intakeL.configPeakCurrentLimit(35);
@@ -21,10 +23,8 @@ public class HardwareIntake extends SubsystemBase{
         intakeR.enableCurrentLimit(true);
         pcm = new PneumaticsControlModule(10);
         intake = new DoubleSolenoid(10, PneumaticsModuleType.CTREPCM, 0, 1);
-    }
-
-    public void open(){
-        intake.set(Value.kReverse);
+        coneLight = new DigitalOutput(0);
+        cubeLight = new DigitalOutput(1);
     }
 
     public void TurnIn(){
@@ -42,8 +42,19 @@ public class HardwareIntake extends SubsystemBase{
         intakeR.set(ControlMode.PercentOutput,0);
     }
 
+    public void open(){
+        intake.set(Value.kReverse);
+        setLights(true);
+    }
+
     public void close(){
         intake.set(Value.kForward);
+        setLights(false);
+    }
+
+    private void setLights(boolean wantsCones) {
+        coneLight.set(wantsCones);
+        cubeLight.set(!wantsCones);
     }
     
 }
