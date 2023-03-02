@@ -40,7 +40,7 @@ public class Startup extends CommandBase{
 
     public boolean isFinished() {
         if(timer.get()>0.5){
-            if(Math.abs(hardwareIntake.getBottomVelocity())<1 || Math.abs(hardwareIntake.getTopVelocity())<1){
+            if(Math.abs(hardwareIntake.getBottomVelocity())<1 && Math.abs(hardwareIntake.getTopVelocity())<1){
             return true;
         }
     }

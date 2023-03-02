@@ -116,7 +116,7 @@ public class Drivetrain extends SubsystemBase{
     public void TankDrive(double forward, double turn) { 
         leftSpeed = (forward + turn);
         rightSpeed = (forward - turn);
-
+        
         leftSpeed *= throttle.getThrottle();
         rightSpeed *= throttle.getThrottle();
         drivetrain.plugandFFDrive(leftSpeed, rightSpeed);

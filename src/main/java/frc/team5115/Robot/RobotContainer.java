@@ -76,8 +76,8 @@ public class RobotContainer {
         //new JoystickButton(joy1, 1).onTrue(new InstantCommand(arm :: In));
         //new JoystickButton(joy1, 2).onTrue(new InstantCommand(arm :: Out));
         // /* 
-        new JoystickButton(joy1, 1).onTrue(new InstantCommand(arm :: In));
-        new JoystickButton(joy1, 2).onTrue(new InstantCommand(arm :: Out));
+        new JoystickButton(joy1, 1).onTrue(new RealExtend(arm, 0));
+        new JoystickButton(joy1, 2).onTrue(new RealExtend(arm, 23));
         new JoystickButton(joy1, 3).onTrue(new InstantCommand(arm :: setArmUp));
         new JoystickButton(joy1, 4).onTrue(new InstantCommand(arm :: setArmDown));
         new JoystickButton(joy1, 5).onTrue(new InstantCommand(intake :: TurnOut)).onFalse(new InstantCommand(intake :: StopMotor));
@@ -139,6 +139,6 @@ public class RobotContainer {
         if(arm.armcontrol) arm.updateController();
         double forward = -joy1.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
         double turn = joy1.getRawAxis(JOY_Z_AXIS_ID);
-        drivetrain.TankDriveOld(forward, turn);
+        //drivetrain.TankDriveOld(forward, turn);
     }
 }

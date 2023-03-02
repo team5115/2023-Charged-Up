@@ -28,8 +28,8 @@ public class HardwareIntake extends SubsystemBase{
     }
 
     public void TurnIn(){
-        intakeL.set(ControlMode.PercentOutput, +0.17);
-        intakeR.set(ControlMode.PercentOutput, +0.17);
+        intakeL.set(ControlMode.PercentOutput, +0.27);
+        intakeR.set(ControlMode.PercentOutput, +0.27);
     }
 
     public void TurnOut(){

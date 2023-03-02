@@ -20,11 +20,11 @@ public class HardwareArm extends SubsystemBase{
     private final double Ks = 0.12655;
     private final double Kv = 4.4235;
     private final double Ka = 0.1113;
-    private final double Kg = 0.38644;
-    public boolean FF = false;
+    private final double Kg = 0.382;
+    public boolean FF = true;
     private final ArmFeedforward arm = new ArmFeedforward(Ks, Kg, Kv, Ka); // Rad Calibrated
     //private double encoderConstant = 1/49;
-    private double startingTurnValue = Units.degreesToRadians(-40); //Rads
+    private double startingTurnValue = Units.degreesToRadians(-90); //Rads
     private double rotatingGearRatio = ((1/49)*(10/48));
     private double winchGearRatio = 1/7;
     private double WinchDiameter = Units.metersToInches(0.12); 
@@ -84,7 +84,7 @@ public class HardwareArm extends SubsystemBase{
         else if(speed<-0.5){
             speed = -0.5;
         }
-        intakeBottom.set(speed + 0.04);
+        intakeBottom.set(speed + 0.05);
     }
 
     public void setTurn(double speed){
@@ -93,17 +93,16 @@ public class HardwareArm extends SubsystemBase{
         if(speed != speed) {
             speed = 0;
         }
-
-        if(speed>.37){
-            speed = 0.37;
-        }
-        else if(speed<-0.1){
-            speed = -0.1;
-        }
         if(FF){
-            intakeTurn.setVoltage(arm.calculate((getArmRad()), speed));
+            intakeTurn.setVoltage(arm.calculate((getArmRad()), 2*speed));
         }
         else{
+            if(speed>.37){
+                speed = 0.37;
+            }
+            else if(speed<-0.1){
+                speed = -0.1;
+            }
         intakeTurn.set(speed);
         }
     }
@@ -206,8 +205,8 @@ public void setEncoders(double Length, double angle){
     }
 
     public double getArmRad(){
-        return Math.toRadians(getArmDeg());
-        //return Math.toRadians(getArmDeg() + startingTurnValue);
+        //return Math.toRadians(getArmDeg());
+        return Math.toRadians(getArmDeg() + startingTurnValue);
     }
 
     public double getBCenterOfMass(double length){
