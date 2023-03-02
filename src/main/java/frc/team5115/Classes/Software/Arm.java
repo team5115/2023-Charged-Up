@@ -83,6 +83,7 @@ public class Arm extends SubsystemBase{
     public void Reset(){
         bottomLength = 26;
         topLength = 25;
+        intake.FF = false;
     }
 
     public void print(){
