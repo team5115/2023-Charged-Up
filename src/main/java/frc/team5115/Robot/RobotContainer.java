@@ -41,7 +41,6 @@ public class RobotContainer {
     private final DockCommandGroup dockSequence;
     private final Startup startup;
 
-    // private final HighCone highCone;
     // private final MiddleCone middleCone;
     // private final HighCube highCube;
     // private final MiddleCube middleCube;
@@ -57,7 +56,6 @@ public class RobotContainer {
         arm = new Arm(hardwareArm);
         
         startup = new Startup(arm, hardwareArm, intake);
-        // highCone = new HighCone(arm);
         // middleCone = new MiddleCone(arm);
         // highCube = new HighCube(arm);
         // middleCube = new MiddleCube(arm);
@@ -78,7 +76,7 @@ public class RobotContainer {
         // /* 
         new JoystickButton(joy1, 1).onTrue(new RealExtend(arm, 0));
         new JoystickButton(joy1, 2).onTrue(new RealExtend(arm, 23));
-        new JoystickButton(joy1, 3).onTrue(new InstantCommand(arm :: setArmUp));
+        new JoystickButton(joy1, 3).onTrue(new HighCone(arm));
         new JoystickButton(joy1, 4).onTrue(new InstantCommand(arm :: setArmDown));
         new JoystickButton(joy1, 5).onTrue(new InstantCommand(intake :: TurnOut)).onFalse(new InstantCommand(intake :: StopMotor));
         new JoystickButton(joy1, 6).onTrue(new InstantCommand(intake :: TurnIn)).onFalse(new InstantCommand(intake :: StopMotor));

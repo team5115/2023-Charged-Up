@@ -13,11 +13,11 @@ public class RealExtend extends SequentialCommandGroup {
 
         if(length > 5){
             addCommands(new IntakeExtend(arm, arm.getTopWinchLength()-2, arm.getBottomWinchLength()+3));
-            addCommands(new IntakeExtend(arm, length, length+2));
+            addCommands(new IntakeExtend(arm, length, length+1));
 
         } else {
             addCommands(new IntakeExtend(arm, arm.getTopWinchLength()-4, arm.getBottomWinchLength() -0.5));
-            addCommands(new IntakeExtend(arm, length, length-2));
+            addCommands(new IntakeExtend(arm, length, length-1));
         }
 
     }

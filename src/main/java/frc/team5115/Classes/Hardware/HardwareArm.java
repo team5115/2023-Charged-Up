@@ -17,10 +17,10 @@ public class HardwareArm extends SubsystemBase{
     private RelativeEncoder TurningEncoder;
     private RelativeEncoder TopWinchEncoder;
     private RelativeEncoder BottomWinchEncoder;
-    private final double Ks = 0.12655;
-    private final double Kv = 4.4235;
+    private final double Ks = 0.13;
+    private final double Kv = 4.5;
     private final double Ka = 0.1113;
-    private final double Kg = 0.382;
+    private final double Kg = 0.39;
     public boolean FF = true;
     private final ArmFeedforward arm = new ArmFeedforward(Ks, Kg, Kv, Ka); // Rad Calibrated
     //private double encoderConstant = 1/49;
