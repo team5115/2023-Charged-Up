@@ -117,6 +117,10 @@ public class Drivetrain extends SubsystemBase{
         leftSpeed = (forward + turn);
         rightSpeed = (forward - turn);
         
+        double[] v = normalizeVector(leftSpeed, rightSpeed);
+        leftSpeed = v[0];
+        rightSpeed = v[1];
+
         leftSpeed *= throttle.getThrottle();
         rightSpeed *= throttle.getThrottle();
         drivetrain.plugandFFDrive(leftSpeed, rightSpeed);

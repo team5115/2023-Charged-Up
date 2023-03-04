@@ -10,24 +10,26 @@ import edu.wpi.first.math.MathUtil;
 
 public class HardwareDrivetrain{
 
-    // Testbed feedforward and feedback (pid) values - 6 inch diameter on testbed
-    private final double leftKs = 0.090949;
-    private final double leftKv = 2.783;
-    private final double leftKa = 0.16477;
+    // Competition feedforward and feedback (pid) values
+    // 6 inch diameter on COMP ROBOT WITH ARM and dumbells in back
+    private final double leftKs = 0.12543;
+    private final double leftKv = 1.3269;
+    private final double leftKa = 0.14027;
     
-    private final double rightKs = 0.099706;
-    private final double rightKv = 2.8314;
-    private final double rightKa = 0.14565;
+    private final double rightKs = 0.12477;
+    private final double rightKv = 1.3587;
+    private final double rightKa = 0.13818;
 
-    private final double Kp = 0; // 3.7203 according to sysid
+    private final double leftKp = 1.6455;
+    private final double rightKp = 1.6220;
     private final double Ki = 0.0;
     private final double Kd = 0.0;
     // END of testbed values
 
     private final SimpleMotorFeedforward leftFeedForward = new SimpleMotorFeedforward(leftKs, leftKv, leftKa);
     private final SimpleMotorFeedforward rightFeedForward = new SimpleMotorFeedforward(rightKs, rightKv, rightKa);
-    private final PIDController leftPID = new PIDController(Kp, Ki, Kd);
-    private final PIDController rightPID = new PIDController(Kp, Ki, Kd);
+    private final PIDController leftPID = new PIDController(leftKp, Ki, Kd);
+    private final PIDController rightPID = new PIDController(rightKp, Ki, Kd);
 
     private final CANSparkMax frontLeft = new CANSparkMax(FRONT_LEFT_MOTOR_ID, MotorType.kBrushless);
     private final CANSparkMax frontRight = new CANSparkMax(FRONT_RIGHT_MOTOR_ID, MotorType.kBrushless);
@@ -94,10 +96,11 @@ public class HardwareDrivetrain{
         
         double leftVoltage = leftFeedForward.calculate(leftSpeed);
         double rightVoltage = rightFeedForward.calculate(rightSpeed);
-        // //leftVoltage += leftPID.calculate(leftEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, leftSpeed);
-        // //rightVoltage += rightPID.calculate(rightEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, rightSpeed);
+        // leftVoltage += leftPID.calculate(leftEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, leftSpeed);
+        // rightVoltage += rightPID.calculate(rightEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, rightSpeed);
 
         leftVoltage = MathUtil.clamp(leftVoltage, -DRIVE_MOTOR_MAX_VOLTAGE, DRIVE_MOTOR_MAX_VOLTAGE);
+        rightVoltage = MathUtil.clamp(rightVoltage, -DRIVE_MOTOR_MAX_VOLTAGE, DRIVE_MOTOR_MAX_VOLTAGE);
 
         backLeft.follow(frontLeft);
         backRight.follow(frontRight);
