@@ -105,6 +105,7 @@ public class HardwareArm extends SubsystemBase{
             }
         intakeTurn.set(speed);
         }
+        System.out.println(FF);
     }
 
     public void stop(){

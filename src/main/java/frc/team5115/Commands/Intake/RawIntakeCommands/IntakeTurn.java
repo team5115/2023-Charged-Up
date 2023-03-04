@@ -40,7 +40,7 @@ public class IntakeTurn extends CommandBase{
 
         
 
-        if(timer.get()>3){
+        if(timer.get()>1){
             return true;
         }
         return false;

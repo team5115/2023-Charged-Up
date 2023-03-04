@@ -2,6 +2,7 @@ package frc.team5115.Robot;
 
 import static frc.team5115.Constants.*;
 
+import java.time.Instant;
 import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -82,6 +83,12 @@ public class RobotContainer {
         new JoystickButton(joy1, 6).onTrue(new InstantCommand(intake :: TurnIn)).onFalse(new InstantCommand(intake :: StopMotor));
         new JoystickButton(joy1, 7).onTrue(new InstantCommand(arm :: Reset));
         new JoystickButton(joy1, 8).onTrue(new InstantCommand(arm :: setArmStart));
+
+        // JoyAxisBoolSupplier upTrigger = new JoyAxisBoolSupplier(joy1, 1, -0.5, false);
+        // JoyAxisBoolSupplier downTrigger = new JoyAxisBoolSupplier(joy1, 1, +0.5, true);
+        // new Trigger(upTrigger).onTrue(new InstantCommand(arm :: turnUp));
+        // new Trigger(downTrigger).onTrue(new InstantCommand(arm :: turnDown));
+        
         // */
          /* 
         new JoystickButton(joy2, 1).onTrue(new InstantCommand(arm :: In));
@@ -133,10 +140,18 @@ public class RobotContainer {
     }
 
     public void teleopPeriodic(){
+        if(-joy1.getRawAxis(1)>0.5){
+            arm.turnUp();
+        }
+        else if(-joy1.getRawAxis(1)<-0.5){
+            arm.turnDown();
+        }
+        
+
         //drivetrain.UpdateOdometry();
         if(arm.armcontrol) arm.updateController();
-        double forward = -joy1.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
-        double turn = joy1.getRawAxis(JOY_Z_AXIS_ID);
+        //double forward = -joy2.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
+        //double turn = joy2.getRawAxis(JOY_Z_AXIS_ID);
         //drivetrain.TankDriveOld(forward, turn);
     }
 }
