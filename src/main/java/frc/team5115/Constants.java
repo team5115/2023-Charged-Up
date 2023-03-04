@@ -49,7 +49,7 @@ public class Constants{
 
      public static class VisionConstants {
         public static final String leftCameraName = "HD_USB_Camera";
-        public static final String rightCameraName = null;
+        // public static final String rightCameraName = null;
         public static final Transform3d robotToCamL = new Transform3d( new Translation3d(0.5, 0.0, 0.5), new Rotation3d( 0, 0, 0)); 
         public static final Transform3d robotToCamR = new Transform3d( new Translation3d(0.5, 0.0, 0.5), new Rotation3d( 0, 0, 0)); 
 

@@ -13,16 +13,17 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team5115.Constants.*;
+import java.lang.Math;
 
 public class PhotonVision extends SubsystemBase{
     private PhotonCamera photonCameraL;
     private PhotonCamera photonCameraR;
     private PhotonPoseEstimator photonPoseEstimatorL;
-    private PhotonPoseEstimator photonPoseEstimatorR;
+    // private PhotonPoseEstimator photonPoseEstimatorR;
 
     public PhotonVision() {
         photonCameraL = new PhotonCamera(VisionConstants.leftCameraName);
-        photonCameraR = new PhotonCamera(VisionConstants.rightCameraName);
+        // photonCameraR = new PhotonCamera(VisionConstants.rightCameraName);
         ArrayList<AprilTag> aprilTagList = new ArrayList<AprilTag>();
 
         // Add all the april tags
@@ -43,24 +44,17 @@ public class PhotonVision extends SubsystemBase{
 
         AprilTagFieldLayout fieldLayout = new AprilTagFieldLayout(aprilTagList, FieldConstants.length, FieldConstants.width);
         photonPoseEstimatorL = new PhotonPoseEstimator(fieldLayout, PoseStrategy.LOWEST_AMBIGUITY, photonCameraL, VisionConstants.robotToCamL);
-        photonPoseEstimatorR = new PhotonPoseEstimator(fieldLayout, PoseStrategy.LOWEST_AMBIGUITY, photonCameraR, VisionConstants.robotToCamR);
+        // photonPoseEstimatorR = new PhotonPoseEstimator(fieldLayout, PoseStrategy.LOWEST_AMBIGUITY, photonCameraR, VisionConstants.robotToCamR);
     }
 
     public void Update() {
-        Optional<EstimatedRobotPose> result = getEstimatedGlobalPose();
+        Optional<EstimatedRobotPose> result = photonPoseEstimatorL.update();
 
         if (result.isPresent()) {
             System.out.println(result.get().estimatedPose.getRotation().toRotation2d().getDegrees());
+        } else {
+            System.out.println(result);
         }
-    }
-
-    public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
-        // The teeam assignment of the first grid the robot looks at is the team assignment of the robot
-        // otherwise if we cant see any april tags trust the team assignment inputted on shuffle board
-        //Trusting the left camera more, no idea on how to use filters to get the most information out of both cameras 2-6-2022
-        if(photonPoseEstimatorL.update().isPresent()) return photonPoseEstimatorL.update();
-        if(photonPoseEstimatorR.update().isPresent()) return photonPoseEstimatorR.update();
-        return Optional.empty();
     }
 
     private AprilTag GenerateAprilTag(int id, double x, double y, double rotationDegrees) {
