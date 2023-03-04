@@ -66,26 +66,6 @@ public class Arm extends SubsystemBase{
         this.bottomLength = length;
     }
 
-    public void In(){
-        bottomLength = 1;      
-        topLength = 0.5;  
-        intake.FF = true;
-        System.out.println("in: " + bottomLength);
-    }
-
-    public void Out(){
-        bottomLength = 23;
-        topLength = 21;  
-        intake.FF = false;
-        System.out.println("out" + bottomLength);
-    }
-
-    public void Reset(){
-        bottomLength = 26;
-        topLength = 25;
-        intake.FF = false;
-    }
-
     public void turnSetAngle(double angle){
         this.angle = angle;
     }
@@ -99,10 +79,6 @@ public class Arm extends SubsystemBase{
     public void setArmDown(){
         angle = -20;
         System.out.println("down");
-    }
-
-    public void setArmStart(){
-        angle = -90;
     }
 
     public void turnUp() {
