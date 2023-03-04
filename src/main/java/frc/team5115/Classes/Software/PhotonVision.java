@@ -46,6 +46,14 @@ public class PhotonVision extends SubsystemBase{
         photonPoseEstimatorR = new PhotonPoseEstimator(fieldLayout, PoseStrategy.LOWEST_AMBIGUITY, photonCameraR, VisionConstants.robotToCamR);
     }
 
+    public void Update() {
+        Optional<EstimatedRobotPose> result = getEstimatedGlobalPose();
+
+        if (result.isPresent()) {
+            System.out.println(result.get().estimatedPose.getRotation().toRotation2d().getDegrees());
+        }
+    }
+
     public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
         // The teeam assignment of the first grid the robot looks at is the team assignment of the robot
         // otherwise if we cant see any april tags trust the team assignment inputted on shuffle board
