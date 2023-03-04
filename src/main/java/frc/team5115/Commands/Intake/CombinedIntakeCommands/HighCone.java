@@ -9,12 +9,12 @@ import frc.team5115.Commands.Intake.RawIntakeCommands.IntakeTurn;
 public class HighCone extends SequentialCommandGroup {
     Arm intake;
 
-    public HighCone(Arm intake){
+    public  HighCone(Arm intake){
         this.intake = intake;
         addCommands(
             new RealExtend(intake, 0),
-            new IntakeTurn(intake, 15),
-            new RealExtend(intake, 22)
+            new IntakeTurn(intake, 20),
+            new RealExtend(intake, 25)
         );
     }
 }

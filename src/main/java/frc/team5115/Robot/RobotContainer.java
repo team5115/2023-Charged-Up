@@ -28,6 +28,7 @@ import frc.team5115.Commands.Intake.CombinedIntakeCommands.MiddleCube;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import frc.team5115.Commands.Intake.CombinedIntakeCommands.Resting;
 
 public class RobotContainer {
     private final Timer timer;
@@ -55,7 +56,6 @@ public class RobotContainer {
         intake = new HardwareIntake();
         hardwareArm = new HardwareArm();
         arm = new Arm(hardwareArm);
-        
         startup = new Startup(arm, hardwareArm, intake);
         // middleCone = new MiddleCone(arm);
         // highCube = new HighCube(arm);
@@ -65,7 +65,6 @@ public class RobotContainer {
         dockSequence = new DockCommandGroup(drivetrain);
         timer = new Timer();
         timer.reset();
-        
         configureButtonBindings();
     }
 
@@ -81,8 +80,8 @@ public class RobotContainer {
         new JoystickButton(joy1, 4).onTrue(new InstantCommand(arm :: setArmDown));
         new JoystickButton(joy1, 5).onTrue(new InstantCommand(intake :: TurnOut)).onFalse(new InstantCommand(intake :: StopMotor));
         new JoystickButton(joy1, 6).onTrue(new InstantCommand(intake :: TurnIn)).onFalse(new InstantCommand(intake :: StopMotor));
-        new JoystickButton(joy1, 7).onTrue(new InstantCommand(arm :: Reset));
-        new JoystickButton(joy1, 8).onTrue(new InstantCommand(arm :: setArmStart));
+        //new JoystickButton(joy1, 7).onTrue(new RealExtend(arm, 25.5));
+        new JoystickButton(joy1, 8).onTrue(new Resting(arm));
 
         // JoyAxisBoolSupplier upTrigger = new JoyAxisBoolSupplier(joy1, 1, -0.5, false);
         // JoyAxisBoolSupplier downTrigger = new JoyAxisBoolSupplier(joy1, 1, +0.5, true);
@@ -146,12 +145,11 @@ public class RobotContainer {
         else if(-joy1.getRawAxis(1)<-0.5){
             arm.turnDown();
         }
-        
 
         //drivetrain.UpdateOdometry();
         if(arm.armcontrol) arm.updateController();
-        //double forward = -joy2.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
-        //double turn = joy2.getRawAxis(JOY_Z_AXIS_ID);
-        //drivetrain.TankDriveOld(forward, turn);
+        double forward = -joy2.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
+        double turn = joy2.getRawAxis(JOY_Z_AXIS_ID);
+        drivetrain.TankDriveOld(forward, turn);
     }
 }
