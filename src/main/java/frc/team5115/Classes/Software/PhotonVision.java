@@ -6,24 +6,22 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team5115.Constants.*;
-import java.lang.Math;
 
 public class PhotonVision extends SubsystemBase{
-    private PhotonCamera photonCameraL;
-    private PhotonCamera photonCameraR;
-    private PhotonPoseEstimator photonPoseEstimatorL;
-    // private PhotonPoseEstimator photonPoseEstimatorR;
+    private PhotonCamera photonCamera;
+    private PhotonPoseEstimator photonPoseEstimator;
 
     public PhotonVision() {
-        photonCameraL = new PhotonCamera(VisionConstants.leftCameraName);
-        // photonCameraR = new PhotonCamera(VisionConstants.rightCameraName);
+        photonCamera = new PhotonCamera(VisionConstants.leftCameraName);
         ArrayList<AprilTag> aprilTagList = new ArrayList<AprilTag>();
 
         // Add all the april tags
@@ -43,15 +41,15 @@ public class PhotonVision extends SubsystemBase{
         aprilTagList.add(GenerateAprilTag(5, -7.908830, +2.741613, 000));
 
         AprilTagFieldLayout fieldLayout = new AprilTagFieldLayout(aprilTagList, FieldConstants.length, FieldConstants.width);
-        photonPoseEstimatorL = new PhotonPoseEstimator(fieldLayout, PoseStrategy.LOWEST_AMBIGUITY, photonCameraL, VisionConstants.robotToCamL);
-        // photonPoseEstimatorR = new PhotonPoseEstimator(fieldLayout, PoseStrategy.LOWEST_AMBIGUITY, photonCameraR, VisionConstants.robotToCamR);
+        photonPoseEstimator = new PhotonPoseEstimator(
+            fieldLayout, PoseStrategy.CLOSEST_TO_CAMERA_HEIGHT, photonCamera, VisionConstants.robotToCam);
     }
 
     public void Update() {
-        Optional<EstimatedRobotPose> result = photonPoseEstimatorL.update();
+        Optional<EstimatedRobotPose> result = photonPoseEstimator.update();
 
         if (result.isPresent()) {
-            System.out.println(result.get().estimatedPose.getRotation().toRotation2d().getDegrees());
+            System.out.println(result.get().estimatedPose.toString());
         } else {
             System.out.println(result);
         }

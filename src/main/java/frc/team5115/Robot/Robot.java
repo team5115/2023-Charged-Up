@@ -1,16 +1,15 @@
 package frc.team5115.Robot;
 
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.team5115.Classes.Software.PhotonVision;
 
 public class Robot extends TimedRobot {
-    private RobotContainer robotContainer;
+    private PhotonVision photonVision;
 
     @Override
     public void robotInit() {
-        robotContainer = new RobotContainer();
+        photonVision = new PhotonVision();
     }
 
     @Override
@@ -19,43 +18,7 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void disabledInit() {
-        CameraServer.startAutomaticCapture();
-    }
-
-    @Override
-    public void disabledPeriodic() {
-    }
-
-    @Override
-    public void autonomousInit() {
-    }
-
-
-    public void autonomousPeriodic() {
-    }
-
-    public void teleopInit () {
-        CameraServer.startAutomaticCapture();
-    }
-    
-    public void teleopPeriodic () {
-       robotContainer.teleopPeriodic();
-    }
-
-    public void testInit () {
-
-    }
-
-    public void testPeriodic () {
-
-    }
-
-    public void practiceInit(){
-        CameraServer.startAutomaticCapture();
-    }
-
-    public void practicePeriodic(){
-
+    public void teleopPeriodic() {
+        photonVision.Update();
     }
 }
