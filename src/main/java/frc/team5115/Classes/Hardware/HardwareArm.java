@@ -103,9 +103,8 @@ public class HardwareArm extends SubsystemBase{
             else if(speed<-0.1){
                 speed = -0.1;
             }
-        intakeTurn.set(speed);
+            intakeTurn.set(speed);
         }
-        System.out.println(FF);
     }
 
     public void stop(){
