@@ -72,7 +72,7 @@ public class Arm extends SubsystemBase{
 
     public void setArmUp(){
         //angle = 25.5;
-        angle = 15;// for ff
+        angle = 20;// for ff
         System.out.println("up");
     }
 
