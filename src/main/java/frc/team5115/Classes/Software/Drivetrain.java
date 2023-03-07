@@ -150,14 +150,14 @@ public class Drivetrain extends SubsystemBase{
     }
 
     public void TankDriveToTrajectoryState(Trajectory.State tState) {
-        ChassisSpeeds adjustedSpeeds = ramseteController.calculate(UpdateOdometry(), tState);
+        ChassisSpeeds adjustedSpeeds = ramseteController.calculate(getEstimatedPose(), tState);
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(adjustedSpeeds);
         leftSpeed = wheelSpeeds.leftMetersPerSecond;
         rightSpeed = wheelSpeeds.rightMetersPerSecond;
         drivetrain.plugandFFDrive(leftSpeed, rightSpeed);
     }
 
-    public Pose2d UpdateOdometry() {
+    public void UpdateOdometry() {
         poseEstimator.update(navx.getYawRotation2D(),
             drivetrain.getEncoder(FRONT_LEFT_MOTOR_ID).getPosition(),
             drivetrain.getEncoder(FRONT_RIGHT_MOTOR_ID).getPosition()
@@ -167,8 +167,10 @@ public class Drivetrain extends SubsystemBase{
         if (result.isPresent()) {
             EstimatedRobotPose camPose = result.get();
             poseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
-            return poseEstimator.getEstimatedPosition();
         }
+    }
+
+    public Pose2d getEstimatedPose() {
         return poseEstimator.getEstimatedPosition();
     }
 
