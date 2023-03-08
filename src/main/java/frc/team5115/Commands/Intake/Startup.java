@@ -35,6 +35,7 @@ public class Startup extends CommandBase{
         System.out.println("Stopped");
         intake.zeroArm();
         intake.stop();
+        intake.setLength(0);
         intake.armcontrol = true;
     }
 
