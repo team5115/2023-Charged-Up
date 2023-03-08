@@ -14,6 +14,8 @@ public class IntakeExtend_v2 extends CommandBase{
     final double max_delta_length=Math.abs(1); // inches, should be positve
     final double suggested_length_step_top=max_delta_length/3.0;      // arbitrary fraction of max value
     final double suggested_length_step_bottom=max_delta_length/3.0; // arbitrary fraction of max value
+    final double seperation_length = Math.abs(3);
+    final double inital_max_delta_length = Math.abs(4);
 
     final double allowed_error_in_length_to_finish_top=1;     // how close to the final target length do you need to be
     final double allowed_error_in_length_to_finish_bottom=1; // how close to the final target length do you need to be
@@ -67,13 +69,6 @@ public class IntakeExtend_v2 extends CommandBase{
         return new_length;
     }
 
-    private void move_both_w_underhang(double upperTargetLength){
-
-    }
-
-    private void move_both_equal_length(){
-
-    }
 
     private void pause_top()
     {
@@ -122,6 +117,7 @@ public class IntakeExtend_v2 extends CommandBase{
         final double remaining_length_bottom_magnitude=Math.abs(remaining_length_bottom);
         //final double remaining_length_bottom_sign=Math.signum(remaining_length_bottom);
 
+        if(remaining_length_bottom_magnitude < 3 && remaining_length_top_magnitude < 3){
         /////////////////////////////////////////////////////////////////
         //
         //  exit logic
@@ -136,8 +132,6 @@ public class IntakeExtend_v2 extends CommandBase{
             both_arms_are_at_target_value=true;
         }
 
-        // HAVE AN UNDERHAND EXCECTUE AND AN EXCUTUE ALIGNED WIHHC IS EXACTLY WHATS PREXISITING
-
         /////////////////////////////////////////////////////////////////
         //
         //  step logic
@@ -147,15 +141,8 @@ public class IntakeExtend_v2 extends CommandBase{
         // Best case is the arms are close together so move them both
         if (Math.abs(delta_length) < Math.abs(max_delta_length))
         {
-           /*step_bottom();
+            step_bottom();
             step_top();
-            */
-            if((remaining_length_bottom_magnitude > 3) &&  (remaining_length_top_magnitude > 3)){
-
-            }
-            else{
-                
-            }
         }
         else   // the arms are too far apart, so we pause the one that is "ahead" so the other guy can catch up
         {
@@ -178,6 +165,40 @@ public class IntakeExtend_v2 extends CommandBase{
 //        }
 //        //System.out.println(intake.getBottomWinchLength() + " " + intake.getTopWinchLength());
 //        */
+        }
+        else{
+
+        /////////////////////////////////////////////////////////////////
+        //
+        //  step logic
+        //
+        /////////////////////////////////////////////////////////////////
+
+        // Best case is the arms are close together so move them both
+        if((Math.abs(delta_length) < Math.abs(max_delta_length)) && (seperation_length < Math.abs(delta_length)))
+        {
+            step_bottom();
+            step_top();
+        }
+        else   // the arms are too far apart, so we pause the one that is "ahead" so the other guy can catch up
+        {
+            if((Math.abs(delta_length) > Math.abs(inital_max_delta_length))){
+            if (remaining_length_bottom_magnitude < remaining_length_top_magnitude) {
+                pause_bottom();
+                step_top();
+
+            } else {
+                step_bottom();
+                pause_top();
+            }
+        }
+        else if(!(seperation_length > Math.abs(delta_length))){
+            step_bottom();
+            pause_top();
+        }
+        }
+
+        }
     }
 
     public void end(boolean interrupted){
@@ -196,9 +217,7 @@ public class IntakeExtend_v2 extends CommandBase{
 //        }
 //        else innerTimer.reset();
 
-        if(timer.get()>1){
-            return true;
-        }
+
         return false;
       }
 

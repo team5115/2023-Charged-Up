@@ -94,8 +94,8 @@ public class HardwareDrivetrain{
      */
     public void plugandFFDrive(double leftSpeed, double rightSpeed) {
         
-        double leftVoltage = leftFeedForward.calculate(leftSpeed);
-        double rightVoltage = rightFeedForward.calculate(rightSpeed);
+        double leftVoltage = 3*leftFeedForward.calculate(leftSpeed);
+        double rightVoltage = 3*rightFeedForward.calculate(rightSpeed);
         // leftVoltage += leftPID.calculate(leftEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, leftSpeed);
         // rightVoltage += rightPID.calculate(rightEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, rightSpeed);
 

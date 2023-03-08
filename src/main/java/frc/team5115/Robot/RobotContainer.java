@@ -1,34 +1,23 @@
 package frc.team5115.Robot;
 
 import static frc.team5115.Constants.*;
-
-import java.time.Instant;
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.team5115.Classes.Acessory.JoyAxisBoolSupplier;
-import frc.team5115.Classes.Hardware.HardwareArm;
-import frc.team5115.Classes.Hardware.HardwareIntake;
-import frc.team5115.Classes.Software.Arm;
-import frc.team5115.Classes.Software.Drivetrain;
-import frc.team5115.Classes.Software.PhotonVision;
+import frc.team5115.Classes.Acessory.*;
+import frc.team5115.Classes.Hardware.*;
+import frc.team5115.Classes.Software.*;
 import frc.team5115.Commands.Auto.AutoCommandGroup;
 import frc.team5115.Commands.Auto.DockAuto.DockCommandGroup;
-import frc.team5115.Commands.Intake.RealExtend;
-import frc.team5115.Commands.Intake.Startup;
-import frc.team5115.Commands.Intake.CombinedIntakeCommands.HighCone;
-import frc.team5115.Commands.Intake.CombinedIntakeCommands.HighCube;
-import frc.team5115.Commands.Intake.CombinedIntakeCommands.MiddleCone;
+import frc.team5115.Commands.Intake.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.team5115.Commands.Intake.CombinedIntakeCommands.MiddleCube;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import frc.team5115.Commands.Intake.CombinedIntakeCommands.Resting;
+import frc.team5115.Commands.Intake.CombinedIntakeCommands.*;
+import frc.team5115.Commands.Intake.RawIntakeCommands.*;
 
 public class RobotContainer {
     private final Timer timer;
@@ -63,15 +52,17 @@ public class RobotContainer {
 
     public void configureButtonBindings() {
         // new JoystickButton(joy2, 1).onTrue(new InstantCommand(drivetrain :: toggleSlowMode));
-        // new JoystickButton(joy2, 2).onTrue(dockSequence);
-        
-        new JoystickButton(joy1, 2).onTrue(new RealExtend(arm, 0));
-        new JoystickButton(joy1, 1).onTrue(new RealExtend(arm, 25.5));
+        // new JoystickButton(joy2, 9).onTrue(dockSequence);
+   
+        //new JoystickButton(joy1, 2).onTrue(new RealExtend(arm, 0));
+        //new JoystickButton(joy1, 1).onTrue(new RealExtend(arm, 25.5));
+        new JoystickButton(joy1, 1).onTrue(new IntakeExtend_v2(arm, 25.5, 25.5));
+        new JoystickButton(joy1, 2).onTrue(new IntakeExtend_v2(arm, 0, 0));
         new JoystickButton(joy1, 3).onTrue(new InstantCommand(arm :: setArmUp));
         new JoystickButton(joy1, 4).onTrue(new InstantCommand(arm :: setArmDown));
         new JoystickButton(joy1, 5).onTrue(new InstantCommand(intake :: TurnOut)).onFalse(new InstantCommand(intake :: StopMotor));
         new JoystickButton(joy1, 6).onTrue(new InstantCommand(intake :: TurnIn)).onFalse(new InstantCommand(intake :: StopMotor));
-        //new JoystickButton(joy1, 7).onTrue(new HighCone(arm));
+        new JoystickButton(joy1, 7).onTrue(new HighCone(arm));
         new JoystickButton(joy1, 8).onTrue(new Resting(arm));
 
         // BooleanSupplier leftTrigger = new JoyAxisBoolSupplier(joy, 2, 0.5);
@@ -92,6 +83,7 @@ public class RobotContainer {
     }
 
     public void disabledInit(){
+
     }
 
     public void stopEverything(){
@@ -130,13 +122,10 @@ public class RobotContainer {
             arm.bottomMoveIn();
         }
 
-
-
-
         //drivetrain.UpdateOdometry();
         if(arm.armcontrol) arm.updateController();
         double forward = -joy2.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
         double turn = joy2.getRawAxis(JOY_Z_AXIS_ID);
-        drivetrain.TankDrive(forward, turn);
+        //drivetrain.TankDrive(forward, turn);
     }
 }
