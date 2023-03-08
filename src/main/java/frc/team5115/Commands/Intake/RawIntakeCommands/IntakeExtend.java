@@ -92,7 +92,7 @@ public class IntakeExtend extends CommandBase{
 
     public boolean isFinished() {
         if((Math.abs(intake.getBottomWinchLength()-bottomLength)<1) && (intake.getTopWinchLength()-topLength)<1){
-            if(innerTimer.get() > 0.2) return true;
+            if(innerTimer.get() > 0.1) return true;
         }
         else innerTimer.reset();
 

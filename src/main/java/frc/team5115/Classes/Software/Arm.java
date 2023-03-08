@@ -16,12 +16,12 @@ public class Arm extends SubsystemBase{
     private double angle = -30;
     private double speed = 0.25;
     private ShuffleboardTab tab = Shuffleboard.getTab("SmartDashboard");
-    private GenericEntry topKp = tab.add("topKp", 0.05).getEntry();
-    private GenericEntry bottomKp = tab.add("bottomKp", 0.04).getEntry();
+    private GenericEntry topKp = tab.add("topKp", 0.07).getEntry();
+    private GenericEntry bottomKp = tab.add("bottomKp", 0.07).getEntry();
     private GenericEntry topAngle = tab.add("topAngle", 0).getEntry();
     private PIDController turnController = new PIDController(0.06, 0.0, 0.0);
-    public PIDController topWinchController = new PIDController(topKp.getDouble(0.05), 0, 0);
-    public PIDController bottomWinchController = new PIDController(bottomKp.getDouble(0.05), 0, 0);
+    public PIDController topWinchController = new PIDController(topKp.getDouble(0.07), 0, 0);
+    public PIDController bottomWinchController = new PIDController(bottomKp.getDouble(0.75), 0, 0);
     public boolean armcontrol = false;
 
     public Arm(HardwareArm x){
