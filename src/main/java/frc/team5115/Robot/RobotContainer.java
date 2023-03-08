@@ -65,13 +65,13 @@ public class RobotContainer {
         // new JoystickButton(joy2, 1).onTrue(new InstantCommand(drivetrain :: toggleSlowMode));
         // new JoystickButton(joy2, 2).onTrue(dockSequence);
         
-        new JoystickButton(joy1, 1).onTrue(new RealExtend(arm, 0));
-        new JoystickButton(joy1, 2).onTrue(new RealExtend(arm, 25.5));
+        new JoystickButton(joy1, 2).onTrue(new RealExtend(arm, 0));
+        new JoystickButton(joy1, 1).onTrue(new RealExtend(arm, 25.5));
         new JoystickButton(joy1, 3).onTrue(new InstantCommand(arm :: setArmUp));
         new JoystickButton(joy1, 4).onTrue(new InstantCommand(arm :: setArmDown));
         new JoystickButton(joy1, 5).onTrue(new InstantCommand(intake :: TurnOut)).onFalse(new InstantCommand(intake :: StopMotor));
         new JoystickButton(joy1, 6).onTrue(new InstantCommand(intake :: TurnIn)).onFalse(new InstantCommand(intake :: StopMotor));
-        new JoystickButton(joy1, 7).onTrue(new HighCone(arm));
+        //new JoystickButton(joy1, 7).onTrue(new HighCone(arm));
         new JoystickButton(joy1, 8).onTrue(new Resting(arm));
 
         // BooleanSupplier leftTrigger = new JoyAxisBoolSupplier(joy, 2, 0.5);
@@ -115,6 +115,23 @@ public class RobotContainer {
         else if(-joy1.getRawAxis(1) < -0.5){
             arm.turnDown();
         }
+
+        if(joy1.getRawAxis(0) < -0.5){
+            arm.topMoveOut();
+        }
+        else if (joy1.getRawAxis(0) > 0.5){
+            arm.topMoveIn();
+        }
+
+        if(joy1.getRawAxis(4) < -0.5){
+            arm.bottomMoveOut();
+        }
+        else if (joy1.getRawAxis(4) > 0.5){
+            arm.bottomMoveIn();
+        }
+
+
+
 
         //drivetrain.UpdateOdometry();
         if(arm.armcontrol) arm.updateController();
