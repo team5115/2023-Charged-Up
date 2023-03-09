@@ -14,8 +14,8 @@ public class IntakeExtend_v2 extends CommandBase{
     final double max_delta_length=Math.abs(1); // inches, should be positve
     final double suggested_length_step_top=max_delta_length/3.0;      // arbitrary fraction of max value
     final double suggested_length_step_bottom=max_delta_length/3.0; // arbitrary fraction of max value
-    final double seperation_length = Math.abs(3);
-    final double inital_max_delta_length = Math.abs(4);
+    final double min_delta_length_when_seperated = Math.abs(3);
+    final double max_delta_length_when_seperated = Math.abs(4);
 
     final double allowed_error_in_length_to_finish_top=1;     // how close to the final target length do you need to be
     final double allowed_error_in_length_to_finish_bottom=1; // how close to the final target length do you need to be
@@ -74,23 +74,29 @@ public class IntakeExtend_v2 extends CommandBase{
     {
         double current_length = intake.getTopWinchLength();
         intake.topWinchSetLength(current_length);
+        System.out.println("Disable Top");
+
     }
 
     private void step_top(){
         double current_length = intake.getTopWinchLength();
         double new_length=calculate_next_step_length(current_length,suggested_length_step_top,topLength_target);
         intake.topWinchSetLength(new_length);
+        System.out.println("Enable Top");
     }
     private void pause_bottom()
     {
         double current_length = intake.getBottomWinchLength();
         intake.bottomWinchSetLength(current_length);
+        System.out.println("Disable Bottom");
     }
 
     private void step_bottom(){
         double current_length = intake.getBottomWinchLength();
         double new_length=calculate_next_step_length(current_length,suggested_length_step_bottom,bottomLength_target);
         intake.bottomWinchSetLength(new_length);
+        System.out.println("Enable Bottom");
+
     }
 
     public void execute(){
@@ -115,9 +121,16 @@ public class IntakeExtend_v2 extends CommandBase{
 
         final double remaining_length_bottom=bottomLength_target-current_length_bottom;
         final double remaining_length_bottom_magnitude=Math.abs(remaining_length_bottom);
+
+        // Overhung when top is further out
+        final boolean is_overhung = ((current_length_top + min_delta_length_when_seperated) > current_length_bottom);
+
+        final boolean is_extending = (topLength_target > current_length_top);
         //final double remaining_length_bottom_sign=Math.signum(remaining_length_bottom);
 
-        if(remaining_length_bottom_magnitude < 3 && remaining_length_top_magnitude < 3){
+        //longer than the 
+        //if(remaining_length_bottom_magnitude < 5 && remaining_length_top_magnitude < 5){
+        if(true){
         /////////////////////////////////////////////////////////////////
         //
         //  exit logic
@@ -126,11 +139,12 @@ public class IntakeExtend_v2 extends CommandBase{
 
         // since we calculate everything here anyway, we check the exit condition and store it in a member variable
 
-        if((remaining_length_bottom_magnitude <= allowed_error_in_length_to_finish_bottom ) &&
+/*      if((remaining_length_bottom_magnitude <= allowed_error_in_length_to_finish_bottom ) &&
                 (remaining_length_top_magnitude <= allowed_error_in_length_to_finish_top)){
 
             both_arms_are_at_target_value=true;
         }
+        */
 
         /////////////////////////////////////////////////////////////////
         //
@@ -156,10 +170,6 @@ public class IntakeExtend_v2 extends CommandBase{
             }
         }
 
-
-
-
-
 //        else{
 //            System.out.println("Everything fine");
 //        }
@@ -174,15 +184,9 @@ public class IntakeExtend_v2 extends CommandBase{
         //
         /////////////////////////////////////////////////////////////////
 
-        // Best case is the arms are close together so move them both
-        if((Math.abs(delta_length) < Math.abs(max_delta_length)) && (seperation_length < Math.abs(delta_length)))
-        {
-            step_bottom();
-            step_top();
-        }
-        else   // the arms are too far apart, so we pause the one that is "ahead" so the other guy can catch up
-        {
-            if((Math.abs(delta_length) > Math.abs(inital_max_delta_length))){
+        // the arms are too far apart, so we pause the one that is "ahead" so the other guy can catch up
+
+        if((Math.abs(delta_length) > Math.abs(max_delta_length_when_seperated))){
             if (remaining_length_bottom_magnitude < remaining_length_top_magnitude) {
                 pause_bottom();
                 step_top();
@@ -192,14 +196,25 @@ public class IntakeExtend_v2 extends CommandBase{
                 pause_top();
             }
         }
-        else if(!(seperation_length > Math.abs(delta_length))){
+        else if((is_overhung)){
+                if(is_extending){
+                    step_bottom();
+                    pause_top();
+                }
+                else{
+                    pause_bottom();
+                    step_top();   
+                }
+            }
+        else {// if((Math.abs(delta_length) < Math.abs(max_delta_length_when_seperated)) && Math.abs(min_delta_length_when_seperated) < Math.abs(delta_length))
             step_bottom();
-            pause_top();
-        }
+            step_top();
         }
 
-        }
     }
+
+    }
+
 
     public void end(boolean interrupted){
         System.out.println("Stopped");
@@ -207,16 +222,24 @@ public class IntakeExtend_v2 extends CommandBase{
 
     public boolean isFinished() {
 
-        if(both_arms_are_at_target_value) {
+        /*if(both_arms_are_at_target_value) {
+            if(innerTimer.get() > 0.2) return true;
+        }
+        else innerTimer.reset();
+        */
+       // /* 
+        if((Math.abs(intake.getBottomWinchLength()-bottomLength_target)<1) && (intake.getTopWinchLength()-topLength_target)<1){
             if(innerTimer.get() > 0.2) return true;
         }
         else innerTimer.reset();
 
-//        if((Math.abs(intake.getBottomWinchLength()-bottomLength_target)<1) && (intake.getTopWinchLength()-topLength_target)<1){
-//            if(innerTimer.get() > 0.2) return true;
-//        }
-//        else innerTimer.reset();
+      //  */
 
+        /* 
+        if(timer.get() > 0.5){
+            return true;
+        }
+        */
 
         return false;
       }

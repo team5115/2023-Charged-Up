@@ -56,8 +56,8 @@ public class RobotContainer {
    
         //new JoystickButton(joy1, 2).onTrue(new RealExtend(arm, 0));
         //new JoystickButton(joy1, 1).onTrue(new RealExtend(arm, 25.5));
-        new JoystickButton(joy1, 1).onTrue(new IntakeExtend_v2(arm, 25.5, 25.5));
-        new JoystickButton(joy1, 2).onTrue(new IntakeExtend_v2(arm, 0, 0));
+        new JoystickButton(joy1, 1).onTrue(new IntakeExtend_v2(arm, 0, 0));
+        new JoystickButton(joy1, 2).onTrue(new IntakeExtend_v2(arm, 25.5, 25.5));
         new JoystickButton(joy1, 3).onTrue(new InstantCommand(arm :: setArmUp));
         new JoystickButton(joy1, 4).onTrue(new InstantCommand(arm :: setArmDown));
         new JoystickButton(joy1, 5).onTrue(new InstantCommand(intake :: TurnOut)).onFalse(new InstantCommand(intake :: StopMotor));

@@ -25,8 +25,6 @@ public class HardwareArm extends SubsystemBase{
     private final ArmFeedforward arm = new ArmFeedforward(Ks, Kg, Kv, Ka); // Rad Calibrated
     //private double encoderConstant = 1/49;
     private double startingTurnValue = Units.degreesToRadians(-90); //Rads
-    private double rotatingGearRatio = ((1/49)*(10/48));
-    private double winchGearRatio = 1/7;
     private double WinchDiameter = Units.metersToInches(0.12); 
 
     public HardwareArm(){
@@ -62,29 +60,22 @@ public class HardwareArm extends SubsystemBase{
     }
 
     public void setTopWinch(double speed){
+        // NaN Check
         if(speed != speed) {
             speed = 0;
         }
-        if(speed>.7){
-            speed = .7;
-        }
-        else if(speed<-0.7){
-            speed = -0.7;
-        }
-        intakeTop.set(speed + 0.05 * Math.signum(speed));
+
+        intakeTop.set(speed);
     }
 
     public void setBottomWinch(double speed){
+        // NaN Check
         if(speed != speed) {
             speed = 0;
         }
-        if(speed>.7){
-            speed = .7;
-        }
-        else if(speed<-0.7){
-            speed = -0.7;
-        }
-        intakeBottom.set(speed + 0.08 * Math.signum(speed));
+
+        
+        intakeBottom.set(speed);
     }
 
     public void setTurn(double speed){
@@ -94,7 +85,7 @@ public class HardwareArm extends SubsystemBase{
             speed = 0;
         }
         if(FF){
-            intakeTurn.setVoltage(arm.calculate((getArmRad()), 1.7*speed));
+            intakeTurn.setVoltage(Math.max(arm.calculate((getArmRad()), 1.7*speed), -8));
         }
         else{
             if(speed>.37){
@@ -172,7 +163,7 @@ public class HardwareArm extends SubsystemBase{
 public void setEncoders(double Length, double angle){
     BottomWinchEncoder.setPosition((7*Length)/((WinchDiameter)));
     TopWinchEncoder.setPosition((7*Length)/((WinchDiameter)));
-    TurningEncoder.setPosition(angle/(360.0 / (48.0 * 49.0 / 10.0)));
+    TurningEncoder.setPosition(angle/(360.0 / (48.0 * 49.0 / 10.0))); // Set the angle 
     // TurningEncoder.setPosition(Units.radiansToDegrees(startingTurnValue)/(360.0 / (48.0 * 49.0 / 10.0)));
 }
 
@@ -193,7 +184,7 @@ public void setEncoders(double Length, double angle){
      */
     public double getBottomWinchLength() {
         //System.out.println((getBottomEncoder()/7)*(WinchDiameter*3.14159));
-        System.out.println((getBottomEncoder()/7)*(WinchDiameter));
+        //System.out.println((getBottomEncoder()/7)*(WinchDiameter));
         return (getBottomEncoder()/7)*(WinchDiameter);
     }
 
