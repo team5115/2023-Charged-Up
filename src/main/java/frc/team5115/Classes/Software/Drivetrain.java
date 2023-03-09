@@ -94,30 +94,6 @@ public class Drivetrain extends SubsystemBase{
         throttle.setThrottleEnabled(enable);
     }
 
-    @Deprecated
-    public void TankDriveOld(double forward, double turn){
-        if(forward>0.4){
-            forward = 0.4;
-        }
-
-        else if(forward<0){
-            forward = 0;
-        }
-
-        if(turn>0.4){
-            turn = 0.4;
-        }
-        else if(turn < -0.4){
-            turn = -0.4;
-        }
-
-        leftSpeed = (forward + turn);
-        rightSpeed = (forward - turn);
-
-        System.out.println(leftSpeed*12);
-        drivetrain.PlugandVoltDrive(leftSpeed*12, rightSpeed*12, leftSpeed*12, rightSpeed*12);
-    }
-
     /**
      * Drive the robot using a tankdrive setup.
      * @param forward is for driving forward/backward: positive is forward, negative is backward
@@ -134,17 +110,6 @@ public class Drivetrain extends SubsystemBase{
         leftSpeed *= throttle.getThrottle();
         rightSpeed *= throttle.getThrottle();
 
-        drivetrain.plugandFFDrive(leftSpeed, rightSpeed);
-    }
-
-    @Deprecated
-    public void TankDriveToAngle(double angleDegrees) { 
-        double rotationDegrees = navx.getYawDeg();
-        System.out.println(rotationDegrees);
-        double turn = MathUtil.clamp(anglePID.calculate(rotationDegrees, angleDegrees), -1, 1);
-        leftSpeed = turn;
-        rightSpeed = -turn;
-        
         drivetrain.plugandFFDrive(leftSpeed, rightSpeed);
     }
 
@@ -206,79 +171,5 @@ public class Drivetrain extends SubsystemBase{
      */
     public void autoDrive(double speed){
         drivetrain.plugandFFDrive(speed, speed);
-    }
-
-    @Deprecated
-    public void autoDriveF(){
-        drivetrain.plugandChugDrive(0.3, -0.3, 0.3, -0.3);
-    }
-
-    @Deprecated
-    public void autoDriveB(){
-        drivetrain.plugandChugDrive(-0.3, 0.3, -0.3, 0.3);
-    }
-    /**
-     * Drive backward at 1 m/s
-     */
-    public void autoDriveBackward(){
-        drivetrain.plugandFFDrive(-1, -1);
-    }
-    /**
-     * Drive all motors at a specific voltage
-     * @param percent voltage to drive at
-     */
-
-    @Deprecated
-    public void AdjustAngle(){
-        double xangle = 0; 
-        double detector = 0;
-        leftSpeed = -xangle*kD;
-        if(leftSpeed > 0.3){
-            leftSpeed = 0.3;
-            System.out.println("capping speed");
-        }
-        if(leftSpeed < -0.3){
-            leftSpeed = -0.3;
-            System.out.println("capping speed");
-        }
-        if(!(detector == 1)){
-            leftSpeed = 0;
-            System.out.print("nothing detected");
-        }
-
-        rightSpeed = leftSpeed;
-        drivetrain.plugandFFDrive(leftSpeed, rightSpeed);
-        System.out.println("left speed "+ leftSpeed);
-        System.out.println("right speed "+ rightSpeed);
-    }
-
-    public double getX(){
-        return tx.getDouble(0);
-    }
-
-    public double getY(){
-        return ty.getDouble(0);
-    }
-
-    // public double getDistanceFromHub(){
-    //     double yAngle = ty.getDouble(0);
-    //     d = (AUTO_HIGH_GOAL_HEIGHT - AUTO_CAMERA_HEIGHT) / tan(toRadians(yAngle + AUTO_CAMERA_ANGLE));
-    //     return d;
-    // }
-
-    @Deprecated
-    public void AdjustDistance(){
-        double dectector = 0;
-        if(dectector == 1){
-            /**d = (AUTO_HIGH_GOAL_HEIGHT - AUTO_CAMERA_HEIGHT) / tan(toRadians(yangle + AUTO_CAMERA_ANGLE));
-            leftSpd = (d-HUB_DISTANCE)*hD;
-            rightSpd = -(d - HUB_DISTANCE)*hD;
-            */
-            double yangle = 0; 
-            leftSpeed = -(TARGET_ANGLE - yangle)*hD;
-            leftSpeed = Math.max(-0.3, Math.min(0.3, leftSpeed));
-            rightSpeed = leftSpeed;
-            drivetrain.plugandFFDrive(leftSpeed, rightSpeed);
-        }
     }
 }
