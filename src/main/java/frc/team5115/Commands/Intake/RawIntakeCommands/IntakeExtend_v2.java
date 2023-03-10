@@ -11,7 +11,7 @@ public class IntakeExtend_v2 extends CommandBase{
     private double bottomLength_target;
     double bottomSpeed = 0;
     double topSpeed = 0;
-    final double max_delta_length=Math.abs(1); // inches, should be positve
+    final double max_delta_length=Math.abs(2); // inches, should be positve
     final double suggested_length_step_top=max_delta_length/3.0;      // arbitrary fraction of max value
     final double suggested_length_step_bottom=max_delta_length/3.0; // arbitrary fraction of max value
     final double min_delta_length_when_seperated = Math.abs(3);
