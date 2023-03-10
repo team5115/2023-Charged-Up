@@ -1,4 +1,5 @@
 package frc.team5115.Classes.Software; 
+import java.lang.StackWalker.Option;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -17,11 +18,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team5115.Constants.*;
 
 public class PhotonVision extends SubsystemBase{
-    private PhotonCamera photonCamera;
-    private PhotonPoseEstimator photonPoseEstimator;
+    private PhotonCamera photonCameraLeft;
+    private PhotonCamera photonCameraRight;
+    private PhotonPoseEstimator photonPoseEstimatorLeft;
+    private PhotonPoseEstimator photonPoseEstimatorRight;
 
     public PhotonVision() {
-        photonCamera = new PhotonCamera(VisionConstants.leftCameraName);
+        photonCameraLeft = new PhotonCamera(VisionConstants.leftCameraName);
+        photonCameraRight = new PhotonCamera(VisionConstants.rightCameraName);
         ArrayList<AprilTag> aprilTagList = new ArrayList<AprilTag>();
 
         // Add all the april tags
@@ -41,18 +45,32 @@ public class PhotonVision extends SubsystemBase{
         aprilTagList.add(GenerateAprilTag(5, -7.908830, +2.741613, 000));
 
         AprilTagFieldLayout fieldLayout = new AprilTagFieldLayout(aprilTagList, FieldConstants.length, FieldConstants.width);
-        photonPoseEstimator = new PhotonPoseEstimator(
-            fieldLayout, PoseStrategy.CLOSEST_TO_CAMERA_HEIGHT, photonCamera, VisionConstants.robotToCam);
+        photonPoseEstimatorLeft = new PhotonPoseEstimator(
+            fieldLayout, PoseStrategy.CLOSEST_TO_CAMERA_HEIGHT, photonCameraLeft, VisionConstants.robotToCam);
+        photonPoseEstimatorRight = new PhotonPoseEstimator(
+            fieldLayout, PoseStrategy.CLOSEST_TO_CAMERA_HEIGHT, photonCameraRight, VisionConstants.robotToCam);
     }
 
     public void Update() {
-        Optional<EstimatedRobotPose> result = photonPoseEstimator.update();
+        Optional<EstimatedRobotPose> result = getEstimatedPose();
 
         if (result.isPresent()) {
             System.out.println(result.get().estimatedPose.toString());
         } else {
             System.out.println(result);
         }
+    }
+
+    private Optional<EstimatedRobotPose> getEstimatedPose() {
+        Optional<EstimatedRobotPose> leftResult = photonPoseEstimatorLeft.update();
+        Optional<EstimatedRobotPose> rightResult = photonPoseEstimatorRight.update();
+        if (leftResult.isPresent()) {
+            return leftResult;
+        }
+        if (rightResult.isPresent()) {
+            return rightResult;
+        }
+        return Optional.empty();
     }
 
     private AprilTag GenerateAprilTag(int id, double x, double y, double rotationDegrees) {

@@ -49,6 +49,7 @@ public class Constants{
 
      public static class VisionConstants {
         public static final String leftCameraName = "HD_USB_Camera";
+        public static final String rightCameraName = "Microsoft_LifeCam_HD-3000";
         public static final Transform3d robotToCam = new Transform3d( new Translation3d(0.0, 0.0, 0.0), new Rotation3d( 0, 0, 0)); 
 
     }
