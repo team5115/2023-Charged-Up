@@ -34,7 +34,7 @@ public class RobotContainer {
 
     public RobotContainer() {
         joy1 = new Joystick(0);
-        joy2 = new Joystick(1);
+        joy2 = new Joystick(0); // <-- for testing only!!
 
         photonVision = new PhotonVision();
         drivetrain = new Drivetrain(photonVision);
@@ -65,20 +65,20 @@ public class RobotContainer {
         // new JoystickButton(joy1, 7).onTrue(new HighCone(arm));
         // new JoystickButton(joy1, 8).onTrue(new Resting(arm));
 
-        new JoystickButton(joy1, 3).onTrue(new ShelfSubstation(arm)); // double substation pickup
-        new JoystickButton(joy1, 4).onTrue(new HighNode(arm)); // high node
-        new JoystickButton(joy1, 2).onTrue(new MiddleNode(arm)); // middle node
-        new JoystickButton(joy1, 1).onTrue(new GroundPickup(arm)); // low node/ground pickup
-        new JoystickButton(joy1, 7).onTrue(new Stow(arm)); // stow fully
-        new JoystickButton(joy1, 8).onTrue(new StowCone(arm)); // stow with cone
-        new Trigger(new JoyAxisBoolSupplier(joy1, 1, -0.5, false)).onTrue(new InstantCommand(arm :: turnUp)); // angle up
-        new Trigger(new JoyAxisBoolSupplier(joy1, 1, +0.5, true)).onTrue(new InstantCommand(arm :: turnDown)); // angle down
-        new JoystickButton(joy1, 5).onTrue(new InstantCommand(arm :: topMoveIn)); // top in
-        new JoystickButton(joy1, 6).onTrue(new InstantCommand(arm :: topMoveOut)); // top out
-        new Trigger(new JoyAxisBoolSupplier(joy1, 2, +0.5)).onTrue(new InstantCommand(arm :: bottomMoveIn)); // bottom in
-        new Trigger(new JoyAxisBoolSupplier(joy1, 3, +0.5)).onTrue(new InstantCommand(arm :: bottomMoveOut)); // bottom out
-        new Trigger(new JoyAxisBoolSupplier(joy1, 4, -0.5, false)).onTrue(new InstantCommand(intake :: TurnIn)); // intake in
-        new Trigger(new JoyAxisBoolSupplier(joy1, 4, +0.5, true)).onTrue(new InstantCommand(intake :: TurnOut)); // intake out
+        // new JoystickButton(joy1, 3).onTrue(new ShelfSubstation(arm)); // double substation pickup
+        // new JoystickButton(joy1, 4).onTrue(new HighNode(arm)); // high node
+        // new JoystickButton(joy1, 2).onTrue(new MiddleNode(arm)); // middle node
+        // new JoystickButton(joy1, 1).onTrue(new GroundPickup(arm)); // low node/ground pickup
+        // new JoystickButton(joy1, 7).onTrue(new Stow(arm)); // stow fully
+        // new JoystickButton(joy1, 8).onTrue(new StowCone(arm)); // stow with cone
+        // new Trigger(new JoyAxisBoolSupplier(joy1, 1, -0.5, false)).onTrue(new InstantCommand(arm :: turnUp)); // angle up
+        // new Trigger(new JoyAxisBoolSupplier(joy1, 1, +0.5, true)).onTrue(new InstantCommand(arm :: turnDown)); // angle down
+        // new JoystickButton(joy1, 5).onTrue(new InstantCommand(arm :: topMoveIn)); // top in
+        // new JoystickButton(joy1, 6).onTrue(new InstantCommand(arm :: topMoveOut)); // top out
+        // new Trigger(new JoyAxisBoolSupplier(joy1, 2, +0.5)).onTrue(new InstantCommand(arm :: bottomMoveIn)); // bottom in
+        // new Trigger(new JoyAxisBoolSupplier(joy1, 3, +0.5)).onTrue(new InstantCommand(arm :: bottomMoveOut)); // bottom out
+        // new Trigger(new JoyAxisBoolSupplier(joy1, 4, -0.5, false)).onTrue(new InstantCommand(intake :: TurnIn)); // intake in
+        // new Trigger(new JoyAxisBoolSupplier(joy1, 4, +0.5, true)).onTrue(new InstantCommand(intake :: TurnOut)); // intake out
 
         // BooleanSupplier leftTrigger = new JoyAxisBoolSupplier(joy, 2, 0.5);
         // BooleanSupplier rightTrigger = new JoyAxisBoolSupplier(joy, 3, 0.5);
@@ -107,7 +107,7 @@ public class RobotContainer {
     }
 
     public void startAuto(){
-        //if(autoCommandGroup != null) autoCommandGroup.schedule();
+        if(autoCommandGroup != null) autoCommandGroup.schedule();
     }
 
     public void autoPeriod(){
@@ -141,6 +141,6 @@ public class RobotContainer {
         if(arm.armcontrol) arm.updateController();
         double forward = -joy2.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
         double turn = joy2.getRawAxis(JOY_Z_AXIS_ID);
-        //drivetrain.TankDrive(forward, turn);
+        drivetrain.TankDrive(forward, turn);
     }
 }

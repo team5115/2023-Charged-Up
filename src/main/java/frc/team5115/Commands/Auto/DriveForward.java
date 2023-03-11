@@ -15,8 +15,17 @@ public class DriveForward extends CommandBase{
         this.dist = dist;
         this.drivetrain = drivetrain;
         this.speed = speed;
+    }
+
+    @Override
+    public void initialize() {
         startRightDist = drivetrain.getRightDistance();
         startleftDist = drivetrain.getLeftDistance();
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        drivetrain.stop();
     }
 
     @Override

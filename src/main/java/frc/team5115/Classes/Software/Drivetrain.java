@@ -181,8 +181,7 @@ public class Drivetrain extends SubsystemBase{
         boolean closeLeft = Math.abs(startRightDist + dist - getLeftDistance()) < 0.1;
         boolean closeRight = Math.abs(startLeftDist + dist - getRightDistance()) < 0.1;
 
-        System.out.println("Left Near: " + closeLeft + "| Right Near: " + closeRight);
-
+        // System.out.println("Left Near: " + closeLeft + "| Right Near: " + closeRight);
         return closeLeft || closeRight;
     }      
 
