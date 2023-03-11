@@ -1,9 +1,7 @@
 package frc.team5115.Robot;
 
-import static frc.team5115.Constants.*;
-
-import java.time.Instant;
-import java.util.function.BooleanSupplier;
+import static frc.team5115.Constants.JOY_Y_AXIS_ID;
+import static frc.team5115.Constants.JOY_Z_AXIS_ID;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
@@ -18,17 +16,13 @@ import frc.team5115.Classes.Software.Drivetrain;
 import frc.team5115.Classes.Software.PhotonVision;
 import frc.team5115.Commands.Auto.AutoCommandGroup;
 import frc.team5115.Commands.Auto.DockAuto.DockCommandGroup;
-import frc.team5115.Commands.Intake.RealExtend;
 import frc.team5115.Commands.Intake.Startup;
-import frc.team5115.Commands.Intake.CombinedIntakeCommands.HighCone;
-import frc.team5115.Commands.Intake.CombinedIntakeCommands.HighCube;
-import frc.team5115.Commands.Intake.CombinedIntakeCommands.MiddleCone;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.team5115.Commands.Intake.CombinedIntakeCommands.MiddleCube;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import frc.team5115.Commands.Intake.CombinedIntakeCommands.Resting;
+import frc.team5115.Commands.Intake.CombinedIntakeCommands.GroundPickup;
+import frc.team5115.Commands.Intake.CombinedIntakeCommands.HighNode;
+import frc.team5115.Commands.Intake.CombinedIntakeCommands.MiddleNode;
+import frc.team5115.Commands.Intake.CombinedIntakeCommands.ShelfSubstation;
+import frc.team5115.Commands.Intake.CombinedIntakeCommands.Stow;
+import frc.team5115.Commands.Intake.CombinedIntakeCommands.StowCone;
 
 public class RobotContainer {
     private final Timer timer;
@@ -65,14 +59,20 @@ public class RobotContainer {
         // new JoystickButton(joy2, 1).onTrue(new InstantCommand(drivetrain :: toggleSlowMode));
         // new JoystickButton(joy2, 2).onTrue(dockSequence);
         
-        new JoystickButton(joy1, 1).onTrue(new RealExtend(arm, 0));
-        new JoystickButton(joy1, 2).onTrue(new RealExtend(arm, 25.5));
-        new JoystickButton(joy1, 3).onTrue(new InstantCommand(arm :: setArmUp));
-        new JoystickButton(joy1, 4).onTrue(new InstantCommand(arm :: setArmDown));
-        new JoystickButton(joy1, 5).onTrue(new InstantCommand(intake :: TurnOut)).onFalse(new InstantCommand(intake :: StopMotor));
-        new JoystickButton(joy1, 6).onTrue(new InstantCommand(intake :: TurnIn)).onFalse(new InstantCommand(intake :: StopMotor));
-        new JoystickButton(joy1, 7).onTrue(new HighCone(arm));
-        new JoystickButton(joy1, 8).onTrue(new Resting(arm));
+        new JoystickButton(joy1, 3).onTrue(new ShelfSubstation(arm)); // double substation pickup
+        new JoystickButton(joy1, 4).onTrue(new HighNode(arm)); // high node
+        new JoystickButton(joy1, 2).onTrue(new MiddleNode(arm)); // middle node
+        new JoystickButton(joy1, 1).onTrue(new GroundPickup(arm)); // low node/ground pickup
+        new JoystickButton(joy1, 7).onTrue(new Stow(arm)); // stow fully
+        new JoystickButton(joy1, 8).onTrue(new StowCone(arm)); // stow with cone
+        new Trigger(new JoyAxisBoolSupplier(joy1, 1, -0.5, false)).onTrue(new InstantCommand(arm :: turnUp)); // angle up
+        new Trigger(new JoyAxisBoolSupplier(joy1, 1, +0.5, true)).onTrue(new InstantCommand(arm :: turnDown)); // angle down
+        new JoystickButton(joy1, 5).onTrue(new InstantCommand(arm :: topMoveIn)); // top in
+        new JoystickButton(joy1, 6).onTrue(new InstantCommand(arm :: topMoveOut)); // top out
+        new Trigger(new JoyAxisBoolSupplier(joy1, 2, +0.5)).onTrue(new InstantCommand(arm :: bottomMoveIn)); // bottom in
+        new Trigger(new JoyAxisBoolSupplier(joy1, 3, +0.5)).onTrue(new InstantCommand(arm :: bottomMoveOut)); // bottom out
+        new Trigger(new JoyAxisBoolSupplier(joy1, 4, -0.5, false)).onTrue(new InstantCommand(intake :: TurnIn)); // intake in
+        new Trigger(new JoyAxisBoolSupplier(joy1, 4, +0.5, true)).onTrue(new InstantCommand(intake :: TurnOut)); // intake out
 
         // BooleanSupplier leftTrigger = new JoyAxisBoolSupplier(joy, 2, 0.5);
         // BooleanSupplier rightTrigger = new JoyAxisBoolSupplier(joy, 3, 0.5);
@@ -109,13 +109,6 @@ public class RobotContainer {
     }
 
     public void teleopPeriodic(){
-        if(-joy1.getRawAxis(1) > 0.5){
-            arm.turnUp();
-        }
-        else if(-joy1.getRawAxis(1) < -0.5){
-            arm.turnDown();
-        }
-
         //drivetrain.UpdateOdometry();
         if(arm.armcontrol) arm.updateController();
         double forward = -joy2.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated

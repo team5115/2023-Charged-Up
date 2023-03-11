@@ -169,12 +169,12 @@ public class HardwareArm extends SubsystemBase{
         TurningEncoder.setPosition(0);
     }
 
-public void setEncoders(double Length, double angle){
-    BottomWinchEncoder.setPosition((7*Length)/((WinchDiameter)));
-    TopWinchEncoder.setPosition((7*Length)/((WinchDiameter)));
-    TurningEncoder.setPosition(angle/(360.0 / (48.0 * 49.0 / 10.0)));
-    // TurningEncoder.setPosition(Units.radiansToDegrees(startingTurnValue)/(360.0 / (48.0 * 49.0 / 10.0)));
-}
+    public void setEncoders(double Length, double angle){
+        BottomWinchEncoder.setPosition((7*Length)/((WinchDiameter)));
+        TopWinchEncoder.setPosition((7*Length)/((WinchDiameter)));
+        TurningEncoder.setPosition(angle/(360.0 / (48.0 * 49.0 / 10.0)));
+        // TurningEncoder.setPosition(Units.radiansToDegrees(startingTurnValue)/(360.0 / (48.0 * 49.0 / 10.0)));
+    }
 
     /** 
      * Returns the length of the Top Winch
@@ -231,6 +231,18 @@ public void setEncoders(double Length, double angle){
 
     public double getTotalTorque(double mass, double length){
         return (getSmallTorque(length) + getBigTorque(length) + getMassTorque(mass, length)/8.85);
+    }
+
+    public void disableBrake(){
+        intakeBottom.setIdleMode(IdleMode.kCoast);
+        intakeTop.setIdleMode(IdleMode.kCoast);
+        //intakeTurn.setIdleMode(IdleMode.kCoast);
+    }
+
+    public void enableBrake(){
+        intakeBottom.setIdleMode(IdleMode.kBrake);
+        intakeTop.setIdleMode(IdleMode.kBrake);
+        intakeTurn.setIdleMode(IdleMode.kBrake);
     }
 
 }

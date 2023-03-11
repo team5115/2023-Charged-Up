@@ -89,6 +89,30 @@ public class Arm extends SubsystemBase{
         angle -= 3*0.02;
     }
 
+    public void topMoveIn(){
+        topLength += 5*0.02;
+    }
+
+    public void topMoveOut(){
+        topLength -= 5*0.02;
+    }
+
+    public void bottomMoveIn(){
+        bottomLength += 5*0.02;
+    }
+
+    public void bottomMoveOut(){
+        bottomLength -= 5*0.02;
+    }
+
+    public void disableBrake(){
+        intake.disableBrake();
+    }
+
+    public void enableBrake(){
+        intake.enableBrake();
+    }
+
     public void updateController(){
         if(bottomLength>5 || topLength>5){
             intake.FF = false;
