@@ -174,16 +174,16 @@ public class Drivetrain extends SubsystemBase{
         return poseEstimator.getEstimatedPosition();
     }
 
-    public boolean UpdateMoving(double dist, double startleftDist, double startRightDist) {
-        double locL = getLeftDistance();
-        double forwardL = movingPID.calculate(locL, startleftDist+dist);
-        double locR = getRightDistance();
-        double forwardR = movingPID.calculate(locR, startRightDist+dist);
-        
-        System.out.println("Would be moving @ " + (forwardL+forwardR)/2 + " m/s");
-        //drivetrain.plugandFFDrive(forwardL, forwardR);
+    public boolean UpdateMoving(double dist, double startLeftDist, double startRightDist, double speedMagnitude) {
+        double speed = speedMagnitude * Math.signum(dist);
+        drivetrain.plugandFFDrive(speed, speed);
 
-        return false;
+        boolean closeLeft = Math.abs(startRightDist + dist - getLeftDistance()) < 0.1;
+        boolean closeRight = Math.abs(startLeftDist + dist - getRightDistance()) < 0.1;
+
+        System.out.println("Left Near: " + closeLeft + "| Right Near: " + closeRight);
+
+        return closeLeft || closeRight;
     }      
 
     public boolean UpdateTurning(double angle) {

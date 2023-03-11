@@ -14,9 +14,9 @@ public class ChargingBasicAdjustDriveCommandGroup extends SequentialCommandGroup
         this.drivetrain = drivetrain;
         this.intake = intake;
         addCommands(
-            new DriveForward(drivetrain, -1),
-            new DriveForward(drivetrain, 8),
-            new DriveForward(drivetrain, -4),
+            new DriveForward(drivetrain, -1, 1),
+            new DriveForward(drivetrain, 8, 1),
+            new DriveForward(drivetrain, -4, 1),
             new Dock(drivetrain)
         ); 
 }

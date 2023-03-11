@@ -43,7 +43,7 @@ public class RobotContainer {
         arm = new Arm(hardwareArm);
         startup = new Startup(arm, hardwareArm, intake);
         
-        autoCommandGroup = new AutoCommandGroup(drivetrain, arm);
+        autoCommandGroup = new AutoCommandGroup(drivetrain, arm, true);
         dockSequence = new DockCommandGroup(drivetrain);
         timer = new Timer();
         timer.reset();
