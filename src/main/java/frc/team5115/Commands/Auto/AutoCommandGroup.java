@@ -15,7 +15,7 @@ public class AutoCommandGroup extends ParallelCommandGroup {
         this.drivetrain = drivetrain;
         addCommands(
             new AdjustDriveCommandGroup(drivetrain, intake),
-            new HighCone(intake)
+            new HighNode(intake)
         );
     }
 }

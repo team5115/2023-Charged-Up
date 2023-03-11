@@ -6,14 +6,14 @@ import frc.team5115.Commands.Intake.RealExtend;
 import frc.team5115.Commands.Intake.RawIntakeCommands.IntakeExtend_v2;
 import frc.team5115.Commands.Intake.RawIntakeCommands.IntakeTurn;
 
-public class Resting extends SequentialCommandGroup {
+public class StowCone extends SequentialCommandGroup {
     Arm intake;
 
-    public Resting(Arm intake){
+    public StowCone(Arm intake){
         this.intake = intake;
         addCommands(
             new RealExtend(intake, 0),
-            new IntakeTurn(intake, -90)
+            new IntakeTurn(intake, -80)
         );
     }
 }
