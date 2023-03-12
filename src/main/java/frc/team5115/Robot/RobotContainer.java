@@ -44,7 +44,7 @@ public class RobotContainer {
         startup = new Startup(arm, hardwareArm, intake);
         
         autoCommandGroup = new AutoCommandGroup(drivetrain, arm, true);
-        dockSequence = new DockCommandGroup(drivetrain);
+        dockSequence = new DockCommandGroup(drivetrain, false);
         timer = new Timer();
         timer.reset();
         configureButtonBindings();

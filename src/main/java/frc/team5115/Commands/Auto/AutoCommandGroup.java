@@ -26,23 +26,25 @@ public class AutoCommandGroup extends SequentialCommandGroup {
     private void setupIdeal() {
         addCommands(
             new DriveForward(drivetrain, -1.0, 0.5),
-            new TestingPrint("done first"),
+            new TestingPrint("done: back a little"),
             new DriveForward(drivetrain, +3.0, 1.2),
-            new TestingPrint("done second"),
-            new DriveForward(drivetrain, +2.0, 0.6),
-            new TestingPrint("done third"),
-            new DriveForward(drivetrain, -2.0, 0.8),
-            new TestingPrint("done fourth"),
-            new DockCommandGroup(drivetrain),
-            new TestingPrint("done completely")
+            new TestingPrint("done: fast forward"),
+            new DriveForward(drivetrain, +3.0, 0.6),
+            new TestingPrint("done: over ramp and exit community"),
+            new DockCommandGroup(drivetrain, true),
+            new TestingPrint("done: docking \n ----Auto Complete----")
 
         );
     }
 
     private void setupNotIdeal() {
         addCommands(
-            new DriveForward(drivetrain, +1, 0.5),
-            new DriveForward(drivetrain, -1, 0.5)
+            new DriveForward(drivetrain, -1.0, 0.5),
+            new TestingPrint("done: back a little"),
+            new DriveForward(drivetrain, +1.0, 1.2),
+            new TestingPrint("done: fast forward"),
+            new DriveForward(drivetrain, +5.0, 1),
+            new TestingPrint("done: exit community")
         );
     }
 }

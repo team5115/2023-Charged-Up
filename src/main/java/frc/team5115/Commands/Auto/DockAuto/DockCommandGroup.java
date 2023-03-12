@@ -4,13 +4,13 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team5115.Classes.Software.Drivetrain;
 
 public class DockCommandGroup extends SequentialCommandGroup {
-    Drivetrain drivetrain;
 
-    public DockCommandGroup(Drivetrain drivetrain) {
-        this.drivetrain = drivetrain;
+    public DockCommandGroup(Drivetrain drivetrain, boolean goBackwards) {
+        double direction = goBackwards ? -1 : 1;
+
         addCommands(
-            new DriveUntilDock(drivetrain, 2),
-            new Dock(drivetrain)
+            new DriveUntilDock(drivetrain, direction),
+            new Dock(drivetrain, direction)
         );
     }
 }

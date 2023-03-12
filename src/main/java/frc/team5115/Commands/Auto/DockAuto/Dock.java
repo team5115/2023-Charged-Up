@@ -9,12 +9,18 @@ public class Dock extends CommandBase{
     private Timer dockedTimer;
     private Drivetrain drivetrain;
     private double encoderDistanceAtStart;
+    private final double direction;
     private final PIDController dockPID;
-    public static final double dockP = 0.0175;
-    private static final double MaxTravelDistance = 1.37;
-    public static final double BalancingTolerance = 1.5; // tolerance in degrees from 0 to decide if the robot is balanced/docked
+    public final double dockP;
+    private final double MaxTravelDistance;
+    public final double BalancingTolerance; // tolerance in degrees from 0 to decide if the robot is balanced/docked
 
-    public Dock(Drivetrain drivetrain) {
+    public Dock(Drivetrain drivetrain, double direction) {
+        this.direction = direction;
+        MaxTravelDistance = 1.37 * direction;
+        BalancingTolerance = 1.5;
+        dockP = 0.0175;
+
         dockPID = new PIDController(dockP, 0, dockP/10);
         this.drivetrain = drivetrain;
         dockedTimer = new Timer();
@@ -31,10 +37,10 @@ public class Dock extends CommandBase{
         double pitch = drivetrain.getPitchDeg();
         // PID loop tries to go towards the setpoint, so in general, a positive currentValue and a 0 setpoint will return negative output
         // this is why it actually runs at the opposite of what the PID loop says
-        double forward = -dockPID.calculate(pitch, 0);
+        double forward = -dockPID.calculate(pitch, 0) * direction;
         // System.out.println("Docking @ " + forward + " m/s");
 
-        if (getDistanceFromStart() < MaxTravelDistance) {
+        if (getDistanceFromStart() * direction < MaxTravelDistance * direction) {
             drivetrain.autoDrive(forward);
         } else {
             // System.out.println("Stopped docking - too close to edge!");
@@ -52,7 +58,13 @@ public class Dock extends CommandBase{
     @Override
     public void end(boolean interrupted){
         drivetrain.setThrottleEnabled(true);
-        System.out.println("Successfully docked!");
+
+        if (interrupted) {
+            System.out.println("docking interrupted");
+        } else {
+            System.out.println("Successfully docked!");
+        }
+
         System.out.println("end angle: " + drivetrain.getPitchDeg() + " degrees");
         System.out.println("distance from start: " + getDistanceFromStart() + " meters");
     }
