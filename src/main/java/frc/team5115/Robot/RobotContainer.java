@@ -30,7 +30,7 @@ public class RobotContainer {
     private final HardwareArm hardwareArm;
     private final AutoCommandGroup autoCommandGroup;
     private final DockCommandGroup dockSequence;
-    private final Startup startup;
+    private final Startup_Intake startup;
 
     public RobotContainer() {
         joy1 = new Joystick(0);
@@ -41,7 +41,7 @@ public class RobotContainer {
         intake = new HardwareIntake();
         hardwareArm = new HardwareArm();
         arm = new Arm(hardwareArm);
-        startup = new Startup(arm, hardwareArm, intake);
+        startup = new Startup_Intake(arm, hardwareArm, intake);
         
         autoCommandGroup = new AutoCommandGroup(drivetrain, arm);
         dockSequence = new DockCommandGroup(drivetrain);
@@ -57,7 +57,7 @@ public class RobotContainer {
         //new JoystickButton(joy1, 2).onTrue(new RealExtend(arm, 0));
         //new JoystickButton(joy1, 1).onTrue(new RealExtend(arm, 25.5));
         new JoystickButton(joy1, 1).onTrue(new IntakeExtend_v2(arm, 0, 0));
-        new JoystickButton(joy1, 2).onTrue(new IntakeExtend_v2(arm, 25.5, 25.5));
+        new JoystickButton(joy1, 2).onTrue(new IntakeExtend_v2(arm, 25, 25));
         new JoystickButton(joy1, 3).onTrue(new InstantCommand(arm :: setArmUp));
         new JoystickButton(joy1, 4).onTrue(new InstantCommand(arm :: setArmDown));
         new JoystickButton(joy1, 5).onTrue(new InstantCommand(intake :: TurnOut)).onFalse(new InstantCommand(intake :: StopMotor));
@@ -80,10 +80,11 @@ public class RobotContainer {
         drivetrain.resetNAVx();
         System.out.println("Starting teleop");
         startup.schedule();
+        arm.enableBrake();
     }
 
     public void disabledInit(){
-
+        arm.disableBrake();
     }
 
     public void stopEverything(){

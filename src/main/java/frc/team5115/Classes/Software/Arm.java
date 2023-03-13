@@ -14,15 +14,26 @@ public class Arm extends SubsystemBase{
     private HardwareArm intake;
     private double topLength = 0;
     private double bottomLength = 0;
-    private double angle = -30;
+    private double angle = -90;
     private double speed = 0.25;
     private ShuffleboardTab tab = Shuffleboard.getTab("SmartDashboard");
-    private GenericEntry topKp = tab.add("topKp", 0.1).getEntry();
-    private GenericEntry bottomKp = tab.add("bottomKp", 0.1).getEntry();
+    /* 
+    private GenericEntry topKp = tab.add("topKp", 0.6).getEntry();
+    private GenericEntry bottomKp = tab.add("bottomKp", 0.6).getEntry();
     private GenericEntry topAngle = tab.add("topAngle", 0).getEntry();
     private PIDController turnController = new PIDController(0.06, 0.0, 0.0);
-    public PIDController topWinchController = new PIDController(topKp.getDouble(0.1), 0, 0);
-    public PIDController bottomWinchController = new PIDController(bottomKp.getDouble(0.1), 0, 0);
+    public PIDController topWinchController = new PIDController(topKp.getDouble(0.6), 0, 0);
+    public PIDController bottomWinchController = new PIDController(bottomKp.getDouble(0.6), 0, 0);
+    */
+
+    private double topKp = 0.5;
+    private double bottomKp = 0.5;
+
+
+    private PIDController turnController = new PIDController(0.06, 0.0, 0.0);
+    public PIDController topWinchController = new PIDController(topKp, 0, 0);
+    public PIDController bottomWinchController = new PIDController(bottomKp, 0, 0);
+
     public boolean armcontrol = false;
 
     public Arm(HardwareArm x){
@@ -74,6 +85,18 @@ public class Arm extends SubsystemBase{
 
     public void turnSetAngle(double angle){
         this.angle = angle;
+    }
+
+    public void resetPID(){
+        topKp = 0.5;
+        bottomKp = 0.5;
+
+    }
+
+    public void stowPID(){
+        topKp = 0.1;
+        bottomKp = 0.1;
+
     }
 
     public void setArmUp(){

@@ -74,7 +74,6 @@ public class HardwareArm extends SubsystemBase{
             speed = 0;
         }
 
-        
         intakeBottom.set(speed);
     }
 
