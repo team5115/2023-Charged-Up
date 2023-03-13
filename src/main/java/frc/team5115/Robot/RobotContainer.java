@@ -111,7 +111,7 @@ public class RobotContainer {
     }
 
     public void autoPeriod(){
-       //drivetrain.UpdateOdometry();
+       drivetrain.UpdateOdometry();
        //arm.updateController();
     }
 
@@ -137,7 +137,7 @@ public class RobotContainer {
         //     arm.bottomMoveIn();
         // }
 
-        //drivetrain.UpdateOdometry();
+        drivetrain.UpdateOdometry();
         if(arm.armcontrol) arm.updateController();
         double forward = -joy2.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
         double turn = joy2.getRawAxis(JOY_Z_AXIS_ID);

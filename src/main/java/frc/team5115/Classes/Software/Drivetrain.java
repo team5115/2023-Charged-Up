@@ -16,6 +16,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team5115.Classes.Acessory.ThrottleControl;
 import frc.team5115.Classes.Hardware.HardwareDrivetrain;
@@ -57,9 +58,14 @@ public class Drivetrain extends SubsystemBase{
         ramseteController = new RamseteController();
         kinematics = new DifferentialDriveKinematics(TRACKING_WIDTH_METERS);
         navx = new NAVx();
-        poseEstimator = new DifferentialDrivePoseEstimator(kinematics, navx.getYawRotation2D(), 0.0, 0.0, new Pose2d(FieldConstants.startX, FieldConstants.startY, FieldConstants.startAngle), 
+        // poseEstimator = new DifferentialDrivePoseEstimator(kinematics, navx.getYawRotation2D(), 0.0, 0.0, new Pose2d(FieldConstants.startX, FieldConstants.startY, FieldConstants.startAngle), 
+        // VecBuilder.fill(1, 1, 1),
+        // VecBuilder.fill(0, 0, 0));
+
+        poseEstimator = new DifferentialDrivePoseEstimator(kinematics, navx.getYawRotation2D(), 0.0, 0.0, new Pose2d(), 
         VecBuilder.fill(1, 1, 1),
         VecBuilder.fill(0, 0, 0));
+        
     }
 
     public void stop() {
@@ -152,9 +158,12 @@ public class Drivetrain extends SubsystemBase{
     public void TankDriveToTrajectoryState(Trajectory.State tState) {
         ChassisSpeeds adjustedSpeeds = ramseteController.calculate(getEstimatedPose(), tState);
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(adjustedSpeeds);
-        leftSpeed = wheelSpeeds.leftMetersPerSecond;
-        rightSpeed = wheelSpeeds.rightMetersPerSecond;
+        leftSpeed = wheelSpeeds.leftMetersPerSecond*0.01;
+        rightSpeed = wheelSpeeds.rightMetersPerSecond*0.01;
         drivetrain.plugandFFDrive(leftSpeed, rightSpeed);
+        System.out.println(adjustedSpeeds);
+        System.out.println(wheelSpeeds);
+        System.out.println(getEstimatedPose());
     }
 
     public void UpdateOdometry() {
