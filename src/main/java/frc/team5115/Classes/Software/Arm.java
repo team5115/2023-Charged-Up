@@ -26,8 +26,8 @@ public class Arm extends SubsystemBase{
     public PIDController bottomWinchController = new PIDController(bottomKp.getDouble(0.6), 0, 0);
     */
 
-    private double topKp = 0.5;
-    private double bottomKp = 0.5;
+    private double topKp = 0.13;
+    private double bottomKp = 0.14;
 
 
     private PIDController turnController = new PIDController(0.06, 0.0, 0.0);
@@ -35,6 +35,7 @@ public class Arm extends SubsystemBase{
     public PIDController bottomWinchController = new PIDController(bottomKp, 0, 0);
 
     public boolean armcontrol = false;
+    public boolean armcontrolangle = false;
 
     public Arm(HardwareArm x){
         intake = x;
@@ -85,18 +86,6 @@ public class Arm extends SubsystemBase{
 
     public void turnSetAngle(double angle){
         this.angle = angle;
-    }
-
-    public void resetPID(){
-        topKp = 0.5;
-        bottomKp = 0.5;
-
-    }
-
-    public void stowPID(){
-        topKp = 0.1;
-        bottomKp = 0.1;
-
     }
 
     public void setArmUp(){

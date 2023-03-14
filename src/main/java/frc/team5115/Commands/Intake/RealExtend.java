@@ -8,17 +8,18 @@ import frc.team5115.Commands.Intake.RawIntakeCommands.IntakeExtend;
 public class RealExtend extends SequentialCommandGroup {
     Arm arm;
 
-    public RealExtend(Arm arm, double length){
-        this.arm = arm;
-        addCommands(new InstantCommand(arm :: stowPID));
-        if(length > 5){
-            addCommands(new IntakeExtend(arm, arm.getTopWinchLength()-2, arm.getBottomWinchLength()+3));
-            addCommands(new IntakeExtend(arm, length, length+1));
-
-        } else {
-            addCommands(new IntakeExtend(arm, arm.getTopWinchLength()-2, arm.getBottomWinchLength() -0.5));
-            addCommands(new IntakeExtend(arm, length-1.5, length-1));
+        public RealExtend(Arm arm, double length){
+            this.arm = arm;
+    
+            if(length > 5){
+                addCommands(new IntakeExtend(arm, arm.getTopWinchLength()-2, arm.getBottomWinchLength()+3));
+                addCommands(new IntakeExtend(arm, length, length+1));
+    
+            } else {
+                addCommands(new IntakeExtend(arm, arm.getTopWinchLength()-2, arm.getBottomWinchLength() -0.5));
+                addCommands(new IntakeExtend(arm, length-1, length-1));
+            }
+    
         }
-        addCommands(new InstantCommand(arm :: resetPID));
-    }
+    
 }

@@ -8,14 +8,12 @@ import frc.team5115.Classes.Hardware.*;
 public class Startup_Angle extends CommandBase{
     private Arm intake;
     private HardwareArm hardwareIntake;
-    private HardwareIntake claw;
     private Timer timer;
     private Timer innerTimer;
 
-    public Startup_Angle(Arm a, HardwareArm b, HardwareIntake claw){
+    public Startup_Angle(Arm a, HardwareArm b){
         intake = a;
         hardwareIntake = b;
-        this.claw = claw;
         timer = new Timer();
         timer.start();
         innerTimer = new Timer();
@@ -23,8 +21,7 @@ public class Startup_Angle extends CommandBase{
     }
     public void initialize() {
         timer.reset();
-        claw.open();
-        hardwareIntake.setTurn(-0.1);
+        hardwareIntake.setTurn(-0.13);
     }
 
     public void execute(){
@@ -35,11 +32,11 @@ public class Startup_Angle extends CommandBase{
         intake.zeroArm();
         intake.stop();
         intake.setLength(0);
-        intake.armcontrol = true;
+        intake.armcontrolangle = true;
     }
 
     public boolean isFinished() {
-        if(timer.get()>0.5){
+        if(timer.get()>0.1){
             if(Math.abs(hardwareIntake.getTurnVelocity())<1){
             return true;
         }

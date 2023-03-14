@@ -71,14 +71,14 @@ public class RobotContainer {
         new JoystickButton(joy1, 1).onTrue(new GroundPickup(arm)); // low node/ground pickup
         new JoystickButton(joy1, 7).onTrue(new Stow(arm)); // stow fully
         new JoystickButton(joy1, 8).onTrue(new StowCone(arm)); // stow with cone
-        new Trigger(new JoyAxisBoolSupplier(joy1, 1, -0.5, false)).onTrue(new InstantCommand(arm :: turnUp)); // angle up
-        new Trigger(new JoyAxisBoolSupplier(joy1, 1, +0.5, true)).onTrue(new InstantCommand(arm :: turnDown)); // angle down
-        new JoystickButton(joy1, 5).onTrue(new InstantCommand(arm :: topMoveIn)); // top in
-        new JoystickButton(joy1, 6).onTrue(new InstantCommand(arm :: topMoveOut)); // top out
-        new Trigger(new JoyAxisBoolSupplier(joy1, 2, +0.5)).onTrue(new InstantCommand(arm :: bottomMoveIn)); // bottom in
-        new Trigger(new JoyAxisBoolSupplier(joy1, 3, +0.5)).onTrue(new InstantCommand(arm :: bottomMoveOut)); // bottom out
-        new Trigger(new JoyAxisBoolSupplier(joy1, 4, -0.5, false)).onTrue(new InstantCommand(intake :: TurnIn)); // intake in
-        new Trigger(new JoyAxisBoolSupplier(joy1, 4, +0.5, true)).onTrue(new InstantCommand(intake :: TurnOut)); // intake out
+       // new Trigger(new JoyAxisBoolSupplier(joy1, 1, -0.5, false)).onTrue(new InstantCommand(arm :: turnUp)); // angle up
+       // new Trigger(new JoyAxisBoolSupplier(joy1, 1, +0.5, true)).onTrue(new InstantCommand(arm :: turnDown)); // angle down
+        //new JoystickButton(joy1, 5).whileTrue(new InstantCommand(arm :: topMoveIn)); // top in
+       // new JoystickButton(joy1, 6).whileTrue(new InstantCommand(arm :: topMoveOut)); // top out
+     //   new Trigger(new JoyAxisBoolSupplier(joy1, 2, +0.5)).onTrue(new InstantCommand(arm :: bottomMoveIn)); // bottom in
+      //  new Trigger(new JoyAxisBoolSupplier(joy1, 3, +0.5)).onTrue(new InstantCommand(arm :: bottomMoveOut)); // bottom out
+       // new Trigger(new JoyAxisBoolSupplier(joy1, 4, -0.5, false)).onTrue(new InstantCommand(intake :: TurnIn)); // intake in
+      //  new Trigger(new JoyAxisBoolSupplier(joy1, 4, +0.5, true)).onTrue(new InstantCommand(intake :: TurnOut)); // intake out
 
         // BooleanSupplier leftTrigger = new JoyAxisBoolSupplier(joy, 2, 0.5);
         // BooleanSupplier rightTrigger = new JoyAxisBoolSupplier(joy, 3, 0.5);
@@ -117,26 +117,36 @@ public class RobotContainer {
     }
 
     public void teleopPeriodic(){
-        // if(-joy1.getRawAxis(1) > 0.5){
-        //     arm.turnUp();
-        // }
-        // else if(-joy1.getRawAxis(1) < -0.5){
-        //     arm.turnDown();
-        // }
+         if(-joy1.getRawAxis(1) > 0.5){
+             arm.turnUp();
+         }
+         else if(-joy1.getRawAxis(1) < -0.5){
+             arm.turnDown();
+        }
 
-        // if(joy1.getRawAxis(0) < -0.5){
-        //     arm.topMoveOut();
-        // }
-        // else if (joy1.getRawAxis(0) > 0.5){
-        //     arm.topMoveIn();
-        // }
+        if(joy1.getRawAxis(2) > 0.5){
+            arm.topMoveIn();
+         }
+          if (joy1.getRawButton(5)){
+             arm.bottomMoveIn();
+         }
 
-        // if(joy1.getRawAxis(4) < -0.5){
-        //     arm.bottomMoveOut();
-        // }
-        // else if (joy1.getRawAxis(4) > 0.5){
-        //     arm.bottomMoveIn();
-        // }
+         if(joy1.getRawAxis(3) > 0.5){
+            arm.topMoveOut();
+         }
+          if (joy1.getRawButton(6)){
+             arm.bottomMoveOut();
+         }
+
+         if(joy1.getRawAxis(4) < -0.5){
+            intake.TurnIn();
+         }
+         else if(joy1.getRawAxis(4) > 0.5){
+            intake.TurnOut();
+         }
+         else {
+            intake.StopMotor();
+         }
 
         //drivetrain.UpdateOdometry();
         if(arm.armcontrol) arm.updateController();

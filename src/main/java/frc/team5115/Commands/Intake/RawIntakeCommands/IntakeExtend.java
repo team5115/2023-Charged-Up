@@ -42,9 +42,10 @@ public class IntakeExtend extends CommandBase{
             return true;
         }
         else innerTimer.reset();
-        if(timer.get()>1 ){
+        if(timer.get()>0.2){
             return true;
         }
+
         return false;
       }
 

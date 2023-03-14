@@ -32,7 +32,7 @@ public class HardwareArm extends SubsystemBase{
         intakeBottom = new CANSparkMax(6, MotorType.kBrushless);    
         intakeTurn = new CANSparkMax(7, MotorType.kBrushless);  
 
-        intakeBottom.setInverted(false);
+        intakeBottom.setInverted(true);
         intakeTop.setInverted(true);
 
         intakeTop.setIdleMode(IdleMode.kBrake);
@@ -84,7 +84,7 @@ public class HardwareArm extends SubsystemBase{
             speed = 0;
         }
         if(FF){
-            intakeTurn.setVoltage(Math.max(arm.calculate((getArmRad()), 1.7*speed), -8));
+            intakeTurn.setVoltage(Math.max(arm.calculate((getArmRad()), 1.7*speed), -10));
         }
         else{
             if(speed>.37){
