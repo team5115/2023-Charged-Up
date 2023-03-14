@@ -28,7 +28,7 @@ public class RobotContainer {
     private final HardwareIntake intake;
     private final Arm arm;
     private final HardwareArm hardwareArm;
-    private final AutoCommandGroup autoCommandGroup;
+    private AutoCommandGroup autoCommandGroup;
     private final DockCommandGroup dockSequence;
     private final Startup startup;
 
@@ -43,7 +43,6 @@ public class RobotContainer {
         arm = new Arm(hardwareArm);
         startup = new Startup(arm, hardwareArm, intake);
         
-        autoCommandGroup = new AutoCommandGroup(drivetrain, arm, true);
         dockSequence = new DockCommandGroup(drivetrain, false);
         timer = new Timer();
         timer.reset();
@@ -92,7 +91,6 @@ public class RobotContainer {
         arm.armcontrol = false;
         if(autoCommandGroup != null) autoCommandGroup.cancel();
         // arm.zeroArm();
-        drivetrain.resetNAVx();
         System.out.println("Starting teleop");
         startup.schedule();
     }
@@ -107,6 +105,8 @@ public class RobotContainer {
     }
 
     public void startAuto(){
+        drivetrain.resetNAVx();
+        autoCommandGroup = new AutoCommandGroup(drivetrain, arm, true);
         if(autoCommandGroup != null) autoCommandGroup.schedule();
     }
 

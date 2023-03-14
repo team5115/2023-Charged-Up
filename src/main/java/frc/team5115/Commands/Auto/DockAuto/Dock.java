@@ -37,7 +37,8 @@ public class Dock extends CommandBase{
         double pitch = drivetrain.getPitchDeg();
         // PID loop tries to go towards the setpoint, so in general, a positive currentValue and a 0 setpoint will return negative output
         // this is why it actually runs at the opposite of what the PID loop says
-        double forward = -dockPID.calculate(pitch, 0) * direction;
+        // if direction is -1, then the pid loop will just be reversed and forward will be negative without needing to be multiplied by direction
+        double forward = -dockPID.calculate(pitch, 0);
         // System.out.println("Docking @ " + forward + " m/s");
 
         if (getDistanceFromStart() * direction < MaxTravelDistance * direction) {
