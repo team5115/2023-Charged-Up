@@ -26,11 +26,11 @@ public class Arm extends SubsystemBase{
     public PIDController bottomWinchController = new PIDController(bottomKp.getDouble(0.6), 0, 0);
     */
 
-    private double topKp = 0.13;
-    private double bottomKp = 0.14;
+    private double topKp = 0.113;
+    private double bottomKp = 0.115;
 
 
-    private PIDController turnController = new PIDController(0.06, 0.0, 0.0);
+    private PIDController turnController = new PIDController(0.073, 0.0, 0.0);
     public PIDController topWinchController = new PIDController(topKp, 0, 0);
     public PIDController bottomWinchController = new PIDController(bottomKp, 0, 0);
 
@@ -41,6 +41,14 @@ public class Arm extends SubsystemBase{
         intake = x;
         zeroArm();
         intake.setEncoders(topLength, -90);
+    }
+
+    public void setTopPID(double kP){
+        topWinchController.setP(kP);
+    }
+
+    public void setBottomPID(double kP){
+        bottomWinchController.setP(kP);
     }
 
     public void setTopWinchSpeed(){
@@ -169,7 +177,7 @@ public class Arm extends SubsystemBase{
     }
 
     public void zeroArm(){
-        intake.setEncoders(0, -90);
+        intake.setEncoders(0, -95.5);
     }
 
     public boolean getFault(CANSparkMax.FaultID f){

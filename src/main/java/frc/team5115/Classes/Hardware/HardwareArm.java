@@ -84,7 +84,7 @@ public class HardwareArm extends SubsystemBase{
             speed = 0;
         }
         if(FF){
-            intakeTurn.setVoltage(Math.max(arm.calculate((getArmRad()), 1.7*speed), -10));
+            intakeTurn.setVoltage(Math.max(arm.calculate((getArmRad()), 1.5*speed), -10));
         }
         else{
             if(speed>.37){

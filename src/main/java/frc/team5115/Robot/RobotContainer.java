@@ -30,7 +30,7 @@ public class RobotContainer {
     private final HardwareArm hardwareArm;
     private final AutoCommandGroup autoCommandGroup;
     private final DockCommandGroup dockSequence;
-    private final Startup_Intake startup;
+    private final Startup startup;
 
     public RobotContainer() {
         joy1 = new Joystick(0);
@@ -41,7 +41,7 @@ public class RobotContainer {
         intake = new HardwareIntake();
         hardwareArm = new HardwareArm();
         arm = new Arm(hardwareArm);
-        startup = new Startup_Intake(arm, hardwareArm, intake);
+        startup = new Startup(arm, hardwareArm, intake);
         
         autoCommandGroup = new AutoCommandGroup(drivetrain, arm);
         dockSequence = new DockCommandGroup(drivetrain);
@@ -52,7 +52,7 @@ public class RobotContainer {
 
     public void configureButtonBindings() {
         new JoystickButton(joy2, 1).onTrue(new InstantCommand(drivetrain :: toggleSlowMode));
-        new JoystickButton(joy2, 9).onTrue(dockSequence);
+        //new JoystickButton(joy2, 9).onTrue(dockSequence);
    
         //new JoystickButton(joy1, 2).onTrue(new RealExtend(arm, 0));
         //new JoystickButton(joy1, 1).onTrue(new RealExtend(arm, 25.5));
@@ -69,8 +69,8 @@ public class RobotContainer {
         new JoystickButton(joy1, 4).onTrue(new HighNode(arm)); // high node
         new JoystickButton(joy1, 2).onTrue(new MiddleNode(arm)); // middle node
         new JoystickButton(joy1, 1).onTrue(new GroundPickup(arm)); // low node/ground pickup
-        new JoystickButton(joy1, 7).onTrue(new Stow(arm)); // stow fully
-        new JoystickButton(joy1, 8).onTrue(new StowCone(arm)); // stow with cone
+        new JoystickButton(joy1, 8).onTrue(new Stow(arm)); // stow fully
+        new JoystickButton(joy1, 7).onTrue(new StowCone(arm)); // stow with cone
        // new Trigger(new JoyAxisBoolSupplier(joy1, 1, -0.5, false)).onTrue(new InstantCommand(arm :: turnUp)); // angle up
        // new Trigger(new JoyAxisBoolSupplier(joy1, 1, +0.5, true)).onTrue(new InstantCommand(arm :: turnDown)); // angle down
         //new JoystickButton(joy1, 5).whileTrue(new InstantCommand(arm :: topMoveIn)); // top in
@@ -138,10 +138,10 @@ public class RobotContainer {
              arm.bottomMoveOut();
          }
 
-         if(joy1.getRawAxis(4) < -0.5){
+         if(-joy1.getRawAxis(5) < -0.5){
             intake.TurnIn();
          }
-         else if(joy1.getRawAxis(4) > 0.5){
+         else if(-joy1.getRawAxis(5) > 0.5){
             intake.TurnOut();
          }
          else {
@@ -149,9 +149,10 @@ public class RobotContainer {
          }
 
         //drivetrain.UpdateOdometry();
-        if(arm.armcontrol) arm.updateController();
+        if(arm.armcontrol && arm.armcontrolangle) arm.updateController();
+        //if(arm.armcontrol && arm.armcontrolangle) arm.updateController();
         double forward = -joy2.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
         double turn = joy2.getRawAxis(JOY_Z_AXIS_ID);
-        //drivetrain.TankDrive(forward, turn);
+        drivetrain.TankDrive(forward, turn);
     }
 }

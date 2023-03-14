@@ -28,8 +28,8 @@ public class HardwareIntake extends SubsystemBase{
     }
 
     public void TurnIn(){
-        intakeL.set(ControlMode.PercentOutput, -0.5);
-        intakeR.set(ControlMode.PercentOutput, -0.5);
+        intakeL.set(ControlMode.PercentOutput, -0.7);
+        intakeR.set(ControlMode.PercentOutput, -0.7);
     }
 
     public void TurnOut(){
@@ -38,8 +38,8 @@ public class HardwareIntake extends SubsystemBase{
     }
 
     public void StopMotor(){
-        intakeL.set(ControlMode.PercentOutput, 0);
-        intakeR.set(ControlMode.PercentOutput,0);
+        intakeL.set(ControlMode.PercentOutput, -0.03);
+        intakeR.set(ControlMode.PercentOutput,-0.03);
     }
 
     public void open(){

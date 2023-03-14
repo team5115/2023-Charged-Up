@@ -12,13 +12,13 @@ public class HardwareDrivetrain{
 
     // Competition feedforward and feedback (pid) values
     // 6 inch diameter on COMP ROBOT WITH ARM and dumbells in back
-    private final double leftKs = 0.12543;
-    private final double leftKv = 1.3269;
-    private final double leftKa = 0.14027;
+    private final double leftKs = 0.17463;
+    private final double leftKv = 2.8104;
+    private final double leftKa = 0.82143;
     
-    private final double rightKs = 0.12477;
-    private final double rightKv = 1.3587;
-    private final double rightKa = 0.13818;
+    private final double rightKs = 0.17463;
+    private final double rightKv = 2.8104;
+    private final double rightKa = 0.82143;
 
     private final double leftKp = 1.6455;
     private final double rightKp = 1.6220;
@@ -94,6 +94,15 @@ public class HardwareDrivetrain{
      */
     public void plugandFFDrive(double leftSpeed, double rightSpeed) {
         
+        /* if((1.5*leftSpeed - (leftEncoder.getVelocity()*NEO_ENCODER_CALIBRATION))>1){
+            leftSpeed = 1.5*(leftEncoder.getVelocity()*NEO_ENCODER_CALIBRATION) + Math.signum(leftSpeed);
+        }
+
+        if((1.5*rightSpeed - (rightEncoder.getVelocity()*NEO_ENCODER_CALIBRATION))>1){
+            rightSpeed = 1.5*(rightEncoder.getVelocity()*NEO_ENCODER_CALIBRATION) + Math.signum(rightSpeed);
+        }
+        */
+
         double leftVoltage = 1.5*leftFeedForward.calculate(leftSpeed);
         double rightVoltage = 1.5*rightFeedForward.calculate(rightSpeed);
         // leftVoltage += leftPID.calculate(leftEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, leftSpeed);
