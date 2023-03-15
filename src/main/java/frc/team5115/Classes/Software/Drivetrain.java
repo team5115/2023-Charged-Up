@@ -187,7 +187,7 @@ public class Drivetrain extends SubsystemBase{
         final double remainingLeftDistance = startLeftDist + dist - getLeftDistance();
         final double remainingRightDistance = startRightDist + dist - getLeftDistance();
 
-        final double speed = speedMagnitude * Math.signum(remainingLeftDistance + remainingRightDistance / 2);
+        final double speed = speedMagnitude * Math.signum((remainingLeftDistance + remainingRightDistance) / 2);
         drivetrain.plugandFFDrive(speed, speed);
 
         final double tolerance = 0.05;
