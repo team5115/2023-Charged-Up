@@ -34,7 +34,7 @@ public class RobotContainer {
 
     public RobotContainer() {
         joy1 = new Joystick(0);
-        joy2 = new Joystick(0); // <-- for testing only!!
+        joy2 = new Joystick(1); // <-- for testing only!!
 
         photonVision = new PhotonVision();
         drivetrain = new Drivetrain(photonVision);
