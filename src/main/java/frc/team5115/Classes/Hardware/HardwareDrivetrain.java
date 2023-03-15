@@ -94,17 +94,17 @@ public class HardwareDrivetrain{
      */
     public void plugandFFDrive(double leftSpeed, double rightSpeed) {
         
-        /* if((1.5*leftSpeed - (leftEncoder.getVelocity()*NEO_ENCODER_CALIBRATION))>1){
-            leftSpeed = 1.5*(leftEncoder.getVelocity()*NEO_ENCODER_CALIBRATION) + Math.signum(leftSpeed);
+         if(Math.abs(leftSpeed - (leftEncoder.getVelocity()*NEO_ENCODER_CALIBRATION))>1){
+            leftSpeed = (leftEncoder.getVelocity()*NEO_ENCODER_CALIBRATION) + Math.signum((1.5*leftSpeed - (leftEncoder.getVelocity()*NEO_ENCODER_CALIBRATION)));
         }
 
-        if((1.5*rightSpeed - (rightEncoder.getVelocity()*NEO_ENCODER_CALIBRATION))>1){
-            rightSpeed = 1.5*(rightEncoder.getVelocity()*NEO_ENCODER_CALIBRATION) + Math.signum(rightSpeed);
+        if(Math.abs(rightSpeed - (rightEncoder.getVelocity()*NEO_ENCODER_CALIBRATION))>1){
+            rightSpeed = (rightEncoder.getVelocity()*NEO_ENCODER_CALIBRATION) + Math.signum((1.5*rightSpeed - (rightEncoder.getVelocity()*NEO_ENCODER_CALIBRATION)));
         }
-        */
+        
 
-        double leftVoltage = 1.5*leftFeedForward.calculate(leftSpeed);
-        double rightVoltage = 1.5*rightFeedForward.calculate(rightSpeed);
+        double leftVoltage = leftFeedForward.calculate(leftSpeed);
+        double rightVoltage = rightFeedForward.calculate(rightSpeed);
         // leftVoltage += leftPID.calculate(leftEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, leftSpeed);
         // rightVoltage += rightPID.calculate(rightEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, rightSpeed);
         // Work on better PID Analyzer
