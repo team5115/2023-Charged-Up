@@ -149,7 +149,7 @@ public class RobotContainer {
          }
 
         //drivetrain.UpdateOdometry();
-        //if(arm.armcontrol && arm.armcontrolangle) arm.updateController();
+        if(arm.armcontrol && arm.armcontrolangle) arm.updateController();
         double forward = -joy2.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
         double turn = joy2.getRawAxis(JOY_Z_AXIS_ID);
         drivetrain.TankDrive(forward, turn);
