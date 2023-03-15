@@ -29,7 +29,7 @@ public class DriveForward extends CommandBase{
 
     @Override
     public void execute() {
-        boolean moved = drivetrain.UpdateMoving(dist, startleftDist, startRightDist);
+        boolean moved = drivetrain.UpdateMoving(dist, startleftDist, startRightDist, 1);
         if (moved) {
             dockedTimer.start();
         } else {
