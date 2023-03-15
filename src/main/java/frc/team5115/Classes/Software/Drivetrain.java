@@ -39,7 +39,7 @@ public class Drivetrain extends SubsystemBase{
     private final HardwareDrivetrain drivetrain;
     private final NAVx navx;
     private final PhotonVision photonVision;
-    private final DifferentialDrivePoseEstimator poseEstimator;
+    private DifferentialDrivePoseEstimator poseEstimator;
     private double leftSpeed;
     private double rightSpeed;
 
@@ -59,13 +59,20 @@ public class Drivetrain extends SubsystemBase{
         ramseteController = new RamseteController();
         kinematics = new DifferentialDriveKinematics(TRACKING_WIDTH_METERS);
         navx = new NAVx();
-        // poseEstimator = new DifferentialDrivePoseEstimator(kinematics, navx.getYawRotation2D(), 0.0, 0.0, new Pose2d(FieldConstants.startX, FieldConstants.startY, FieldConstants.startAngle), 
-        // VecBuilder.fill(1, 1, 1),
-        // VecBuilder.fill(0, 0, 0));
+    }
 
-        poseEstimator = new DifferentialDrivePoseEstimator(kinematics,
-            navx.getYawRotation2D(), getLeftDistance(), getRightDistance(), new Pose2d(),
-            VecBuilder.fill(1, 1, 1), VecBuilder.fill(0, 0, 0)
+    public void init() {
+        // poseEstimator = new DifferentialDrivePoseEstimator(
+        //     kinematics, navx.getYawRotation2D(), 0.0, 0.0,
+        //     new Pose2d(FieldConstants.startX, FieldConstants.startY, FieldConstants.startAngle), 
+        //     VecBuilder.fill(1, 1, 1),
+        //     VecBuilder.fill(0, 0, 0)
+        // );
+
+        poseEstimator = new DifferentialDrivePoseEstimator(
+            kinematics, navx.getYawRotation2D(), getLeftDistance(), getRightDistance(), new Pose2d()
+        );
+        System.out.println("Angle from navx" + navx.getYawDeg()
         );
     }
 
@@ -159,8 +166,8 @@ public class Drivetrain extends SubsystemBase{
     }
 
     public void TankDriveToTrajectoryState(Trajectory.State tState) {
-        ChassisSpeeds adjustedSpeeds = ramseteController.calculate(getEstimatedPose(), tState);
-        DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(adjustedSpeeds);
+        final ChassisSpeeds adjustedSpeeds = ramseteController.calculate(getEstimatedPose(), tState);
+        final DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(adjustedSpeeds);
         leftSpeed = wheelSpeeds.leftMetersPerSecond;
         rightSpeed = wheelSpeeds.rightMetersPerSecond;
         drivetrain.plugandFFDrive(leftSpeed, rightSpeed);

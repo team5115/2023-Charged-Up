@@ -98,6 +98,7 @@ public class RobotContainer {
 
     public void disabledInit(){
         arm.disableBrake();
+        drivetrain.init();
     }
 
     public void stopEverything(){
