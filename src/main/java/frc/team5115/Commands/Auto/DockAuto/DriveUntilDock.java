@@ -7,11 +7,12 @@ import frc.team5115.Classes.Software.Drivetrain;
 public class DriveUntilDock extends CommandBase {
     Drivetrain drivetrain;
     Timer timer;
-    double timeout;
+    double direction;
+    final double timeout = 5;
 
-    public DriveUntilDock(Drivetrain drivetrain, double timeout) {
+    public DriveUntilDock(Drivetrain drivetrain, double direction) {
         this.drivetrain = drivetrain;
-        this.timeout = timeout;
+        this.direction = direction;
         timer = new Timer();
     }
 
@@ -24,7 +25,7 @@ public class DriveUntilDock extends CommandBase {
 
     @Override
     public void execute() {
-        drivetrain.autoDrive(0.2);
+        drivetrain.autoDrive(0.2 * direction);
         // System.out.println("hasn't found it yet @ " + drivetrain.getPitchDeg() + " degrees");
     }
 
@@ -34,7 +35,7 @@ public class DriveUntilDock extends CommandBase {
             System.out.println("Drive until dock timed out");
             return true;
         }
-        if (drivetrain.getPitchDeg() > 12) {
+        if (Math.abs(drivetrain.getPitchDeg()) > 12) {
             System.out.println("found slope");
             return true;
         }

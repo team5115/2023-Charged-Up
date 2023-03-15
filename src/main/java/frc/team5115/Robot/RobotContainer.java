@@ -28,13 +28,13 @@ public class RobotContainer {
     private final HardwareIntake intake;
     private final Arm arm;
     private final HardwareArm hardwareArm;
-    private final AutoCommandGroup autoCommandGroup;
+    private AutoCommandGroup autoCommandGroup;
     private final DockCommandGroup dockSequence;
     private final Startup startup;
 
     public RobotContainer() {
         joy1 = new Joystick(0);
-        joy2 = new Joystick(1);
+        joy2 = new Joystick(1); // <-- for testing only!!
 
         photonVision = new PhotonVision();
         drivetrain = new Drivetrain(photonVision);
@@ -43,8 +43,7 @@ public class RobotContainer {
         arm = new Arm(hardwareArm);
         startup = new Startup(arm, hardwareArm, intake);
         
-        autoCommandGroup = new AutoCommandGroup(drivetrain, arm);
-        dockSequence = new DockCommandGroup(drivetrain);
+        dockSequence = new DockCommandGroup(drivetrain, false);
         timer = new Timer();
         timer.reset();
         configureButtonBindings();
@@ -92,7 +91,6 @@ public class RobotContainer {
         arm.armcontrol = false;
         if(autoCommandGroup != null) autoCommandGroup.cancel();
         // arm.zeroArm();
-        drivetrain.resetNAVx();
         System.out.println("Starting teleop");
         startup.schedule();
         arm.enableBrake();
@@ -108,11 +106,13 @@ public class RobotContainer {
     }
 
     public void startAuto(){
-        //if(autoCommandGroup != null) autoCommandGroup.schedule();
+        drivetrain.resetNAVx();
+        autoCommandGroup = new AutoCommandGroup(drivetrain, arm, true);
+        if(autoCommandGroup != null) autoCommandGroup.schedule();
     }
 
     public void autoPeriod(){
-       //drivetrain.UpdateOdometry();
+       drivetrain.UpdateOdometry();
        //arm.updateController();
     }
 
@@ -150,7 +150,6 @@ public class RobotContainer {
 
         //drivetrain.UpdateOdometry();
         if(arm.armcontrol && arm.armcontrolangle) arm.updateController();
-        //if(arm.armcontrol && arm.armcontrolangle) arm.updateController();
         double forward = -joy2.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
         double turn = joy2.getRawAxis(JOY_Z_AXIS_ID);
         drivetrain.TankDrive(forward, turn);

@@ -16,6 +16,8 @@ public class FollowTrajectory extends CommandBase {
     private final Drivetrain drivetrain;
     private final Trajectory trajectory;
     private final Timer timer;
+    private final double MaxSpeed = 0.1; // m/s
+    private final double MaxAcceleration = 0.1; // m/s^2
 
     public FollowTrajectory(Drivetrain drivetrain, double x, double y, double theta, ArrayList<Translation2d> interiorWaypoints) {
         this.drivetrain = drivetrain;
@@ -117,7 +119,7 @@ public class FollowTrajectory extends CommandBase {
      * Be sure to check that your taking in the x and y coordinate and not the distance and angle by checking the Javadocs of the method.
      */
     private Trajectory generateTrajectory(ArrayList<Translation2d> interiorWaypoints, Pose2d endPose) {
-        TrajectoryConfig config = new TrajectoryConfig(3, 3);
+        TrajectoryConfig config = new TrajectoryConfig(MaxSpeed, MaxAcceleration);
         return TrajectoryGenerator.generateTrajectory(drivetrain.getEstimatedPose(), interiorWaypoints, endPose, config);
     }
 }

@@ -21,7 +21,7 @@ public class ChargingAdjustDriveCommandGroup extends SequentialCommandGroup {
         interiorWaypoints.add(new Translation2d(8, 0));
         addCommands(
             new FollowTrajectory(drivetrain, -4.0, -1.0, 0.0, interiorWaypoints),
-            new DockCommandGroup(drivetrain)
+            new DockCommandGroup(drivetrain, true)
         ); 
     }
 }
