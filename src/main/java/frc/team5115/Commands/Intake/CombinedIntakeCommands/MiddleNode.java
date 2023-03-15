@@ -13,7 +13,7 @@ public class MiddleNode extends SequentialCommandGroup {
         this.intake = intake;
         addCommands(
             new RealExtend(intake, 0),
-            new IntakeTurn(intake, 2),
+            new IntakeTurn(intake, 9),
             new RealExtend(intake, 8)
         );
     }

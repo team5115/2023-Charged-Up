@@ -121,6 +121,8 @@ public class Drivetrain extends SubsystemBase{
      * @param turn is for turning right/left: positive is right, negative is left
      */
     public void TankDrive(double forward, double turn) { 
+        turn *= 0.7;
+
         leftSpeed = (forward + turn);
         rightSpeed = (forward - turn);
         

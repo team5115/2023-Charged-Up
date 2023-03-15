@@ -17,7 +17,7 @@ public class Constants{
     public static final byte BACK_RIGHT_MOTOR_ID = 4;
 
     public static final double TALON_ENCODER_CALIBRATION = (63.837/4104.5);
-    public static final double NEO_ENCODER_CALIBRATION = (0.3192*10.71/60);
+    public static final double NEO_ENCODER_CALIBRATION = (0.47877871986/(60*10.71));
     public static final double MAX_VOLTAGE = 12;
 
     //X-Box

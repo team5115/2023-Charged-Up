@@ -2,6 +2,7 @@ package frc.team5115.Commands.Intake.RawIntakeCommands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team5115.Classes.Software.Arm;
+import frc.team5115.Classes.Hardware.*;
 
 public class IntakeExtend_v2 extends CommandBase{
     private Arm intake;
@@ -12,15 +13,16 @@ public class IntakeExtend_v2 extends CommandBase{
     double bottomSpeed = 0;
     double topSpeed = 0;
     final double max_delta_length=Math.abs(2); // inches, should be positve
-    final double suggested_length_step_top=max_delta_length/3.0;      // arbitrary fraction of max value
-    final double suggested_length_step_bottom=max_delta_length/3.0; // arbitrary fraction of max value
+    final double suggested_length_step_top=max_delta_length/2.0;      // arbitrary fraction of max value
+    final double suggested_length_step_bottom=max_delta_length/2.0; // arbitrary fraction of max value
     final double min_delta_length_when_seperated = Math.abs(3);
-    final double max_delta_length_when_seperated = Math.abs(4);
+    final double max_delta_length_when_seperated = Math.abs(3.5);
 
     final double allowed_error_in_length_to_finish_top=1;     // how close to the final target length do you need to be
     final double allowed_error_in_length_to_finish_bottom=1; // how close to the final target length do you need to be
 
     boolean both_arms_are_at_target_value=false;
+
 
     public IntakeExtend_v2(Arm a, double topLength_target, double bottomLength_target){
         intake = a;
@@ -73,8 +75,9 @@ public class IntakeExtend_v2 extends CommandBase{
     private void pause_top()
     {
         double current_length = intake.getTopWinchLength();
-        intake.topWinchSetLength(current_length);
-        System.out.println("Disable Top");
+        double new_length=calculate_next_step_length(current_length,suggested_length_step_top,topLength_target);
+        intake.topWinchSetLength(new_length/2);
+      //  System.out.println("Disable Top");
 
     }
 
@@ -82,20 +85,21 @@ public class IntakeExtend_v2 extends CommandBase{
         double current_length = intake.getTopWinchLength();
         double new_length=calculate_next_step_length(current_length,suggested_length_step_top,topLength_target);
         intake.topWinchSetLength(new_length);
-        System.out.println("Enable Top");
+      //  System.out.println("Enable Top");
     }
     private void pause_bottom()
     {
         double current_length = intake.getBottomWinchLength();
-        intake.bottomWinchSetLength(current_length);
-        System.out.println("Disable Bottom");
+        double new_length=calculate_next_step_length(current_length,suggested_length_step_bottom,bottomLength_target);
+        intake.bottomWinchSetLength(new_length/2);
+       // System.out.println("Disable Bottom");
     }
 
     private void step_bottom(){
         double current_length = intake.getBottomWinchLength();
         double new_length=calculate_next_step_length(current_length,suggested_length_step_bottom,bottomLength_target);
         intake.bottomWinchSetLength(new_length);
-        System.out.println("Enable Bottom");
+        //System.out.println("Enable Bottom");
 
     }
 
@@ -129,8 +133,9 @@ public class IntakeExtend_v2 extends CommandBase{
         //final double remaining_length_bottom_sign=Math.signum(remaining_length_bottom);
 
         //longer than the 
-        //if(remaining_length_bottom_magnitude < 5 && remaining_length_top_magnitude < 5){
-        if(true){
+        if(remaining_length_bottom_magnitude < 5 && remaining_length_top_magnitude < 5){
+        
+        //if(true){
         /////////////////////////////////////////////////////////////////
         //
         //  exit logic
@@ -200,18 +205,22 @@ public class IntakeExtend_v2 extends CommandBase{
                 if(is_extending){
                     step_bottom();
                     pause_top();
+                    System.out.println("Extending: " + is_extending);
                 }
                 else{
                     pause_bottom();
                     step_top();   
+                    System.out.println("Extending: " + is_extending);
                 }
             }
         else {// if((Math.abs(delta_length) < Math.abs(max_delta_length_when_seperated)) && Math.abs(min_delta_length_when_seperated) < Math.abs(delta_length))
             step_bottom();
             step_top();
+            System.out.println(is_overhung);
         }
 
     }
+
 
     }
 
