@@ -184,14 +184,14 @@ public class Drivetrain extends SubsystemBase{
     }
 
     public boolean UpdateMoving(double dist, double startLeftDist, double startRightDist, double speedMagnitude) {
-        double speed = speedMagnitude * Math.signum(dist);
+        final double remainingLeftDistance = startLeftDist + dist - getLeftDistance();
+        final double remainingRightDistance = startRightDist + dist - getLeftDistance();
+
+        final double speed = speedMagnitude * Math.signum(remainingLeftDistance + remainingRightDistance / 2);
         drivetrain.plugandFFDrive(speed, speed);
 
-        boolean closeLeft = Math.abs(startRightDist + dist - getLeftDistance()) < 0.1;
-        boolean closeRight = Math.abs(startLeftDist + dist - getRightDistance()) < 0.1;
-
-        // System.out.println("Left Near: " + closeLeft + "| Right Near: " + closeRight);
-        return closeLeft || closeRight;
+        final double tolerance = 0.05;
+        return Math.abs(remainingLeftDistance) < tolerance || Math.abs(remainingRightDistance) < tolerance;
     }      
 
     public boolean UpdateTurning(double angle) {
