@@ -202,7 +202,7 @@ public class Drivetrain extends SubsystemBase{
     }      
 
     public boolean UpdateTurning(double angle) {
-        double currentAngle = (navx.getRollDeg());
+        double currentAngle = (navx.getPitchDeg());
         double turn = turningPID.calculate(currentAngle, angle);
         System.out.println("Would be turning @ " + turn + " m/s");
         //drivetrain.plugandFFDrive(forward, -forward);
@@ -214,8 +214,8 @@ public class Drivetrain extends SubsystemBase{
         navx.resetNAVx();
     }
 
-    public double getRollDeg() {
-        return navx.getRollDeg();
+    public double getPitchDeg() {
+        return navx.getPitchDeg();
     }
 
     /**

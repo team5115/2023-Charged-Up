@@ -35,7 +35,7 @@ public class DriveUntilDock extends CommandBase {
             System.out.println("Drive until dock timed out");
             return true;
         }
-        if (Math.abs(drivetrain.getRollDeg()) > 5) {
+        if (Math.abs(drivetrain.getPitchDeg()) > 5) {
             System.out.println("found slope");
             return true;
         }
