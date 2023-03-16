@@ -17,8 +17,8 @@ public class Dock extends CommandBase{
 
     public Dock(Drivetrain drivetrain, double direction) {
         this.direction = direction;
-        MaxTravelDistance = 1.37 * direction;
-        BalancingTolerance = 1.5;
+        MaxTravelDistance = 1.5 * direction;
+        BalancingTolerance = 1.0;
         dockP = 0.007;
 
         dockPID = new PIDController(dockP, 0, dockP/5);

@@ -24,6 +24,7 @@ public class HardwareIntake extends SubsystemBase{
         pcm = new PneumaticsControlModule(10);
         intake = new DoubleSolenoid(10, PneumaticsModuleType.CTREPCM, 0, 1);
         coneLight = new DigitalOutput(0);
+        coneLight.set(true);
         cubeLight = new DigitalOutput(1);
     }
 
@@ -38,8 +39,8 @@ public class HardwareIntake extends SubsystemBase{
     }
 
     public void StopMotor(){
-        intakeL.set(ControlMode.PercentOutput, -0.03);
-        intakeR.set(ControlMode.PercentOutput,-0.03);
+        intakeL.set(ControlMode.PercentOutput, -0.09);
+        intakeR.set(ControlMode.PercentOutput,-0.09);
     }
 
     public void open(){
@@ -55,6 +56,7 @@ public class HardwareIntake extends SubsystemBase{
     private void setLights(boolean wantsCones) {
         coneLight.set(wantsCones);
         cubeLight.set(!wantsCones);
+        System.out.println(wantsCones);
     }
     
 }

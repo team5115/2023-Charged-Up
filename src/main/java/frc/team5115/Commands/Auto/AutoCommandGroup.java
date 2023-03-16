@@ -17,7 +17,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
         this.intake = intake;
         this.drivetrain = drivetrain;
 
-         if (true) {
+         if (inIdealPosition) {
             setupIdeal();
         } else {
             setupNotIdeal();

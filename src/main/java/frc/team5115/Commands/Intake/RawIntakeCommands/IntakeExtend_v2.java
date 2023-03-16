@@ -137,7 +137,7 @@ public class IntakeExtend_v2 extends CommandBase{
         //final double remaining_length_bottom_sign=Math.signum(remaining_length_bottom);
 
         //longer than the 
-        if(remaining_length_bottom_magnitude < 5 && remaining_length_top_magnitude < 5){
+        if(remaining_length_bottom_magnitude < 3 && remaining_length_top_magnitude < 3){
         
         //if(true){
         /////////////////////////////////////////////////////////////////

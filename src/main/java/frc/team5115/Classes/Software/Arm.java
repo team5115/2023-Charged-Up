@@ -30,7 +30,7 @@ public class Arm extends SubsystemBase{
     private double bottomKp = 0.115;
 
 
-    private PIDController turnController = new PIDController(0.073, 0.0, 0.0);
+    private PIDController turnController = new PIDController(0.08, 0.0, 0.0);
     public PIDController topWinchController = new PIDController(topKp, 0, 0);
     public PIDController bottomWinchController = new PIDController(bottomKp, 0, 0);
 
@@ -198,7 +198,7 @@ public class Arm extends SubsystemBase{
     }
 
     public void zeroArm(){
-        intake.setEncoders(0, -92.0);
+        intake.setEncoders(0, -96.0);
     }
 
     public boolean getFault(CANSparkMax.FaultID f){

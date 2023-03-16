@@ -24,7 +24,7 @@ public class HardwareArm extends SubsystemBase{
     public boolean FF = true;
     private final ArmFeedforward arm = new ArmFeedforward(Ks, Kg, Kv, Ka); // Rad Calibrated
     //private double encoderConstant = 1/49;
-    private double startingTurnValue = Units.degreesToRadians(-90); //Rads
+    private double startingTurnValue = Units.degreesToRadians(-96); //Rads
     private double WinchDiameter = Units.metersToInches(0.12); 
 
     public HardwareArm(){
