@@ -12,7 +12,7 @@ public class DriveUntilDock extends CommandBase {
 
     public DriveUntilDock(Drivetrain drivetrain, double direction) {
         this.drivetrain = drivetrain;
-        this.direction = direction;
+        this.direction = 1;
         timer = new Timer();
     }
 
@@ -25,7 +25,7 @@ public class DriveUntilDock extends CommandBase {
 
     @Override
     public void execute() {
-        drivetrain.autoDrive(0.2 * direction);
+        drivetrain.autoDrive(0.5 * direction);
         // System.out.println("hasn't found it yet @ " + drivetrain.getPitchDeg() + " degrees");
     }
 
@@ -35,7 +35,7 @@ public class DriveUntilDock extends CommandBase {
             System.out.println("Drive until dock timed out");
             return true;
         }
-        if (Math.abs(drivetrain.getPitchDeg()) > 12) {
+        if (Math.abs(drivetrain.getRollDeg()) > 5) {
             System.out.println("found slope");
             return true;
         }

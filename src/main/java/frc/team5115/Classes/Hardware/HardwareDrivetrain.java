@@ -38,8 +38,8 @@ public class HardwareDrivetrain{
     private final double rightKa = 0.14565;
     */
 
-    private final double leftKp = 0; // 3.7203 according to sysid
-    private final double rightKp = 0; // 3.7203 according to sysid
+    private final double leftKp = 0.0; // 3.7203 according to sysid
+    private final double rightKp = 0.0; // 3.7203 according to sysid
     private final double Ki = 0.0;
     private final double Kd = 0.0;
     // END of testbed values
@@ -81,6 +81,36 @@ public class HardwareDrivetrain{
         }
     }
 
+    public double getEncoderDistance(int motorID){
+        switch (motorID) {
+            case BACK_LEFT_MOTOR_ID:
+            case FRONT_LEFT_MOTOR_ID:
+                return leftEncoder.getPosition()*NEO_DISTANCE_CALIBRATION;
+            
+            case BACK_RIGHT_MOTOR_ID:
+            case FRONT_RIGHT_MOTOR_ID:
+                return rightEncoder.getPosition()*NEO_DISTANCE_CALIBRATION;
+                
+            default:
+                throw new Error("Encoder ID " + motorID + " is invalid!");
+        }
+    }
+
+    public Double getEncoderVelocity(int motorID){
+        switch (motorID) {
+            case BACK_LEFT_MOTOR_ID:
+            case FRONT_LEFT_MOTOR_ID:
+                return leftEncoder.getVelocity()*NEO_VELOCITY_CALIBRATION;
+            
+            case BACK_RIGHT_MOTOR_ID:
+            case FRONT_RIGHT_MOTOR_ID:
+                return rightEncoder.getVelocity()*NEO_VELOCITY_CALIBRATION;
+                
+            default:
+                throw new Error("Encoder ID " + motorID + " is invalid!");
+        }
+    }
+
     /**
      * Sets the voltages of the indvidiual motors, without PID for mecanum compatability
      * 
@@ -112,19 +142,20 @@ public class HardwareDrivetrain{
      */
     public void plugandFFDrive(double leftSpeed, double rightSpeed) {
         
-         if(Math.abs(leftSpeed - (leftEncoder.getVelocity()*NEO_ENCODER_CALIBRATION))>1){
-            leftSpeed = (leftEncoder.getVelocity()*NEO_ENCODER_CALIBRATION) + Math.signum((1.5*leftSpeed - (leftEncoder.getVelocity()*NEO_ENCODER_CALIBRATION)));
+         if(Math.abs(leftSpeed - (leftEncoder.getVelocity()*NEO_VELOCITY_CALIBRATION))>1){
+            //System.out.println("Left too fast");
+            leftSpeed = (leftEncoder.getVelocity()*NEO_VELOCITY_CALIBRATION) + 1*Math.signum((leftSpeed - (leftEncoder.getVelocity()*NEO_VELOCITY_CALIBRATION)));
         }
 
-        if(Math.abs(rightSpeed - (rightEncoder.getVelocity()*NEO_ENCODER_CALIBRATION))>1){
-            rightSpeed = (rightEncoder.getVelocity()*NEO_ENCODER_CALIBRATION) + Math.signum((1.5*rightSpeed - (rightEncoder.getVelocity()*NEO_ENCODER_CALIBRATION)));
-        }
-        
+        if(Math.abs(rightSpeed - (rightEncoder.getVelocity()*NEO_VELOCITY_CALIBRATION))>1){
+            //System.out.println("Right too fast");
+            rightSpeed = (rightEncoder.getVelocity()*NEO_VELOCITY_CALIBRATION) + 1*Math.signum((rightSpeed - (rightEncoder.getVelocity()*NEO_VELOCITY_CALIBRATION)));
+        }        
 
         double leftVoltage = leftFeedForward.calculate(leftSpeed);
         double rightVoltage = rightFeedForward.calculate(rightSpeed);
-        // leftVoltage += leftPID.calculate(leftEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, leftSpeed);
-        // rightVoltage += rightPID.calculate(rightEncoder.getVelocity() * NEO_ENCODER_CALIBRATION, rightSpeed);
+         leftVoltage += leftPID.calculate(leftEncoder.getVelocity() * NEO_VELOCITY_CALIBRATION, leftSpeed);
+         rightVoltage += rightPID.calculate(rightEncoder.getVelocity() * NEO_VELOCITY_CALIBRATION, rightSpeed);
         // Work on better PID Analyzer
 
         leftVoltage = MathUtil.clamp(leftVoltage, -DRIVE_MOTOR_MAX_VOLTAGE, DRIVE_MOTOR_MAX_VOLTAGE);

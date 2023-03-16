@@ -21,7 +21,7 @@ public class NAVx implements Subsystem {
         yawAtReset = getYawDeg();
     }
     public void resetPitch() {
-        pitchAtReset = getPitchDeg();
+        pitchAtReset = getRollDeg();
     }
     public void resetNAVx() {
         resetYaw();
@@ -44,13 +44,13 @@ public class NAVx implements Subsystem {
      * Find the pitch of the robot, from -180 to 180 degrees
      * @return the pitch of the robot
      */
-    public double getPitchDeg() {
+    public double getRollDeg() {
         // uses roll because the navx is on the side of the robot -- navx roll is robot pitch
         // getRoll() is negated because tilting up (i.e. front of robot is high) should return a positive value out of this function
         // for sideways mount
         // double angle = ahrs.getRoll() - pitchAtReset;
         // for flat mount
-        double angle = ahrs.getPitch() - pitchAtReset;
+        double angle = ahrs.getRoll() - pitchAtReset;
         if (angle > 180) {
             return -360 + angle;
         }

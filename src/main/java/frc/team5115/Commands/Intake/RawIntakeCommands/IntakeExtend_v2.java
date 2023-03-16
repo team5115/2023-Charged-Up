@@ -13,9 +13,9 @@ public class IntakeExtend_v2 extends CommandBase{
     double bottomSpeed = 0;
     double topSpeed = 0;
     final double max_delta_length=Math.abs(2); // inches, should be positve
-    final double suggested_length_step_top=max_delta_length/2.0;      // arbitrary fraction of max value
-    final double suggested_length_step_bottom=max_delta_length/2.0; // arbitrary fraction of max value
-    final double min_delta_length_when_seperated = Math.abs(3);
+    final double suggested_length_step_top=max_delta_length/2;      // arbitrary fraction of max value
+    final double suggested_length_step_bottom=max_delta_length/2; // arbitrary fraction of max value
+    final double min_delta_length_when_seperated = Math.abs(2.5);
     final double max_delta_length_when_seperated = Math.abs(3.5);
 
     final double allowed_error_in_length_to_finish_top=1;     // how close to the final target length do you need to be
@@ -36,11 +36,11 @@ public class IntakeExtend_v2 extends CommandBase{
     public void initialize() {
         timer.reset();
         innerTimer.reset();
-
+        intake.setTopPID(0.55);
+        intake.setBottomPID(0.57);
         // nothing will happen till the first loop execute
         //intake.topWinchSetLength(topLength_target);
         //intake.bottomWinchSetLength(bottomLength_target);
-
         both_arms_are_at_target_value=false;
     }
 
@@ -76,8 +76,9 @@ public class IntakeExtend_v2 extends CommandBase{
     {
         double current_length = intake.getTopWinchLength();
         double new_length=calculate_next_step_length(current_length,suggested_length_step_top,topLength_target);
-        intake.topWinchSetLength(new_length/2);
+        intake.topWinchSetLength(current_length+((new_length-current_length)/1.7));
       //  System.out.println("Disable Top");
+        //intake.slowTopPID();
 
     }
 
@@ -86,13 +87,15 @@ public class IntakeExtend_v2 extends CommandBase{
         double new_length=calculate_next_step_length(current_length,suggested_length_step_top,topLength_target);
         intake.topWinchSetLength(new_length);
       //  System.out.println("Enable Top");
+        //intake.stepTopPID();
     }
     private void pause_bottom()
     {
         double current_length = intake.getBottomWinchLength();
         double new_length=calculate_next_step_length(current_length,suggested_length_step_bottom,bottomLength_target);
-        intake.bottomWinchSetLength(new_length/2);
+        intake.bottomWinchSetLength(current_length+((new_length-current_length)/1.7));
        // System.out.println("Disable Bottom");
+       //intake.slowBottomPID();
     }
 
     private void step_bottom(){
@@ -100,6 +103,7 @@ public class IntakeExtend_v2 extends CommandBase{
         double new_length=calculate_next_step_length(current_length,suggested_length_step_bottom,bottomLength_target);
         intake.bottomWinchSetLength(new_length);
         //System.out.println("Enable Bottom");
+        //intake.stepBottomPID();
 
     }
 
@@ -226,6 +230,7 @@ public class IntakeExtend_v2 extends CommandBase{
 
 
     public void end(boolean interrupted){
+        intake.resetPID();
         System.out.println("Stopped");
     }
 
@@ -238,7 +243,7 @@ public class IntakeExtend_v2 extends CommandBase{
         */
        // /* 
         if((Math.abs(intake.getBottomWinchLength()-bottomLength_target)<1) && (intake.getTopWinchLength()-topLength_target)<1){
-            if(innerTimer.get() > 0.2) return true;
+        return true;
         }
         else innerTimer.reset();
 

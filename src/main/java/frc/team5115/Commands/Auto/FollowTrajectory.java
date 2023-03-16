@@ -120,6 +120,7 @@ public class FollowTrajectory extends CommandBase {
      */
     private Trajectory generateTrajectory(ArrayList<Translation2d> interiorWaypoints, Pose2d endPose) {
         TrajectoryConfig config = new TrajectoryConfig(MaxSpeed, MaxAcceleration);
+        config.setReversed(true);
         return TrajectoryGenerator.generateTrajectory(drivetrain.getEstimatedPose(), interiorWaypoints, endPose, config);
     }
 }
