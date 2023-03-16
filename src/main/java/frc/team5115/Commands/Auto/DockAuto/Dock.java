@@ -12,15 +12,15 @@ public class Dock extends CommandBase{
     private final double direction;
     private final PIDController dockPID;
     public final double dockP;
+    private double last_pitch = 0;
     private final double MaxTravelDistance;
     public final double BalancingTolerance; // tolerance in degrees from 0 to decide if the robot is balanced/docked
 
     public Dock(Drivetrain drivetrain, double direction) {
         this.direction = direction;
         MaxTravelDistance = 1.5 * direction;
-        BalancingTolerance = 1.0;
-        dockP = 0.007;
-
+        BalancingTolerance = 2;
+        dockP = 0.0172;
         dockPID = new PIDController(dockP, 0, dockP/5);
         this.drivetrain = drivetrain;
         dockedTimer = new Timer();
@@ -28,6 +28,7 @@ public class Dock extends CommandBase{
 
     @Override
     public void initialize() {
+        last_pitch = drivetrain.getPitchDeg();
         encoderDistanceAtStart = drivetrain.getLeftDistance();
     }
 
@@ -41,7 +42,7 @@ public class Dock extends CommandBase{
         double forward = -dockPID.calculate(pitch, 0);
         // System.out.println("Docking @ " + forward + " m/s");
 
-        if (getDistanceFromStart() * direction < MaxTravelDistance * direction) {
+        if (getDistanceFromStart() * direction < MaxTravelDistance * direction && Math.abs(pitch - last_pitch) < 1) {
             drivetrain.autoDrive(forward);
         } else {
             // System.out.println("Stopped docking - too close to edge!");
@@ -54,6 +55,7 @@ public class Dock extends CommandBase{
         } else {
             dockedTimer.reset();
         }
+        last_pitch = pitch;
     }
 
     @Override
@@ -73,7 +75,7 @@ public class Dock extends CommandBase{
     @Override
     public boolean isFinished() {
         // finish if docked for more than the minimum dock time
-        if (dockedTimer.get() > 3) {
+        if (dockedTimer.get() > 0.32) {
             return true;
         }
         return false;
