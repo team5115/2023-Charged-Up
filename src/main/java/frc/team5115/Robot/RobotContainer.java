@@ -63,13 +63,14 @@ public class RobotContainer {
         // new JoystickButton(joy1, 6).onTrue(new InstantCommand(intake :: TurnIn)).onFalse(new InstantCommand(intake :: StopMotor));
         // new JoystickButton(joy1, 7).onTrue(new HighCone(arm));
         // new JoystickButton(joy1, 8).onTrue(new Resting(arm));
-
+        
         new JoystickButton(joy1, 3).onTrue(new ShelfSubstation(arm)); // double substation pickup
         new JoystickButton(joy1, 4).onTrue(new HighNode(arm)); // high node
         new JoystickButton(joy1, 2).onTrue(new MiddleNode(arm)); // middle node
         new JoystickButton(joy1, 1).onTrue(new GroundPickup(arm)); // low node/ground pickup
         new JoystickButton(joy1, 8).onTrue(new Stow(arm)); // stow fully
         new JoystickButton(joy1, 7).onTrue(new StowCone(arm)); // stow with cone
+        
        // new Trigger(new JoyAxisBoolSupplier(joy1, 1, -0.5, false)).onTrue(new InstantCommand(arm :: turnUp)); // angle up
        // new Trigger(new JoyAxisBoolSupplier(joy1, 1, +0.5, true)).onTrue(new InstantCommand(arm :: turnDown)); // angle down
         //new JoystickButton(joy1, 5).whileTrue(new InstantCommand(arm :: topMoveIn)); // top in
@@ -88,7 +89,6 @@ public class RobotContainer {
     }
 
     public void startTeleop(){
-        arm.armcontrol = false;
         if(autoCommandGroup != null) autoCommandGroup.cancel();
         // arm.zeroArm();
         System.out.println("Starting teleop");
@@ -98,6 +98,8 @@ public class RobotContainer {
 
     public void disabledInit(){
         arm.disableBrake();
+        arm.armcontrolangle = false;
+        arm.armcontrol = false;
     }
 
     public void stopEverything(){
@@ -107,6 +109,7 @@ public class RobotContainer {
 
     public void startAuto(){
         drivetrain.resetNAVx();
+        //startup.schedule();
         autoCommandGroup = new AutoCommandGroup(drivetrain, arm, true);
         if(autoCommandGroup != null) autoCommandGroup.schedule();
     }
@@ -146,6 +149,13 @@ public class RobotContainer {
          }
          else {
             intake.StopMotor();
+         }
+
+         if(joy1.getPOV()>=0 && joy1.getPOV()<=180){
+            intake.close();
+         }
+         else if(joy1.getPOV()<=360 && joy1.getPOV()>180 ){
+            intake.open();
          }
 
         //drivetrain.UpdateOdometry();

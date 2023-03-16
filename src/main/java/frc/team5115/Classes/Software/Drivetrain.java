@@ -74,11 +74,11 @@ public class Drivetrain extends SubsystemBase{
     }
 
     public double getLeftDistance(){
-        return drivetrain.getEncoder(BACK_LEFT_MOTOR_ID).getPosition()*NEO_ENCODER_CALIBRATION;
+        return drivetrain.getEncoderDistance(BACK_LEFT_MOTOR_ID);
     }
 
     public double getRightDistance(){
-        return drivetrain.getEncoder(BACK_RIGHT_MOTOR_ID).getPosition()*NEO_ENCODER_CALIBRATION;
+        return drivetrain.getEncoderDistance(BACK_RIGHT_MOTOR_ID);
     }
 
     public void resetEncoders() {
@@ -195,7 +195,7 @@ public class Drivetrain extends SubsystemBase{
     }      
 
     public boolean UpdateTurning(double angle) {
-        double currentAngle = (navx.getPitchDeg());
+        double currentAngle = (navx.getRollDeg());
         double turn = turningPID.calculate(currentAngle, angle);
         System.out.println("Would be turning @ " + turn + " m/s");
         //drivetrain.plugandFFDrive(forward, -forward);
@@ -207,8 +207,8 @@ public class Drivetrain extends SubsystemBase{
         navx.resetNAVx();
     }
 
-    public double getPitchDeg() {
-        return navx.getPitchDeg();
+    public double getRollDeg() {
+        return navx.getRollDeg();
     }
 
     /**

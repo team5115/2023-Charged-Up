@@ -1,5 +1,6 @@
 package frc.team5115.Commands.Auto;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team5115.Classes.Software.Drivetrain;
@@ -16,7 +17,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
         this.intake = intake;
         this.drivetrain = drivetrain;
 
-        if (inIdealPosition) {
+         if (true) {
             setupIdeal();
         } else {
             setupNotIdeal();
@@ -27,9 +28,10 @@ public class AutoCommandGroup extends SequentialCommandGroup {
         addCommands(
             // new FollowTrajectory(drivetrain, 1, 0.5, 0)
             new DriveForward(drivetrain, -0.3, 0.5), // back up to node
-            new DriveForward(drivetrain, +0.8, 1.2), // speed away to drop cube
-            new DriveForward(drivetrain, +4, 0.6), // go over ramp and exit community
-            new DockCommandGroup(drivetrain, true) // dock backwards
+            new DriveForward(drivetrain, +3.5, 0.8),//, // speed away to drop cube
+            new DriveForward(drivetrain, -1.5, 0.6), // go over ramp and exit community
+            new DockCommandGroup(drivetrain, true), // dock backwards
+            new InstantCommand(drivetrain :: stop)
         );
     }
 
@@ -37,7 +39,9 @@ public class AutoCommandGroup extends SequentialCommandGroup {
         addCommands(
             new DriveForward(drivetrain, -0.33, 0.5), // back up to node
             new DriveForward(drivetrain, +0.65, 1.2), // speed away to drop cube
-            new DriveForward(drivetrain, +3.5, 1.0) // go over ramp
+            new DriveForward(drivetrain, +3.5, 1.0), // go over ramp
+            new InstantCommand(drivetrain :: stop)
+
         );
     }
 }

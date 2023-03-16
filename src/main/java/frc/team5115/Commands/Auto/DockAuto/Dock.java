@@ -34,7 +34,7 @@ public class Dock extends CommandBase{
     @Override
     public void execute() {
         // System.out.println("dist from start: " + getDistanceFromStart());
-        double pitch = drivetrain.getPitchDeg();
+        double pitch = drivetrain.getRollDeg();
         // PID loop tries to go towards the setpoint, so in general, a positive currentValue and a 0 setpoint will return negative output
         // this is why it actually runs at the opposite of what the PID loop says
         // if direction is -1, then the pid loop will just be reversed and forward will be negative without needing to be multiplied by direction
@@ -66,7 +66,7 @@ public class Dock extends CommandBase{
             System.out.println("Successfully docked!");
         }
 
-        System.out.println("end angle: " + drivetrain.getPitchDeg() + " degrees");
+        System.out.println("end angle: " + drivetrain.getRollDeg() + " degrees");
         System.out.println("distance from start: " + getDistanceFromStart() + " meters");
     }
 

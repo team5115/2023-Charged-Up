@@ -22,6 +22,7 @@ public class Startup_Intake extends CommandBase{
     }
     public void initialize() {
         timer.reset();
+        intake.armcontrol = false;
         claw.open();
         hardwareIntake.setBottomWinch(-0.1);
         hardwareIntake.setTopWinch(-0.25);

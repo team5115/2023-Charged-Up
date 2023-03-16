@@ -9,7 +9,7 @@ public class DockCommandGroup extends SequentialCommandGroup {
         double direction = goBackwards ? -1 : 1;
 
         addCommands(
-            new DriveUntilDock(drivetrain, direction),
+            //new DriveUntilDock(drivetrain, direction),
             new Dock(drivetrain, direction)
         );
     }
