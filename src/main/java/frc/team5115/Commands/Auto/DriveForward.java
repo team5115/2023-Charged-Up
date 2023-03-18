@@ -12,11 +12,13 @@ public class DriveForward extends CommandBase{
     private double speed;
     private boolean doneMoving;
     private Timer timer;
+    private final double timeout;
 
     public DriveForward(Drivetrain drivetrain, double dist, double speed) {
         this.dist = dist;
         this.drivetrain = drivetrain;
         this.speed = speed;
+        timeout = (dist / speed) + 1.0; // meters divided by m/s gives seconds! plus extra time
         timer = new Timer();
     }
 
@@ -40,7 +42,7 @@ public class DriveForward extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        if(timer.get() > 3.7) return true;
+        if(timer.get() > timeout) return true;
         return doneMoving;
     }
 }

@@ -129,27 +129,27 @@ public class Arm extends SubsystemBase{
     }
 
     public void turnUp() {
-        angle += 3*0.02;
+        angle += 9*0.02;
     }
 
     public void turnDown() {
-        angle -= 3*0.02;
+        angle -= 9*0.02;
     }
 
     public void topMoveIn(){
-        topLength += 5*0.02;
+        topLength += 10*0.02;
     }
 
     public void topMoveOut(){
-        topLength -= 5*0.02;
+        topLength -= 10*0.02;
     }
 
     public void bottomMoveIn(){
-        bottomLength += 5*0.02;
+        bottomLength += 10*0.02;
     }
 
     public void bottomMoveOut(){
-        bottomLength -= 5*0.02;
+        bottomLength -= 10*0.02;
     }
 
     public void disableBrake(){

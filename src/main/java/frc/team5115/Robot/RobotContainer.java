@@ -35,8 +35,8 @@ public class RobotContainer {
     private final DockCommandGroup dockSequence;
     private final Startup startup;
     private ShuffleboardTab tab = Shuffleboard.getTab("SmartDashboard");
-    private GenericEntry good = tab.add("good auto?", false).getEntry();
-    private boolean goodAuto = good.getBoolean(false); 
+    //private GenericEntry good = tab.add("good auto?", false).getEntry();
+    private boolean goodAuto = true; 
 
     public RobotContainer() {
         joy1 = new Joystick(0);
@@ -75,7 +75,7 @@ public class RobotContainer {
         new JoystickButton(joy1, 2).onTrue(new MiddleNode(arm)); // middle node
         new JoystickButton(joy1, 1).onTrue(new GroundPickup(arm)); // low node/ground pickup
         new JoystickButton(joy1, 8).onTrue(new Stow(arm, hardwareArm, intake)); // stow fully
-        new JoystickButton(joy1, 7).onTrue(new StowCone(arm)); // stow with cone
+        new JoystickButton(joy1, 7).onTrue(new StowCone(arm, hardwareArm, intake)); // stow with cone
         
        // new Trigger(new JoyAxisBoolSupplier(joy1, 1, -0.5, false)).onTrue(new InstantCommand(arm :: turnUp)); // angle up
        // new Trigger(new JoyAxisBoolSupplier(joy1, 1, +0.5, true)).onTrue(new InstantCommand(arm :: turnDown)); // angle down

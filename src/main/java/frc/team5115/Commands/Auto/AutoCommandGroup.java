@@ -17,18 +17,26 @@ public class AutoCommandGroup extends SequentialCommandGroup {
         this.intake = intake;
         this.drivetrain = drivetrain;
 
+        setupCubeDrop();
          if (inIdealPosition) {
             setupIdeal();
         } else {
             setupNotIdeal();
         }
     }
+    
+    private void setupCubeDrop() {
+        addCommands(    
+            new DriveForward(drivetrain, -0.2, 0.5), // back up to node
+            new DriveForward(drivetrain, +0.65, 1.2), // speed away to drop cube
+            new DriveForward(drivetrain, -0.75, 1.0) // back up to push cube into place
+        );
+        // this should finish with the robot pushed up against the node
+    }
 
     private void setupIdeal() {
         addCommands(
-            // new FollowTrajectory(drivetrain, 1, 0.5, 0)
-            new DriveForward(drivetrain, -0.2, 0.5), // back up to node
-            new DriveForward(drivetrain, +3.2, 0.8),//, // speed away to drop cube
+            new DriveForward(drivetrain, +4.0, 0.8), // exit community
             new DriveForward(drivetrain, -1.5, 0.6), // go over ramp and exit community
             new DockCommandGroup(drivetrain, true), // dock backwards
             new InstantCommand(drivetrain :: stop)
@@ -36,12 +44,10 @@ public class AutoCommandGroup extends SequentialCommandGroup {
     }
 
     private void setupNotIdeal() {
+        System.out.println("AHHHHH!!! WHY AM I RUNNING!!! that's not ideal...");
         addCommands(
-            new DriveForward(drivetrain, -0.2, 0.5), // back up to node
-            new DriveForward(drivetrain, +0.65, 1.2), // speed away to drop cube
-            new DriveForward(drivetrain, +3.5, 1.0), // go over ramp
+            new DriveForward(drivetrain, +4.0, 1.0), // exit community
             new InstantCommand(drivetrain :: stop)
-
         );
     }
 }
