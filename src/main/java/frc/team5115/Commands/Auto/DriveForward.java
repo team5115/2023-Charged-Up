@@ -40,6 +40,7 @@ public class DriveForward extends CommandBase{
 
     @Override
     public boolean isFinished() {
+        if(timer.get() > 3.7) return true;
         return doneMoving;
     }
 }

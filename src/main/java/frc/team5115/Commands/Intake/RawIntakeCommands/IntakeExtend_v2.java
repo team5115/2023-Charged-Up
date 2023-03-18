@@ -249,11 +249,11 @@ public class IntakeExtend_v2 extends CommandBase{
 
       //  */
 
-        /* 
-        if(timer.get() > 0.5){
+        
+        if(timer.get() > 2){
             return true;
         }
-        */
+        
 
         return false;
       }

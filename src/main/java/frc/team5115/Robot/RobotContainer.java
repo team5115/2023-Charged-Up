@@ -18,6 +18,9 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.team5115.Commands.Intake.CombinedIntakeCommands.*;
 import frc.team5115.Commands.Intake.RawIntakeCommands.*;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 public class RobotContainer {
     private final Timer timer;
@@ -31,6 +34,9 @@ public class RobotContainer {
     private AutoCommandGroup autoCommandGroup;
     private final DockCommandGroup dockSequence;
     private final Startup startup;
+    private ShuffleboardTab tab = Shuffleboard.getTab("SmartDashboard");
+    private GenericEntry good = tab.add("good auto?", false).getEntry();
+    private boolean goodAuto = good.getBoolean(false); 
 
     public RobotContainer() {
         joy1 = new Joystick(0);
@@ -111,12 +117,12 @@ public class RobotContainer {
     public void startAuto(){
         drivetrain.resetNAVx();
         //startup.schedule();
-        autoCommandGroup = new AutoCommandGroup(drivetrain, arm, true);
+        autoCommandGroup = new AutoCommandGroup(drivetrain, arm, goodAuto);
         if(autoCommandGroup != null) autoCommandGroup.schedule();
     }
 
     public void autoPeriod(){
-       drivetrain.UpdateOdometry();
+       //drivetrain.UpdateOdometry();
        //arm.updateController();
     }
 

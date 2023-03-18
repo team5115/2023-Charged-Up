@@ -27,7 +27,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
     private void setupIdeal() {
         addCommands(
             // new FollowTrajectory(drivetrain, 1, 0.5, 0)
-            new DriveForward(drivetrain, -0.3, 0.5), // back up to node
+            new DriveForward(drivetrain, -0.2, 0.5), // back up to node
             new DriveForward(drivetrain, +3.2, 0.8),//, // speed away to drop cube
             new DriveForward(drivetrain, -1.5, 0.6), // go over ramp and exit community
             new DockCommandGroup(drivetrain, true), // dock backwards
@@ -37,7 +37,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
 
     private void setupNotIdeal() {
         addCommands(
-            new DriveForward(drivetrain, -0.33, 0.5), // back up to node
+            new DriveForward(drivetrain, -0.2, 0.5), // back up to node
             new DriveForward(drivetrain, +0.65, 1.2), // speed away to drop cube
             new DriveForward(drivetrain, +3.5, 1.0), // go over ramp
             new InstantCommand(drivetrain :: stop)

@@ -20,7 +20,7 @@ public class Dock extends CommandBase{
         this.direction = direction;
         MaxTravelDistance = 1.5 * direction;
         BalancingTolerance = 2;
-        dockP = 0.0172;
+        dockP = 0.0174;
         dockPID = new PIDController(dockP, 0, dockP/5);
         this.drivetrain = drivetrain;
         dockedTimer = new Timer();
