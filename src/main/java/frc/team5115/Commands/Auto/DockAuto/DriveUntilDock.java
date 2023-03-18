@@ -10,10 +10,11 @@ public class DriveUntilDock extends CommandBase {
     Timer innerTimer;
     double direction;
     final double timeout = 10;
+    final double finishedTolerance = 5; // degrees
 
     public DriveUntilDock(Drivetrain drivetrain, double direction) {
         this.drivetrain = drivetrain;
-        this.direction = 1;
+        this.direction = direction;
         timer = new Timer();
         innerTimer = new Timer();
     }
@@ -30,19 +31,16 @@ public class DriveUntilDock extends CommandBase {
 
     @Override
     public void execute() {
-
-        drivetrain.autoDrive(0.9 * -direction);
+        // only "works" when going backwards; direction is always 1 
+        drivetrain.autoDrive(0.9 * direction);
         // System.out.println("hasn't found it yet @ " + drivetrain.getPitchDeg() + " degrees");
     }
 
     @Override
     public boolean isFinished() {
-        if (timer.get() > timeout) {
-            System.out.println("Drive until dock timed out");
-            return true;
-        }
-        if (Math.abs(drivetrain.getPitchDeg()) > 5) {
+        if (Math.abs(drivetrain.getPitchDeg()) > finishedTolerance) {
             System.out.println("found slope");
+            innerTimer.start();
             if(innerTimer.get()  > 0.65)
             return true;
         }

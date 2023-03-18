@@ -17,12 +17,13 @@ public class AutoCommandGroup extends SequentialCommandGroup {
         this.intake = intake;
         this.drivetrain = drivetrain;
 
-        setupCubeDrop();
-         if (inIdealPosition) {
-            setupIdeal();
+        setupCubeDrop();        
+         if (false) {
+            setupScuffed();
         } else {
             setupNotIdeal();
         }
+        
     }
     
     private void setupCubeDrop() {
@@ -36,18 +37,25 @@ public class AutoCommandGroup extends SequentialCommandGroup {
 
     private void setupIdeal() {
         addCommands(
-            new DriveForward(drivetrain, +4.0, 0.8), // exit community
-            new DriveForward(drivetrain, -1.5, 0.6), // go over ramp and exit community
-            new DockCommandGroup(drivetrain, true), // dock backwards
-            new InstantCommand(drivetrain :: stop)
+            new DriveForward(drivetrain, +3.4, 0.8), // exit community
+            new DriveForward(drivetrain, -2.0, 0.6), // go over ramp and exit community
+            new DockCommandGroup(drivetrain, true) // dock backwards
+           // ,new InstantCommand(drivetrain :: stop)
         );
     }
 
     private void setupNotIdeal() {
         System.out.println("AHHHHH!!! WHY AM I RUNNING!!! that's not ideal...");
         addCommands(
-            new DriveForward(drivetrain, +4.0, 1.0), // exit community
+            new DriveForward(drivetrain, +3, 1.0), // exit community
             new InstantCommand(drivetrain :: stop)
+        );
+    }
+
+    private void setupScuffed(){
+        addCommands(
+        new DockCommandGroup(drivetrain, false) // dock forwards
+           // ,new InstantCommand(drivetrain :: stop)
         );
     }
 }
