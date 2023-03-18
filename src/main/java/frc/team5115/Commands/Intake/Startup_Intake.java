@@ -25,7 +25,7 @@ public class Startup_Intake extends CommandBase{
         intake.armcontrol = false;
         claw.open();
         hardwareIntake.setBottomWinch(-0.1);
-        hardwareIntake.setTopWinch(-0.27);
+        hardwareIntake.setTopWinch(-0.37);
 
     }
 

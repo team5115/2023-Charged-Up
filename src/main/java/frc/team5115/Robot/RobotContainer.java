@@ -74,7 +74,7 @@ public class RobotContainer {
         new JoystickButton(joy1, 4).onTrue(new HighNode(arm)); // high node
         new JoystickButton(joy1, 2).onTrue(new MiddleNode(arm)); // middle node
         new JoystickButton(joy1, 1).onTrue(new GroundPickup(arm)); // low node/ground pickup
-        new JoystickButton(joy1, 8).onTrue(new Stow(arm)); // stow fully
+        new JoystickButton(joy1, 8).onTrue(new Stow(arm, hardwareArm, intake)); // stow fully
         new JoystickButton(joy1, 7).onTrue(new StowCone(arm)); // stow with cone
         
        // new Trigger(new JoyAxisBoolSupplier(joy1, 1, -0.5, false)).onTrue(new InstantCommand(arm :: turnUp)); // angle up

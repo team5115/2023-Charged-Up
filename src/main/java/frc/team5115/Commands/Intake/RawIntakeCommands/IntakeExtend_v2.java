@@ -13,8 +13,8 @@ public class IntakeExtend_v2 extends CommandBase{
     double bottomSpeed = 0;
     double topSpeed = 0;
     final double max_delta_length=Math.abs(2); // inches, should be positve
-    final double suggested_length_step_top=max_delta_length/2;      // arbitrary fraction of max value
-    final double suggested_length_step_bottom=max_delta_length/2; // arbitrary fraction of max value
+    final double suggested_length_step_top=max_delta_length;      // arbitrary fraction of max value
+    final double suggested_length_step_bottom=max_delta_length; // arbitrary fraction of max value
     final double min_delta_length_when_seperated = Math.abs(2.5);
     final double max_delta_length_when_seperated = Math.abs(3.5);
 
@@ -36,8 +36,8 @@ public class IntakeExtend_v2 extends CommandBase{
     public void initialize() {
         timer.reset();
         innerTimer.reset();
-        intake.setTopPID(0.55);
-        intake.setBottomPID(0.57);
+        intake.setTopPID(0.45);
+        intake.setBottomPID(0.5);
         // nothing will happen till the first loop execute
         //intake.topWinchSetLength(topLength_target);
         //intake.bottomWinchSetLength(bottomLength_target);
