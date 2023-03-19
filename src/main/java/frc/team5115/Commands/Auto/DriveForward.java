@@ -5,55 +5,44 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team5115.Classes.Software.Drivetrain;
 
 public class DriveForward extends CommandBase{
-    private Timer grandTimer;
-    private Timer dockedTimer;
     private Drivetrain drivetrain;
     private double dist;
     private double startRightDist;
     private double startleftDist;
+    private double speed;
+    private boolean doneMoving;
+    private Timer timer;
+    private final double timeout;
 
-    public DriveForward(Drivetrain drivetrain, double dist) {
+    public DriveForward(Drivetrain drivetrain, double dist, double speed) {
         this.dist = dist;
         this.drivetrain = drivetrain;
-        startRightDist = drivetrain.getRightDistance();
-        startleftDist = drivetrain.getLeftDistance();
-        dockedTimer = new Timer();
-        grandTimer = new Timer();
-        grandTimer.start();
+        this.speed = speed;
+        timeout = (dist / speed) + 1.0; // meters divided by m/s gives seconds! plus extra time
+        timer = new Timer();
     }
 
     @Override
     public void initialize() {
-        grandTimer.reset();
+        timer.start();
+        timer.reset();
+        startRightDist = drivetrain.getRightDistance();
+        startleftDist = drivetrain.getLeftDistance();
     }
 
     @Override
     public void execute() {
-        boolean moved = drivetrain.UpdateMoving(dist, startleftDist, startRightDist);
-        if (moved) {
-            dockedTimer.start();
-        } else {
-            dockedTimer.reset();
-        }
+        doneMoving = drivetrain.UpdateMoving(dist, startleftDist, startRightDist, speed);
+        //System.out.println("Right Distance: " + drivetrain.getRightDistance() + "Left Distance: " + drivetrain.getRightDistance());
     }
 
-    @Override
-    public void end(boolean interrupted){
-        System.out.println("finished moving");
+    public void end(boolean interrupted) {
+       // drivetrain.stop();
     }
 
     @Override
     public boolean isFinished() {
-        // timeout if the command has been running for too long
-        if (grandTimer.get() > 10) {
-            System.out.println("Moving attempt timed out after 10 s");
-            return true;
-        }
-        // finish if docked for more than the minimum dock time
-        if (dockedTimer.get() > 0.5) {
-            System.out.println("Successfully moved");
-            return true;
-        }
-        return false;
+        if(timer.get() > timeout) return true;
+        return doneMoving;
     }
 }

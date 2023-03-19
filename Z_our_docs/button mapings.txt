@@ -1,0 +1,58 @@
+----NEW MAPPINGS----
+	
+PRESETS:
+	Double substation pickup	X (3)
+	High Node					Y (4)
+	Mid Node					B (2)
+	Low Node/ Ground pickup		A (1)
+	Stow fully					Back (7)
+	Stow with cone				Start (8)
+	
+MANUAL (all digital):
+	Angle up/down				left stick y (axis 1, negated)
+	Top in						left bumper (5)
+	Top out						right bumper (6)
+	Bottom in					left trigger (axis 2)
+	Bottom out					right trigger (axis 3)
+	
+	Intake in					right stick negative x (axis 4)
+	Intake out					right stick positive x (axis 4)
+
+DRIVE JOYSTICK:
+	forward/backwards		left stick y axis
+	rotate left/right		right stick x axis
+	dock sequence			push left stick
+
+
+----MAIN BRANCH----
+ARM JOYSTICK:
+	In setpoint				A
+	Out setpoint			B
+	Up setpoint				X
+	Down setpoint			Y
+	Intake spin in			left bumper
+	Intake spin out			right bumper
+	Arm reset extend		back
+	Arm stow				start
+DRIVE JOYSTICK:
+	forward/backwards		left stick y axis
+	rotate left/right		right stick x axis
+	dock sequence			push left stick
+
+----TESTING----
+ARM JOYSTICK:
+	In setpoint (v2)		A
+	Out setpoint (v2)		B
+	Up setpoint				X
+	Down setpoint 			Y
+	Intake spin in			left bumper
+	Intake spin out			right bumper
+	High Cone setpoint		back
+	Stow (v2)				start
+	Manual up/down			left stick y axis
+	Manual top in/out		left stick x axis
+	Manual bottom in/out	right stick x axis
+DRIVE JOYSTICK:
+	forward/backwards		left stick y axis
+	rotate left/right		right stick x axis
+	

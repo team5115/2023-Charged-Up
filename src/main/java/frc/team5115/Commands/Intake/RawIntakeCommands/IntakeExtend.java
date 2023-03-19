@@ -30,60 +30,7 @@ public class IntakeExtend extends CommandBase{
     }
 
     public void execute(){
-        /* 
-        double bottomSpeed = intake.bottomWinchController.calculate(intake.getBottomWinchLength(), bottomLength);
-        double topSpeed = intake.topWinchController.calculate(intake.getTopWinchLength(), topLength);
-        if((intake.getTopWinchLength() - intake.getBottomWinchLength()+3)>0.5){
-            System.out.print("Top too far ahead & ");
-                if(topSpeed< 0 && bottomSpeed<0){
-                    System.out.println("Bottom Stopped");
-                    intake.setBottomWinch(0);
-                    intake.setTopWinch(topSpeed);
-                }
-                else if(topSpeed<0 && bottomSpeed>0){
-                    System.out.println("Neither Stopped");
-                    intake.setTopWinch(topSpeed);
-                    intake.setBottomWinch(bottomSpeed);
-                }
-                else if(topSpeed>0  && bottomSpeed>0){
-                    System.out.println("top Stopped");
-                    intake.setTopWinch(0);
-                    intake.setBottomWinch(bottomSpeed);
-                }
-                else{
-                    System.out.println("none Stopped");
-                    intake.setTopWinch(topSpeed);
-                    intake.setBottomWinch(bottomSpeed);
-                }
-            }
-            else if(intake.getBottomWinchLength() - intake.getTopWinchLength()-3>0.5){
-                System.out.print("Bottom too far ahead");
-                if(topSpeed< 0 && bottomSpeed<0){
-                    System.out.println("Top Stopped");
-                    intake.setTopWinch(0);
-                    intake.setBottomWinch(bottomSpeed);
-                }
-                else if(topSpeed>0 && bottomSpeed<0){
-                    System.out.println("Neither Stopped");
-                    intake.setTopWinch(topSpeed);
-                    intake.setBottomWinch(bottomSpeed);
-                }
-                else if(topSpeed>0  && bottomSpeed>0){
-                    System.out.println("Bottom Stopped");
-                    intake.setTopWinch(topSpeed);
-                    intake.setBottomWinch(0);
-                }
-                else{
-                    System.out.println("none Stopped");
-                    intake.setTopWinch(topSpeed);
-                    intake.setBottomWinch(bottomSpeed);
-                }
-            }
-        else{
-            System.out.println("Everything fine");
-        }
-        //System.out.println(intake.getBottomWinchLength() + " " + intake.getTopWinchLength());
-        */
+        //System.out.println(timer.get() + " " + intake.getTopWinchLength() + " " + intake.getBottomWinchLength());
     }
 
     public void end(boolean interrupted){
@@ -92,13 +39,13 @@ public class IntakeExtend extends CommandBase{
 
     public boolean isFinished() {
         if((Math.abs(intake.getBottomWinchLength()-bottomLength)<1) && (intake.getTopWinchLength()-topLength)<1){
-            if(innerTimer.get() > 0.1) return true;
-        }
-        else innerTimer.reset();
-
-        if(timer.get()>1){
             return true;
         }
+        else innerTimer.reset();
+        if(timer.get()>0.2){
+            return true;
+        }
+
         return false;
       }
 

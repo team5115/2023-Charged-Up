@@ -10,12 +10,14 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team5115.Classes.Acessory.ThrottleControl;
 import frc.team5115.Classes.Hardware.HardwareDrivetrain;
@@ -37,7 +39,7 @@ public class Drivetrain extends SubsystemBase{
     private final HardwareDrivetrain drivetrain;
     private final NAVx navx;
     private final PhotonVision photonVision;
-    private final DifferentialDrivePoseEstimator poseEstimator;
+    private DifferentialDrivePoseEstimator poseEstimator;
     private double leftSpeed;
     private double rightSpeed;
 
@@ -57,9 +59,21 @@ public class Drivetrain extends SubsystemBase{
         ramseteController = new RamseteController();
         kinematics = new DifferentialDriveKinematics(TRACKING_WIDTH_METERS);
         navx = new NAVx();
-        poseEstimator = new DifferentialDrivePoseEstimator(kinematics, navx.getYawRotation2D(), 0.0, 0.0, new Pose2d(FieldConstants.startX, FieldConstants.startY, FieldConstants.startAngle), 
-        VecBuilder.fill(1, 1, 1),
-        VecBuilder.fill(0, 0, 0));
+    }
+
+    public void init() {
+        // poseEstimator = new DifferentialDrivePoseEstimator(
+        //     kinematics, navx.getYawRotation2D(), 0.0, 0.0,
+        //     new Pose2d(FieldConstants.startX, FieldConstants.startY, FieldConstants.startAngle), 
+        //     VecBuilder.fill(1, 1, 1),
+        //     VecBuilder.fill(0, 0, 0)
+        // );
+
+        poseEstimator = new DifferentialDrivePoseEstimator(
+            kinematics, navx.getYawRotation2D(), getLeftDistance(), getRightDistance(), new Pose2d()
+        );
+        System.out.println("Angle from navx" + navx.getYawDeg()
+        );
     }
 
     public void stop() {
@@ -67,11 +81,11 @@ public class Drivetrain extends SubsystemBase{
     }
 
     public double getLeftDistance(){
-        return drivetrain.getEncoder(1).getPosition()*NEO_ENCODER_CALIBRATION;
+        return drivetrain.getEncoderDistance(BACK_LEFT_MOTOR_ID);
     }
 
     public double getRightDistance(){
-        return drivetrain.getEncoder(2).getPosition()*NEO_ENCODER_CALIBRATION;
+        return drivetrain.getEncoderDistance(BACK_RIGHT_MOTOR_ID);
     }
 
     public void resetEncoders() {
@@ -114,6 +128,8 @@ public class Drivetrain extends SubsystemBase{
      * @param turn is for turning right/left: positive is right, negative is left
      */
     public void TankDrive(double forward, double turn) { 
+        turn *= 0.7;
+
         leftSpeed = (forward + turn);
         rightSpeed = (forward - turn);
         
@@ -150,38 +166,39 @@ public class Drivetrain extends SubsystemBase{
     }
 
     public void TankDriveToTrajectoryState(Trajectory.State tState) {
-        ChassisSpeeds adjustedSpeeds = ramseteController.calculate(UpdateOdometry(), tState);
-        DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(adjustedSpeeds);
+        final ChassisSpeeds adjustedSpeeds = ramseteController.calculate(getEstimatedPose(), tState);
+        final DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(adjustedSpeeds);
         leftSpeed = wheelSpeeds.leftMetersPerSecond;
         rightSpeed = wheelSpeeds.rightMetersPerSecond;
         drivetrain.plugandFFDrive(leftSpeed, rightSpeed);
+        System.out.println("left: " + leftSpeed + " | right: " + rightSpeed);
+        System.out.println(wheelSpeeds);
+        System.out.println(getEstimatedPose());
     }
 
-    public Pose2d UpdateOdometry() {
-        poseEstimator.update(navx.getYawRotation2D(),
-            drivetrain.getEncoder(FRONT_LEFT_MOTOR_ID).getPosition(),
-            drivetrain.getEncoder(FRONT_RIGHT_MOTOR_ID).getPosition()
-        );
+    public void UpdateOdometry() {
+        poseEstimator.update(navx.getYawRotation2D(), getLeftDistance(), getRightDistance());
 
         Optional<EstimatedRobotPose> result = photonVision.getEstimatedGlobalPose();
         if (result.isPresent()) {
             EstimatedRobotPose camPose = result.get();
             poseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
-            return poseEstimator.getEstimatedPosition();
         }
+    }
+
+    public Pose2d getEstimatedPose() {
         return poseEstimator.getEstimatedPosition();
     }
 
-    public boolean UpdateMoving(double dist, double startleftDist, double startRightDist) {
-        double locL = getLeftDistance();
-        double forwardL = movingPID.calculate(locL, startleftDist+dist);
-        double locR = getRightDistance();
-        double forwardR = movingPID.calculate(locR, startRightDist+dist);
-        
-        System.out.println("Would be moving @ " + (forwardL+forwardR)/2 + " m/s");
-        //drivetrain.plugandFFDrive(forwardL, forwardR);
+    public boolean UpdateMoving(double dist, double startLeftDist, double startRightDist, double speedMagnitude) {
+        final double remainingLeftDistance = startLeftDist + dist - getLeftDistance();
+        final double remainingRightDistance = startRightDist + dist - getLeftDistance();
 
-        return false;
+        final double speed = speedMagnitude * Math.signum((remainingLeftDistance + remainingRightDistance) / 2);
+        drivetrain.plugandFFDrive(speed, speed);
+
+        final double tolerance = 0.05;
+        return Math.abs(remainingLeftDistance) < tolerance || Math.abs(remainingRightDistance) < tolerance;
     }      
 
     public boolean UpdateTurning(double angle) {

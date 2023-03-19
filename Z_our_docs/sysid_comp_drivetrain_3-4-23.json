@@ -78858,5 +78858,5 @@
   "sysid": true,
   "test": "Drivetrain",
   "units": "Meters",
-  "unitsPerRotation": 1.0
+  "unitsPerRotation": 0.47877871986
 }

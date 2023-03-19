@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team5115.Classes.Software.Drivetrain;
 import frc.team5115.Classes.Software.Arm;
 import frc.team5115.Commands.Auto.*;
-import frc.team5115.Commands.Auto.DockAuto.Dock;
+import frc.team5115.Commands.Auto.DockAuto.DockCommandGroup;
 
 public class ChargingBasicAdjustDriveCommandGroup extends SequentialCommandGroup {
         Drivetrain drivetrain;
@@ -14,10 +14,10 @@ public class ChargingBasicAdjustDriveCommandGroup extends SequentialCommandGroup
         this.drivetrain = drivetrain;
         this.intake = intake;
         addCommands(
-            new DriveForward(drivetrain, -1),
-            new DriveForward(drivetrain, 8),
-            new DriveForward(drivetrain, -4),
-            new Dock(drivetrain)
+            new DriveForward(drivetrain, -1, 1),
+            new DriveForward(drivetrain, 8, 1),
+            new DriveForward(drivetrain, -4, 1),
+            new DockCommandGroup(drivetrain, true)
         ); 
 }
 }

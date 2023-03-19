@@ -9,20 +9,33 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
+
 public class Arm extends SubsystemBase{
     private HardwareArm intake;
     private double topLength = 0;
     private double bottomLength = 0;
-    private double angle = -30;
+    private double angle = -90;
     private double speed = 0.25;
     private ShuffleboardTab tab = Shuffleboard.getTab("SmartDashboard");
-    private GenericEntry topKp = tab.add("topKp", 0.07).getEntry();
-    private GenericEntry bottomKp = tab.add("bottomKp", 0.07).getEntry();
+    /* 
+    private GenericEntry topKp = tab.add("topKp", 0.6).getEntry();
+    private GenericEntry bottomKp = tab.add("bottomKp", 0.6).getEntry();
     private GenericEntry topAngle = tab.add("topAngle", 0).getEntry();
     private PIDController turnController = new PIDController(0.06, 0.0, 0.0);
-    public PIDController topWinchController = new PIDController(topKp.getDouble(0.07), 0, 0);
-    public PIDController bottomWinchController = new PIDController(bottomKp.getDouble(0.75), 0, 0);
+    public PIDController topWinchController = new PIDController(topKp.getDouble(0.6), 0, 0);
+    public PIDController bottomWinchController = new PIDController(bottomKp.getDouble(0.6), 0, 0);
+    */
+
+    private double topKp = 0.113;
+    private double bottomKp = 0.115;
+
+
+    private PIDController turnController = new PIDController(0.08, 0.0, 0.0);
+    public PIDController topWinchController = new PIDController(topKp, 0, 0);
+    public PIDController bottomWinchController = new PIDController(bottomKp, 0, 0);
+
     public boolean armcontrol = false;
+    public boolean armcontrolangle = false;
 
     public Arm(HardwareArm x){
         intake = x;
@@ -30,8 +43,42 @@ public class Arm extends SubsystemBase{
         intake.setEncoders(topLength, -90);
     }
 
+    public void setTopPID(double kP){
+        topWinchController.setP(kP);
+    }
+
+    public void setBottomPID(double kP){
+        bottomWinchController.setP(kP);
+    }
+
+    public void stepBottomPID(){
+        setBottomPID(bottomWinchController.getP()*1.1);
+    }
+
+    public void slowBottomPID(){
+        setBottomPID(bottomWinchController.getP()*0.9);
+    }
+
+    public void stepTopPID(){
+        setTopPID(topWinchController.getP()*1.1);
+    }
+
+    public void slowTopPID(){
+        setTopPID(topWinchController.getP()*0.9);
+    }
+
+    public void resetPID(){
+        setTopPID(0.113);
+        setBottomPID(0.115);
+    }
+
     public void setTopWinchSpeed(){
         intake.setTopWinch(speed);
+    }
+
+    public void setLength(double length){
+        topLength = length;
+        bottomLength = length;
     }
 
     public void setNegTopWinchSpeed(){
@@ -82,11 +129,35 @@ public class Arm extends SubsystemBase{
     }
 
     public void turnUp() {
-        angle += 3*0.02;
+        angle += 9*0.02;
     }
 
     public void turnDown() {
-        angle -= 3*0.02;
+        angle -= 9*0.02;
+    }
+
+    public void topMoveIn(){
+        topLength += 10*0.02;
+    }
+
+    public void topMoveOut(){
+        topLength -= 10*0.02;
+    }
+
+    public void bottomMoveIn(){
+        bottomLength += 10*0.02;
+    }
+
+    public void bottomMoveOut(){
+        bottomLength -= 10*0.02;
+    }
+
+    public void disableBrake(){
+        intake.disableBrake();
+    }
+
+    public void enableBrake(){
+        intake.enableBrake();
     }
 
     public void updateController(){
@@ -127,7 +198,7 @@ public class Arm extends SubsystemBase{
     }
 
     public void zeroArm(){
-        intake.setEncoders(0, -90);
+        intake.setEncoders(0, -96.0);
     }
 
     public boolean getFault(CANSparkMax.FaultID f){
