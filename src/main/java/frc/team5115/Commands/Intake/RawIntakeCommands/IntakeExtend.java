@@ -9,6 +9,8 @@ public class IntakeExtend extends CommandBase{
     private Timer innerTimer;
     private double topLength;
     private double bottomLength;
+    double bottomSpeed = 0;
+    double topSpeed = 0;
 
 
     public IntakeExtend(Arm a, double topLength, double bottomLength){
@@ -28,7 +30,7 @@ public class IntakeExtend extends CommandBase{
     }
 
     public void execute(){
-        //System.out.println(intake.getBottomWinchLength() + " " + intake.getTopWinchLength());
+        //System.out.println(timer.get() + " " + intake.getTopWinchLength() + " " + intake.getBottomWinchLength());
     }
 
     public void end(boolean interrupted){
@@ -36,14 +38,14 @@ public class IntakeExtend extends CommandBase{
     }
 
     public boolean isFinished() {
-        if((Math.abs(intake.getBottomWinchLength()-bottomLength)<0.1) && (intake.getTopWinchLength()-topLength)<0.1){
-            if(innerTimer.get() > 0.2) return true;
-        }
-        else innerTimer.reset();
-
-        if(timer.get()>3){
+        if((Math.abs(intake.getBottomWinchLength()-bottomLength)<1) && (intake.getTopWinchLength()-topLength)<1){
             return true;
         }
+        else innerTimer.reset();
+        if(timer.get()>0.2){
+            return true;
+        }
+
         return false;
       }
 

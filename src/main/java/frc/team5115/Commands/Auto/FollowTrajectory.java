@@ -16,6 +16,8 @@ public class FollowTrajectory extends CommandBase {
     private final Drivetrain drivetrain;
     private final Trajectory trajectory;
     private final Timer timer;
+    private final double MaxSpeed = 0.1; // m/s
+    private final double MaxAcceleration = 0.1; // m/s^2
 
     public FollowTrajectory(Drivetrain drivetrain, double x, double y, double theta, ArrayList<Translation2d> interiorWaypoints) {
         this.drivetrain = drivetrain;
@@ -45,7 +47,6 @@ public class FollowTrajectory extends CommandBase {
         timer = new Timer();
         timer.start();
     }
-
 
     @Override
     public void initialize() {
@@ -82,9 +83,28 @@ public class FollowTrajectory extends CommandBase {
      * Be sure to check that your taking in the x and y coordinate and not the distance and angle by checking the Javadocs of the method.
      */
     private Trajectory generateTrajectory(ArrayList<Translation2d> interiorWaypoints, double x, double y, double theta) {
-        TrajectoryConfig config = new TrajectoryConfig(3, 3);
-        Pose2d endPose = new Pose2d(x, y, Rotation2d.fromDegrees(theta));
-        return TrajectoryGenerator.generateTrajectory(drivetrain.UpdateOdometry(), interiorWaypoints, endPose, config);
+        return generateTrajectory(interiorWaypoints, new Pose2d(x, y, Rotation2d.fromDegrees(theta)));
+    }
+
+    /**
+     * Create a trajectory that will drive the robot from where it is along a hard-coded path to an end position.
+     * @param x the final x position the robot will go to.
+     * @param y the final y position the robot will go to.
+     * @param theta the final orentation of the robot.
+     * 
+     * @return a trajectory that starts at current robot position and follow hard-coded path
+     */
+    private Trajectory generateTrajectory(double x, double y, double theta) {
+        return generateTrajectory(new Pose2d(x, y, Rotation2d.fromDegrees(theta)));
+    }
+
+    /**
+     * Create a trajectory that will drive the robot from where it is along a hard-coded path to an end position.
+     * @param endPose the Pose2d object that contains the final x and y position, and orientation of the robot.
+     * @return a trajectory that starts at current robot position and follow hard-coded path
+     */
+    private Trajectory generateTrajectory(Pose2d endPose) {
+        return generateTrajectory(new ArrayList<Translation2d>(), endPose);
     }
 
     /**
@@ -99,33 +119,8 @@ public class FollowTrajectory extends CommandBase {
      * Be sure to check that your taking in the x and y coordinate and not the distance and angle by checking the Javadocs of the method.
      */
     private Trajectory generateTrajectory(ArrayList<Translation2d> interiorWaypoints, Pose2d endPose) {
-        TrajectoryConfig config = new TrajectoryConfig(3, 3);
-        return TrajectoryGenerator.generateTrajectory(drivetrain.UpdateOdometry(), interiorWaypoints, endPose, config);
-    }
-
-    /**
-     * Create a trajectory that will drive the robot from where it is along a hard-coded path to an end position.
-     * @param x the final x position the robot will go to.
-     * @param y the final y position the robot will go to.
-     * @param theta the final orentation of the robot.
-     * 
-     * @return a trajectory that starts at current robot position and follow hard-coded path
-     */
-    private Trajectory generateTrajectory(double x, double y, double theta) {
-        ArrayList<Translation2d> interiorWaypoints = new ArrayList<Translation2d>();
-        TrajectoryConfig config = new TrajectoryConfig(3, 3);
-        Pose2d endPose = new Pose2d(x, y, Rotation2d.fromDegrees(theta));
-        return TrajectoryGenerator.generateTrajectory(drivetrain.UpdateOdometry(), interiorWaypoints, endPose, config);
-    }
-
-    /**
-     * Create a trajectory that will drive the robot from where it is along a hard-coded path to an end position.
-     * @param endPose the Pose2d object that contains the final x and y position, and orientation of the robot.
-     * @return a trajectory that starts at current robot position and follow hard-coded path
-     */
-    private Trajectory generateTrajectory(Pose2d endPose) {
-        ArrayList<Translation2d> interiorWaypoints = new ArrayList<Translation2d>();
-        TrajectoryConfig config = new TrajectoryConfig(3, 3);
-        return TrajectoryGenerator.generateTrajectory(drivetrain.UpdateOdometry(), interiorWaypoints, endPose, config);
+        TrajectoryConfig config = new TrajectoryConfig(MaxSpeed, MaxAcceleration);
+        config.setReversed(true);
+        return TrajectoryGenerator.generateTrajectory(drivetrain.getEstimatedPose(), interiorWaypoints, endPose, config);
     }
 }

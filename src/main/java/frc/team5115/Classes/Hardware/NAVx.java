@@ -50,7 +50,7 @@ public class NAVx implements Subsystem {
         // for sideways mount
         // double angle = ahrs.getRoll() - pitchAtReset;
         // for flat mount
-        double angle = ahrs.getPitch() - pitchAtReset;
+        double angle = -ahrs.getRoll() - pitchAtReset;
         if (angle > 180) {
             return -360 + angle;
         }

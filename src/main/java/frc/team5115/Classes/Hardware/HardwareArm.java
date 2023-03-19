@@ -17,16 +17,14 @@ public class HardwareArm extends SubsystemBase{
     private RelativeEncoder TurningEncoder;
     private RelativeEncoder TopWinchEncoder;
     private RelativeEncoder BottomWinchEncoder;
-    private final double Ks = 0.12655;
-    private final double Kv = 4.4235;
+    private final double Ks = 0.13;
+    private final double Kv = 4.5;
     private final double Ka = 0.1113;
-    private final double Kg = 0.38644;
-    private boolean FF = false;
+    private final double Kg = 0.39;
+    public boolean FF = true;
     private final ArmFeedforward arm = new ArmFeedforward(Ks, Kg, Kv, Ka); // Rad Calibrated
     //private double encoderConstant = 1/49;
-    private double startingTurnValue = Units.degreesToRadians(-40); //Rads
-    private double rotatingGearRatio = ((1/49)*(10/48));
-    private double winchGearRatio = 1/7;
+    private double startingTurnValue = Units.degreesToRadians(-96); //Rads
     private double WinchDiameter = Units.metersToInches(0.12); 
 
     public HardwareArm(){
@@ -34,7 +32,7 @@ public class HardwareArm extends SubsystemBase{
         intakeBottom = new CANSparkMax(6, MotorType.kBrushless);    
         intakeTurn = new CANSparkMax(7, MotorType.kBrushless);  
 
-        intakeBottom.setInverted(false);
+        intakeBottom.setInverted(true);
         intakeTop.setInverted(true);
 
         intakeTop.setIdleMode(IdleMode.kBrake);
@@ -62,29 +60,21 @@ public class HardwareArm extends SubsystemBase{
     }
 
     public void setTopWinch(double speed){
+        // NaN Check
         if(speed != speed) {
             speed = 0;
         }
-        if(speed>.5){
-            speed = .5;
-        }
-        else if(speed<-0.5){
-            speed = -0.5;
-        }
+
         intakeTop.set(speed);
     }
 
     public void setBottomWinch(double speed){
+        // NaN Check
         if(speed != speed) {
             speed = 0;
         }
-        if(speed>.5){
-            speed = .5;
-        }
-        else if(speed<-0.5){
-            speed = -0.5;
-        }
-        intakeBottom.set(speed + 0.04);
+
+        intakeBottom.set(speed);
     }
 
     public void setTurn(double speed){
@@ -93,18 +83,17 @@ public class HardwareArm extends SubsystemBase{
         if(speed != speed) {
             speed = 0;
         }
-
-        if(speed>.37){
-            speed = 0.37;
-        }
-        else if(speed<-0.1){
-            speed = -0.1;
-        }
         if(FF){
-            intakeTurn.setVoltage(arm.calculate((getArmRad()), speed));
+            intakeTurn.setVoltage(Math.max(arm.calculate((getArmRad()), 1.5*speed), -10));
         }
         else{
-        intakeTurn.set(speed);
+            if(speed>.37){
+                speed = 0.37;
+            }
+            else if(speed<-0.2){
+                speed = -0.2;
+            }
+            intakeTurn.set(speed);
         }
     }
 
@@ -173,7 +162,7 @@ public class HardwareArm extends SubsystemBase{
 public void setEncoders(double Length, double angle){
     BottomWinchEncoder.setPosition((7*Length)/((WinchDiameter)));
     TopWinchEncoder.setPosition((7*Length)/((WinchDiameter)));
-    TurningEncoder.setPosition(angle/(360.0 / (48.0 * 49.0 / 10.0)));
+    TurningEncoder.setPosition(angle/(360.0 / (48.0 * 49.0 / 10.0))); // Set the angle 
     // TurningEncoder.setPosition(Units.radiansToDegrees(startingTurnValue)/(360.0 / (48.0 * 49.0 / 10.0)));
 }
 
@@ -183,6 +172,7 @@ public void setEncoders(double Length, double angle){
      */
     public double getTopWinchLength() {
         //System.out.println((getTopEncoder()/7)*(WinchDiameter*3.14159));
+        //System.out.println((getBottomEncoder()/7)*(WinchDiameter));
         return (getTopEncoder()/7)*(WinchDiameter);
     
     }
@@ -193,6 +183,7 @@ public void setEncoders(double Length, double angle){
      */
     public double getBottomWinchLength() {
         //System.out.println((getBottomEncoder()/7)*(WinchDiameter*3.14159));
+        //System.out.println((getBottomEncoder()/7)*(WinchDiameter));
         return (getBottomEncoder()/7)*(WinchDiameter);
     }
 
@@ -206,32 +197,20 @@ public void setEncoders(double Length, double angle){
     }
 
     public double getArmRad(){
-        return Math.toRadians(getArmDeg());
-        //return Math.toRadians(getArmDeg() + startingTurnValue);
+        //return Math.toRadians(getArmDeg());
+        return Math.toRadians(getArmDeg() + startingTurnValue);
     }
 
-    public double getBCenterOfMass(double length){
-        return (4917*length+11.1384);
+    public void disableBrake(){
+        intakeBottom.setIdleMode(IdleMode.kCoast);
+        intakeTop.setIdleMode(IdleMode.kCoast);
+        //intakeTurn.setIdleMode(IdleMode.kCoast);
     }
 
-    public double getSCenterOfMass(double length){
-    return (.34831*length+14.3416);
-    }
-
-    public double getSmallTorque(double length){
-        return 2.584*getSCenterOfMass(length)*Math.sin(getArmRad());
-    }
-
-    public double getBigTorque(double length){
-        return 4.4104*getBCenterOfMass(length)*Math.sin(getArmRad());
-    }
-
-    public double getMassTorque(double mass, double length){
-        return mass * length * Math.sin(getArmRad());
-    }
-
-    public double getTotalTorque(double mass, double length){
-        return (getSmallTorque(length) + getBigTorque(length) + getMassTorque(mass, length)/8.85);
+    public void enableBrake(){
+        intakeBottom.setIdleMode(IdleMode.kBrake);
+        intakeTop.setIdleMode(IdleMode.kBrake);
+        intakeTurn.setIdleMode(IdleMode.kBrake);
     }
 
 }

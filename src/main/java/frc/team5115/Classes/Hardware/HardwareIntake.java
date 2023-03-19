@@ -13,6 +13,8 @@ public class HardwareIntake extends SubsystemBase{
     private TalonSRX intakeL = new TalonSRX(9);
     private TalonSRX intakeR = new TalonSRX(8);
     //PCM IS 10 this season YOU HAVE TO LABEL THE MODULE/CAN ID in everything you instantiate
+    private final DigitalOutput coneLight;
+    private final DigitalOutput cubeLight;
 
     public HardwareIntake(){
         intakeL.configPeakCurrentLimit(35);
@@ -21,29 +23,40 @@ public class HardwareIntake extends SubsystemBase{
         intakeR.enableCurrentLimit(true);
         pcm = new PneumaticsControlModule(10);
         intake = new DoubleSolenoid(10, PneumaticsModuleType.CTREPCM, 0, 1);
+        coneLight = new DigitalOutput(0);
+        coneLight.set(true);
+        cubeLight = new DigitalOutput(1);
+    }
+
+    public void TurnIn(){
+        intakeL.set(ControlMode.PercentOutput, -0.7);
+        intakeR.set(ControlMode.PercentOutput, -0.7);
+    }
+
+    public void TurnOut(){
+        intakeL.set(ControlMode.PercentOutput, +0.7);
+        intakeR.set(ControlMode.PercentOutput, +0.7);
+    }
+
+    public void StopMotor(){
+        intakeL.set(ControlMode.PercentOutput, -0.09);
+        intakeR.set(ControlMode.PercentOutput,-0.09);
     }
 
     public void open(){
         intake.set(Value.kReverse);
-    }
-
-    public void TurnIn(){
-        intakeL.set(ControlMode.PercentOutput, +0.17);
-        intakeR.set(ControlMode.PercentOutput, +0.17);
-    }
-
-    public void TurnOut(){
-        intakeL.set(ControlMode.PercentOutput, -0.5);
-        intakeR.set(ControlMode.PercentOutput, -0.5);
-    }
-
-    public void StopMotor(){
-        intakeL.set(ControlMode.PercentOutput, 0);
-        intakeR.set(ControlMode.PercentOutput,0);
+        setLights(true);
     }
 
     public void close(){
         intake.set(Value.kForward);
+        setLights(false);
+    }
+
+    private void setLights(boolean wantsCones) {
+        coneLight.set(wantsCones);
+        cubeLight.set(!wantsCones);
+        System.out.println(wantsCones);
     }
     
 }
