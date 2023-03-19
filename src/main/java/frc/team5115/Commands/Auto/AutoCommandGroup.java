@@ -18,7 +18,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
         this.drivetrain = drivetrain;
 
         setupCubeDrop();        
-         if (true) {
+         if (false) {
             setupScuffed();
         } else {
             setupNotIdeal();
@@ -28,9 +28,9 @@ public class AutoCommandGroup extends SequentialCommandGroup {
     
     private void setupCubeDrop() {
         addCommands(    
-            new DriveForward(drivetrain, -0.2, 0.5), // back up to node
+            new DriveForward(drivetrain, -0.26, 0.5), // back up to node
             new DriveForward(drivetrain, +0.65, 1.2), // speed away to drop cube
-            new DriveForward(drivetrain, -0.75, 1.0) // back up to push cube into place
+            new DriveForward(drivetrain, -0.85, 0.8) // back up to push cube into place
         );
         // this should finish with the robot pushed up against the node
     }
@@ -45,7 +45,6 @@ public class AutoCommandGroup extends SequentialCommandGroup {
     }
 
     private void setupNotIdeal() {
-        System.out.println("AHHHHH!!! WHY AM I RUNNING!!! that's not ideal...");
         addCommands(
             new DriveForward(drivetrain, +3, 1.0), // exit community
             new InstantCommand(drivetrain :: stop)
