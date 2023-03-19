@@ -18,7 +18,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
         this.drivetrain = drivetrain;
 
         setupCubeDrop();        
-         if (false) {
+         if (true) {
             setupScuffed();
         } else {
             setupNotIdeal();
