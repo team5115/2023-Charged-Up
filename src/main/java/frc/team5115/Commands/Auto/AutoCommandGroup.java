@@ -3,22 +3,28 @@ package frc.team5115.Commands.Auto;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.team5115.Classes.Software.Drivetrain;
-import frc.team5115.Classes.Software.Arm;
+import frc.team5115.Classes.Software.*;
+import frc.team5115.Classes.Hardware.*;
 import frc.team5115.Commands.Auto.BasicAuto.AdjustDriveCommandGroup;
 import frc.team5115.Commands.Auto.DockAuto.DockCommandGroup;
+import frc.team5115.Commands.Intake.RealExtend;
 import frc.team5115.Commands.Intake.CombinedIntakeCommands.*;
+import frc.team5115.Commands.Intake.RawIntakeCommands.IntakeTurn;
 
 public class AutoCommandGroup extends SequentialCommandGroup {
     Drivetrain drivetrain;
-    Arm intake;
+    Arm arm;
+    HardwareArm hArm;
+    HardwareIntake hIntake;
 
-    public AutoCommandGroup(Drivetrain drivetrain, Arm intake, boolean inIdealPosition){
-        this.intake = intake;
+    public AutoCommandGroup(Drivetrain drivetrain, Arm arm, HardwareArm hArm, HardwareIntake hIntake, boolean inIdealPosition){
+        this.arm = arm;
         this.drivetrain = drivetrain;
+        this.hArm = hArm;
+        this.hIntake = hIntake;
 
         setupCubeDrop();        
-         if (false) {
+         if (inIdealPosition) {
             setupScuffed();
         } else {
             setupNotIdeal();
@@ -37,9 +43,13 @@ public class AutoCommandGroup extends SequentialCommandGroup {
 
     private void setupIdeal() {
         addCommands(
-            new DriveForward(drivetrain, +3.4, 0.8), // exit community
-            new DriveForward(drivetrain, -2.0, 0.6), // go over ramp and exit community
-            new DockCommandGroup(drivetrain, true) // dock backwards
+            new HighNode(arm),
+            new IntakeTurn(arm, 15),
+            new Stow(arm, hArm, hIntake),
+            new DriveTurn(drivetrain, 180),
+            new IntakeAndMoveGroup(arm, drivetrain, 3.4, 1),
+            new DriveTurn(drivetrain, 0),
+            new DockCommandGroup(drivetrain, false) // dock backwards
            // ,new InstantCommand(drivetrain :: stop)
         );
     }
