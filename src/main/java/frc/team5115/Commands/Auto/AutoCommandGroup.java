@@ -3,6 +3,7 @@ package frc.team5115.Commands.Auto;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team5115.Classes.Software.*;
 import frc.team5115.Classes.Hardware.*;
 import frc.team5115.Commands.Auto.BasicAuto.AdjustDriveCommandGroup;
@@ -22,17 +23,16 @@ public class AutoCommandGroup extends SequentialCommandGroup {
         this.drivetrain = drivetrain;
         this.hArm = hArm;
         this.hIntake = hIntake;
+        System.out.println(inIdealPosition);
 
-        setupCubeDrop();        
-         if (inIdealPosition) {
-            setupScuffed();
+        if (inIdealPosition) {
+            dockForward();
         } else {
-            setupNotIdeal();
+            scoreHigh();
         }
-        
     }
     
-    private void setupCubeDrop() {
+    private void cubeDrop() {
         addCommands(    
             new DriveForward(drivetrain, -0.26, 0.5), // back up to node
             new DriveForward(drivetrain, +0.65, 1.2), // speed away to drop cube
@@ -41,30 +41,47 @@ public class AutoCommandGroup extends SequentialCommandGroup {
         // this should finish with the robot pushed up against the node
     }
 
-    private void setupIdeal() {
+    private void superIdeal() {
         addCommands(
             new HighNode(arm),
             new IntakeTurn(arm, 15),
             new Stow(arm, hArm, hIntake),
             new DriveTurn(drivetrain, 180),
             new IntakeAndMoveGroup(arm, drivetrain, 3.4, 1),
-            new DriveTurn(drivetrain, 0),
+            new DriveTurn(drivetrain, 180),
             new DockCommandGroup(drivetrain, false) // dock backwards
            // ,new InstantCommand(drivetrain :: stop)
         );
     }
 
-    private void setupNotIdeal() {
+    private void scoreHigh() {
+        // should start facing towards grid
+        addCommands(
+            new Stow(arm, hArm, hIntake),
+            new InstantCommand(hIntake :: TurnIn),
+            new WaitCommand(1),
+            new StowCone(arm, hArm, hIntake),
+            new InstantCommand(hIntake :: StopMotor),
+            new HighNode(arm),
+            new InstantCommand(hIntake :: TurnOut),
+            // do something here with scoring it, like bringing the arm down
+            new WaitCommand(1),
+            new InstantCommand(hIntake :: StopMotor),
+            new Stow(arm, hArm, hIntake)
+            // ,new DriveForward(drivetrain, -3.0, 1.0)
+        );
+    }
+
+    private void exitCommunity() {
         addCommands(
             new DriveForward(drivetrain, +3, 1.0), // exit community
             new InstantCommand(drivetrain :: stop)
         );
     }
 
-    private void setupScuffed(){
+    private void dockForward(){
         addCommands(
-        new DockCommandGroup(drivetrain, false) // dock forwards
-           // ,new InstantCommand(drivetrain :: stop)
+            new DockCommandGroup(drivetrain, false) // dock forwards
         );
     }
 }
