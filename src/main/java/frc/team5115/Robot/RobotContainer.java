@@ -35,7 +35,7 @@ public class RobotContainer {
 
     public RobotContainer() {
         joy1 = new Joystick(0);
-        joy2 = new Joystick(1); // <-- for testing only!!
+        joy2 = new Joystick(1);
 
         photonVision = new PhotonVision();
         drivetrain = new Drivetrain(photonVision);
@@ -119,7 +119,7 @@ public class RobotContainer {
 
     public void autoPeriod(){
        //drivetrain.UpdateOdometry();
-       //arm.updateController();
+       arm.updateController();
     }
 
     public void teleopPeriodic(){

@@ -33,7 +33,6 @@ public class Drivetrain extends SubsystemBase{
     private final ThrottleControl throttle;
     private final PIDController anglePID;
     private final PIDController movingPID;
-    private final PIDController turningPID;
     private final RamseteController ramseteController;
     private final DifferentialDriveKinematics kinematics;
     private final HardwareDrivetrain drivetrain;
@@ -54,7 +53,6 @@ public class Drivetrain extends SubsystemBase{
         anglePID = new PIDController(0.0144, 0.0001, 0.0015);
         
         movingPID = new PIDController(0.01, 0, 0);
-        turningPID = new PIDController(0.01, 0, 0);
         drivetrain = new HardwareDrivetrain();
         ramseteController = new RamseteController();
         kinematics = new DifferentialDriveKinematics(TRACKING_WIDTH_METERS);
@@ -201,13 +199,13 @@ public class Drivetrain extends SubsystemBase{
         return Math.abs(remainingLeftDistance) < tolerance || Math.abs(remainingRightDistance) < tolerance;
     }      
 
-    public boolean UpdateTurning(double angle) {
-        double currentAngle = (navx.getPitchDeg());
-        double turn = turningPID.calculate(currentAngle, angle);
-        System.out.println("Would be turning @ " + turn + " m/s");
-        //drivetrain.plugandFFDrive(forward, -forward);
+    public boolean UpdateTurning(double setpointAngle) {
+        double currentAngle = navx.getYawDeg();
+        double turn = MathUtil.clamp(anglePID.calculate(currentAngle, setpointAngle), -1, 1);
+        System.out.println("turning @ " + turn + " m/s");
+        drivetrain.plugandFFDrive(turn, -turn);
 
-        return Math.abs(angle-currentAngle) < 0.1;
+        return Math.abs(turn) < 0.01;
     }
 
     public void resetNAVx(){
@@ -215,6 +213,10 @@ public class Drivetrain extends SubsystemBase{
     }
 
     public double getPitchDeg() {
+        return navx.getPitchDeg();
+    }
+
+    public double getYawDeg() {
         return navx.getPitchDeg();
     }
 

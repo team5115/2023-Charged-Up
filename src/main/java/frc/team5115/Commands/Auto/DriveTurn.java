@@ -6,14 +6,14 @@ import frc.team5115.Classes.Software.Drivetrain;
 
 public class DriveTurn extends CommandBase{
     private Timer grandTimer;
-    private Timer dockedTimer;
+    private Timer doneTimer;
     private Drivetrain drivetrain;
-    private double angle;
+    private double absoluteAngle;
 
-    public DriveTurn(Drivetrain drivetrain, double angle) {
-        this.angle = angle;
+    public DriveTurn(Drivetrain drivetrain, double deltaAngle) {
+        absoluteAngle = deltaAngle + drivetrain.getYawDeg();
         this.drivetrain = drivetrain;
-        dockedTimer = new Timer();
+        doneTimer = new Timer();
         grandTimer = new Timer();
         grandTimer.start();
     }
@@ -25,11 +25,11 @@ public class DriveTurn extends CommandBase{
 
     @Override
     public void execute() {
-        boolean turned = drivetrain.UpdateTurning(angle);
+        boolean turned = drivetrain.UpdateTurning(absoluteAngle);
         if (turned) {
-            dockedTimer.start();
+            doneTimer.start();
         } else {
-            dockedTimer.reset();
+            doneTimer.reset();
         }
     }
 
@@ -46,7 +46,7 @@ public class DriveTurn extends CommandBase{
             return true;
         }
         // finish if docked for more than the minimum dock time
-        if (dockedTimer.get() > 0.5) {
+        if (doneTimer.get() > 0.5) {
             System.out.println("Successfully turned");
             return true;
         }
