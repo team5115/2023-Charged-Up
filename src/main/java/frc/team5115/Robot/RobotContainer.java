@@ -41,7 +41,7 @@ public class RobotContainer {
         drivetrain = new Drivetrain(photonVision);
         intake = new HardwareIntake();
         hardwareArm = new HardwareArm();
-        arm = new Arm(hardwareArm);
+        arm = new Arm(hardwareArm, intake);
         startup = new Startup(arm, hardwareArm, intake);
         
         dockSequence = new DockCommandGroup(drivetrain, false);

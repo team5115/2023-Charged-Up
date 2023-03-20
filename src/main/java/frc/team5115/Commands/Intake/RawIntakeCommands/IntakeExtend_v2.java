@@ -42,6 +42,10 @@ public class IntakeExtend_v2 extends CommandBase{
         //intake.topWinchSetLength(topLength_target);
         //intake.bottomWinchSetLength(bottomLength_target);
         both_arms_are_at_target_value=false;
+        if(topLength_target > 20 && bottomLength_target > 20 && !intake.h.open){
+            topLength_target = 20;
+            bottomLength_target = 20;
+        }
     }
 
 

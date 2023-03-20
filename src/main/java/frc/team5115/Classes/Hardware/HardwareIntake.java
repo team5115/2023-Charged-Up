@@ -15,6 +15,7 @@ public class HardwareIntake extends SubsystemBase{
     //PCM IS 10 this season YOU HAVE TO LABEL THE MODULE/CAN ID in everything you instantiate
     private final DigitalOutput coneLight;
     private final DigitalOutput cubeLight;
+    public boolean open = true;
 
     public HardwareIntake(){
         intakeL.configPeakCurrentLimit(35);
@@ -46,11 +47,13 @@ public class HardwareIntake extends SubsystemBase{
     public void open(){
         intake.set(Value.kReverse);
         setLights(true);
+        open = true;
     }
 
     public void close(){
         intake.set(Value.kForward);
         setLights(false);
+        open = false;
     }
 
     private void setLights(boolean wantsCones) {
