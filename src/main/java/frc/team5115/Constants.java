@@ -24,7 +24,7 @@ public class Constants{
     //X-Box
     public static final byte JOY_X_AXIS_ID = 0;
     public static final byte JOY_Y_AXIS_ID = 1;
-    public static final byte JOY_Z_AXIS_ID = 4; 
+    public static final byte JOY_Z_AXIS_ID = 2; // 4 normally, 2 for different controller 
 
     // NEW Feedforward
     public static final double kS = 0.18296; 

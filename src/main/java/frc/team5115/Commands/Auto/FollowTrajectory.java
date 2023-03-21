@@ -2,6 +2,8 @@ package frc.team5115.Commands.Auto;
 
 import java.util.ArrayList;
 
+import javax.management.RuntimeErrorException;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -16,8 +18,8 @@ public class FollowTrajectory extends CommandBase {
     private final Drivetrain drivetrain;
     private final Trajectory trajectory;
     private final Timer timer;
-    private final double MaxSpeed = 0.1; // m/s
-    private final double MaxAcceleration = 0.1; // m/s^2
+    private static final double MaxSpeed = 2; // m/s
+    private static final double MaxAcceleration = 2; // m/s^2
 
     public FollowTrajectory(Drivetrain drivetrain, double x, double y, double theta, ArrayList<Translation2d> interiorWaypoints) {
         this.drivetrain = drivetrain;
@@ -56,12 +58,16 @@ public class FollowTrajectory extends CommandBase {
     @Override
     public void execute() {
         drivetrain.TankDriveToTrajectoryState(trajectory.sample(timer.get()));
+        System.out.println(drivetrain.getEstimatedPose());
     }
     
     @Override
     public void end(boolean interrupted){
         drivetrain.stop();
-        if (interrupted) System.out.println("Trajectory following was INTERRUPTED");
+        drivetrain.stop();
+        System.out.println("yourmom.com!!!!!!!!!!!!@@!!0000");
+        //throw new RuntimeErrorException(null);
+       // if (interrupted) System.out.println("Trajectory following was INTERRUPTED");
     }
 
     @Override

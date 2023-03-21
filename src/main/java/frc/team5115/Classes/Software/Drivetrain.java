@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.networktables.NetworkTable;
@@ -32,13 +33,13 @@ public class Drivetrain extends SubsystemBase{
     public NetworkTableEntry tv;
     private final ThrottleControl throttle;
     private final PIDController anglePID;
-    private final PIDController movingPID;
     private final RamseteController ramseteController;
     private final DifferentialDriveKinematics kinematics;
     private final HardwareDrivetrain drivetrain;
     private final NAVx navx;
     private final PhotonVision photonVision;
     private DifferentialDrivePoseEstimator poseEstimator;
+    private DifferentialDriveOdometry odometry;
     private double leftSpeed;
     private double rightSpeed;
 
@@ -52,7 +53,6 @@ public class Drivetrain extends SubsystemBase{
         throttle = new ThrottleControl(3, -3, 0.2);
         anglePID = new PIDController(0.0144, 0.0001, 0.0015);
         
-        movingPID = new PIDController(0.01, 0, 0);
         drivetrain = new HardwareDrivetrain();
         ramseteController = new RamseteController();
         kinematics = new DifferentialDriveKinematics(TRACKING_WIDTH_METERS);
@@ -70,8 +70,10 @@ public class Drivetrain extends SubsystemBase{
         poseEstimator = new DifferentialDrivePoseEstimator(
             kinematics, navx.getYawRotation2D(), getLeftDistance(), getRightDistance(), new Pose2d()
         );
-        System.out.println("Angle from navx" + navx.getYawDeg()
+        odometry = new DifferentialDriveOdometry(
+            navx.getYawRotation2D(), getLeftDistance(), getRightDistance()
         );
+        System.out.println("Angle from navx" + navx.getYawDeg());
     }
 
     public void stop() {
@@ -170,13 +172,16 @@ public class Drivetrain extends SubsystemBase{
         rightSpeed = wheelSpeeds.rightMetersPerSecond;
         drivetrain.plugandFFDrive(leftSpeed, rightSpeed);
         System.out.println("left: " + leftSpeed + " | right: " + rightSpeed);
-        System.out.println(wheelSpeeds);
-        System.out.println(getEstimatedPose());
+       // System.out.println(wheelSpeeds);
+        //System.out.println(getEstimatedPose());
     }
 
     public void UpdateOdometry() {
+        // update from encoders
         poseEstimator.update(navx.getYawRotation2D(), getLeftDistance(), getRightDistance());
-
+        odometry.update(navx.getYawRotation2D(), getLeftDistance(), getRightDistance());
+        
+        // add vision measurements, if they exist
         Optional<EstimatedRobotPose> result = photonVision.getEstimatedGlobalPose();
         if (result.isPresent()) {
             EstimatedRobotPose camPose = result.get();
@@ -185,7 +190,8 @@ public class Drivetrain extends SubsystemBase{
     }
 
     public Pose2d getEstimatedPose() {
-        return poseEstimator.getEstimatedPosition();
+        // return poseEstimator.getEstimatedPosition();
+        return odometry.getPoseMeters();
     }
 
     public boolean UpdateMoving(double dist, double startLeftDist, double startRightDist, double speedMagnitude) {

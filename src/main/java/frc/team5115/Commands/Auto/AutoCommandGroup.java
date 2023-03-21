@@ -1,5 +1,6 @@
 package frc.team5115.Commands.Auto;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -23,13 +24,21 @@ public class AutoCommandGroup extends SequentialCommandGroup {
         this.drivetrain = drivetrain;
         this.hArm = hArm;
         this.hIntake = hIntake;
-        System.out.println(inIdealPosition);
 
-        if (inIdealPosition) {
-            dockForward();
-        } else {
-            scoreHigh();
-        }
+        testTrajectory();
+
+        // if (inIdealPosition) {
+        //     dockForward();
+        // } else {
+        //     scoreHigh();
+        // }
+    }
+
+    private void testTrajectory() {
+        addCommands(
+            new FollowTrajectory(drivetrain, 1, 1, 0),
+            new InstantCommand(drivetrain :: stop)
+        );
     }
     
     private void cubeDrop() {
