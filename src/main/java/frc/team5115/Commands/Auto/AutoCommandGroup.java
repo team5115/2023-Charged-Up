@@ -35,10 +35,12 @@ public class AutoCommandGroup extends SequentialCommandGroup {
     }
 
     private void testTrajectory() {
-        addCommands(
-            new FollowTrajectory(drivetrain, 11, 1, 0),
-            new InstantCommand(drivetrain :: stop)
-        );
+        addCommands(drivetrain.getRamseteCommand());
+        
+        // addCommands(
+        //     new FollowTrajectory(drivetrain, 11, 1, 0),
+        //     new InstantCommand(drivetrain :: stop)
+        // );
     }
     
     private void cubeDrop() {

@@ -9,38 +9,35 @@ import edu.wpi.first.math.controller.*;
 import edu.wpi.first.math.MathUtil;
 
 public class HardwareDrivetrain{
-
-
-
     // Competition feedforward and feedback (pid) values
     // 6 inch diameter on COMP ROBOT WITH ARM and dumbells in back
-    // private final double leftKs = 0.17463;
-    // private final double leftKv = 2.8104;
-    // private final double leftKa = 0.82143;
+    // private static final double leftKs = 0.17463;
+    // private static final double leftKv = 2.8104;
+    // private static final double leftKa = 0.82143;
     
-    // private final double rightKs = 0.17463;
-    // private final double rightKv = 2.8104;
-    // private final double rightKa = 0.82143;
+    // private static final double rightKs = 0.17463;
+    // private static final double rightKv = 2.8104;
+    // private static final double rightKa = 0.82143;
 
-    // private final double leftKp = 1.6455;
-    // private final double rightKp = 1.6220;
-    // private final double Ki = 0.0;
-    // private final double Kd = 0.0;
+    // private static final double leftKp = 1.6455;
+    // private static final double rightKp = 1.6220;
+    // private static final double Ki = 0.0;
+    // private static final double Kd = 0.0;
     // // END of comp robot values
 
     // Testbed feedforward and feedback (pid) values - 6 inch diameter on testbed
-    private final double leftKs = 0.090949;
-    private final double leftKv = 2.783;
-    private final double leftKa = 0.16477;
+    private static final double leftKs = 0.090949;
+    private static final double leftKv = 2.783;
+    private static final double leftKa = 0.16477;
     
-    private final double rightKs = 0.099706;
-    private final double rightKv = 2.8314;
-    private final double rightKa = 0.14565;
+    private static final double rightKs = 0.099706;
+    private static final double rightKv = 2.8314;
+    private static final double rightKa = 0.14565;
     
-    private final double leftKp = 0.0; // 3.7203 according to sysid
-    private final double rightKp = 0.0; // 3.7203 according to sysid
-    private final double Ki = 0.0;
-    private final double Kd = 0.0;
+    private static final double leftKp = 0.0; // 3.7203 according to sysid
+    private static final double rightKp = 0.0; // 3.7203 according to sysid
+    private static final double Ki = 0.0;
+    private static final double Kd = 0.0;
     // END of testbed values
 
     private final SimpleMotorFeedforward leftFeedForward = new SimpleMotorFeedforward(leftKs, leftKv, leftKa);
@@ -126,11 +123,15 @@ public class HardwareDrivetrain{
         backRight.set(backRightSpeed);
     }
 
-    public void PlugandVoltDrive(double frontLeftVoltage, double frontRightVoltage, double backLeftVoltage, double backRightVoltage){
+    public void plugAndVoltDrive(double frontLeftVoltage, double frontRightVoltage, double backLeftVoltage, double backRightVoltage){
         frontLeft.setVoltage(frontLeftVoltage);
         frontRight.setVoltage(frontRightVoltage);
         backLeft.setVoltage(backLeftVoltage);
         backRight.setVoltage(backRightVoltage);
+    }
+
+    public void plugAndVoltDrive(double leftVoltage, double rightVoltage) {
+        plugAndVoltDrive(leftVoltage, rightVoltage, leftVoltage, rightVoltage);
     }
 
     /**
@@ -169,5 +170,18 @@ public class HardwareDrivetrain{
     public void resetEncoders(){
         leftEncoder.setPosition(0);
         rightEncoder.setPosition(0);
+    }
+
+    private static double averageTwoValues(double x, double y) {
+        return (x + y) / 2;
+    }
+    public static double getFeedForwardKs() {
+        return averageTwoValues(leftKs, rightKs);
+    }
+    public static double getFeedForwardKv() {
+        return averageTwoValues(leftKv, rightKv);
+    }
+    public static double getFeedForwardKa() {
+        return averageTwoValues(leftKa, rightKa);
     }
 }

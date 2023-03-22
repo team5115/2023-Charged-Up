@@ -2,23 +2,31 @@ package frc.team5115.Classes.Software;
 
 import static frc.team5115.Constants.*;
 
+import java.util.List;
 import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team5115.Classes.Acessory.ThrottleControl;
 import frc.team5115.Classes.Hardware.HardwareDrivetrain;
@@ -86,6 +94,14 @@ public class Drivetrain extends SubsystemBase{
 
     public double getRightDistance(){
         return drivetrain.getEncoderDistance(BACK_RIGHT_MOTOR_ID);
+    }
+
+    public double getLeftVelocity() {
+        return drivetrain.getEncoderVelocity(BACK_LEFT_MOTOR_ID);
+    }
+
+    public double getRightVelocity() {
+        return drivetrain.getEncoderVelocity(BACK_RIGHT_MOTOR_ID);
     }
 
     public void resetEncoders() {
@@ -249,6 +265,61 @@ public class Drivetrain extends SubsystemBase{
     public void autoDriveBackward(){
         drivetrain.plugandFFDrive(-1, -1);
     }
+
+    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+        return new DifferentialDriveWheelSpeeds(getLeftVelocity(), getRightVelocity());
+    }
+
+    public Command getRamseteCommand() {
+        final double MaxSpeed = 2; // m/s
+        final double MaxAcceleration = 2; // m/s^2
+        final SimpleMotorFeedforward simpleMotorFeedforward = new SimpleMotorFeedforward(
+            HardwareDrivetrain.getFeedForwardKs(),
+            HardwareDrivetrain.getFeedForwardKv(),
+            HardwareDrivetrain.getFeedForwardKa()
+        );
+        final var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(simpleMotorFeedforward, kinematics, 10);
+        
+        // Create config for trajectory
+        TrajectoryConfig config = new TrajectoryConfig(MaxSpeed, MaxAcceleration);
+        config.setKinematics(kinematics);
+        config.addConstraint(autoVoltageConstraint);
+        config.setReversed(true);
+    
+        // An example trajectory to follow.  All units in meters.
+        Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+            new Pose2d(+0, +0, new Rotation2d(+0)), 
+            null, 
+            new Pose2d(+3, +1, new Rotation2d(+0)),
+            config
+        );
+    
+        RamseteCommand ramseteCommand =
+            new RamseteCommand(
+                exampleTrajectory,
+                this :: getEstimatedPose,
+                new RamseteController(),
+                simpleMotorFeedforward,
+                kinematics,
+                this :: getWheelSpeeds,
+                new PIDController(0, 0, 0),
+                new PIDController(0, 0, 0),
+                // RamseteCommand passes volts to the callback
+                drivetrain :: plugAndVoltDrive
+                );
+    
+        // Reset odometry to the starting pose of the trajectory.
+        resetOdometry(exampleTrajectory.getInitialPose());
+    
+        // Run path following command, then stop at the end.
+        return ramseteCommand.andThen(() -> stop());
+    }
+
+    public void resetOdometry(Pose2d pose) {
+        resetEncoders();
+        odometry.resetPosition(navx.getYawRotation2D(), getLeftDistance(), getRightDistance(), pose);
+    }
+
     /**
      * Drive all motors at a specific voltage
      * @param percent voltage to drive at
