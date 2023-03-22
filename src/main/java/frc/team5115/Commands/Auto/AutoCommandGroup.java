@@ -36,7 +36,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
 
     private void testTrajectory() {
         addCommands(
-            new FollowTrajectory(drivetrain, 1, 1, 0),
+            new FollowTrajectory(drivetrain, 11, 1, 0),
             new InstantCommand(drivetrain :: stop)
         );
     }
