@@ -34,15 +34,10 @@ public class IntakeTurn extends CommandBase{
     public boolean isFinished() {
         
         if((Math.abs(intake.getTurnDeg()-angle)<2)){
-            if(innerTimer.get() > 0.2) return true;
+            if(innerTimer.get() > 0.05) return true;
         }
         else innerTimer.reset();
 
-        
-
-        if(timer.get()>1){
-            return true;
-        }
         return false;
       }
 

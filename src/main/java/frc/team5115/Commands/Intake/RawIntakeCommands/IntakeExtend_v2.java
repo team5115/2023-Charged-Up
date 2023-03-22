@@ -43,9 +43,10 @@ public class IntakeExtend_v2 extends CommandBase{
         //intake.bottomWinchSetLength(bottomLength_target);
         both_arms_are_at_target_value=false;
         if(topLength_target > 20 && bottomLength_target > 20 && !intake.h.open){
-            topLength_target = 20;
-            bottomLength_target = 20;
+            //topLength_target = 20;
+            //bottomLength_target = 20;
         }
+        System.out.println(intake.h.open);
     }
 
 
@@ -82,8 +83,8 @@ public class IntakeExtend_v2 extends CommandBase{
         double new_length=calculate_next_step_length(current_length,suggested_length_step_top,topLength_target);
         intake.topWinchSetLength(current_length+((new_length-current_length)/1.7));
       //  System.out.println("Disable Top");
-        //intake.slowTopPID();
-
+      //  intake.slowBottomPID();
+      //  intake.stepTopPID();
     }
 
     private void step_top(){
@@ -91,7 +92,6 @@ public class IntakeExtend_v2 extends CommandBase{
         double new_length=calculate_next_step_length(current_length,suggested_length_step_top,topLength_target);
         intake.topWinchSetLength(new_length);
       //  System.out.println("Enable Top");
-        //intake.stepTopPID();
     }
     private void pause_bottom()
     {
@@ -99,7 +99,8 @@ public class IntakeExtend_v2 extends CommandBase{
         double new_length=calculate_next_step_length(current_length,suggested_length_step_bottom,bottomLength_target);
         intake.bottomWinchSetLength(current_length+((new_length-current_length)/1.7));
        // System.out.println("Disable Bottom");
-       //intake.slowBottomPID();
+      // intake.slowTopPID();
+      // intake.stepBottomPID();
     }
 
     private void step_bottom(){
@@ -107,8 +108,6 @@ public class IntakeExtend_v2 extends CommandBase{
         double new_length=calculate_next_step_length(current_length,suggested_length_step_bottom,bottomLength_target);
         intake.bottomWinchSetLength(new_length);
         //System.out.println("Enable Bottom");
-        //intake.stepBottomPID();
-
     }
 
     public void execute(){

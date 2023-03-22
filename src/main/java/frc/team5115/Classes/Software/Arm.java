@@ -55,19 +55,19 @@ public class Arm extends SubsystemBase{
     }
 
     public void stepBottomPID(){
-        setBottomPID(bottomWinchController.getP()*1.1);
+        setBottomPID(bottomWinchController.getP()*1.01);
     }
 
     public void slowBottomPID(){
-        setBottomPID(bottomWinchController.getP()*0.9);
+        setBottomPID(bottomWinchController.getP()*0.99);
     }
 
     public void stepTopPID(){
-        setTopPID(topWinchController.getP()*1.1);
+        setTopPID(topWinchController.getP()*1.01);
     }
 
     public void slowTopPID(){
-        setTopPID(topWinchController.getP()*0.9);
+        setTopPID(topWinchController.getP()*0.99);
     }
 
     public void resetPID(){
