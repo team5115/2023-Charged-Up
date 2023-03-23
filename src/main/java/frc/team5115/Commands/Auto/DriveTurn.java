@@ -9,10 +9,12 @@ public class DriveTurn extends CommandBase{
     private Timer doneTimer;
     private Drivetrain drivetrain;
     private double absoluteAngle;
+    private double deltaAngle;
+    private boolean turned = false;
 
     public DriveTurn(Drivetrain drivetrain, double deltaAngle) {
-        absoluteAngle = deltaAngle + drivetrain.getYawDeg();
         this.drivetrain = drivetrain;
+        this.deltaAngle = deltaAngle;
         doneTimer = new Timer();
         grandTimer = new Timer();
         grandTimer.start();
@@ -20,22 +22,25 @@ public class DriveTurn extends CommandBase{
 
     @Override
     public void initialize() {
+        if(deltaAngle + drivetrain.getYawDeg() < 0){
+        absoluteAngle = 360+(deltaAngle + drivetrain.getYawDeg());
+        }
+        else{
+        absoluteAngle = (deltaAngle + drivetrain.getYawDeg());
+        }
         grandTimer.reset();
+        turned = false;
     }
 
     @Override
     public void execute() {
-        boolean turned = drivetrain.UpdateTurning(absoluteAngle);
-        if (turned) {
-            doneTimer.start();
-        } else {
-            doneTimer.reset();
-        }
+         turned = drivetrain.UpdateTurning(absoluteAngle);
     }
 
     @Override
     public void end(boolean interrupted){
         System.out.println("finished turning");
+        drivetrain.stop();
     }
 
     @Override
@@ -46,10 +51,6 @@ public class DriveTurn extends CommandBase{
             return true;
         }
         // finish if docked for more than the minimum dock time
-        if (doneTimer.get() > 0.2) {
-            System.out.println("Successfully turned");
-            return true;
-        }
-        return false;
+        return turned;
     }
 }

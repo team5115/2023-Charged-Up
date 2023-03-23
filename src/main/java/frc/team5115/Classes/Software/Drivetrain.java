@@ -50,7 +50,7 @@ public class Drivetrain extends SubsystemBase{
     public Drivetrain(PhotonVision photonVision) {
         this.photonVision = photonVision;
         throttle = new ThrottleControl(3, -3, 0.2);
-        anglePID = new PIDController(0.0124, 0.0001, 0.0015);
+        anglePID = new PIDController(0.013, 0.0001, 0.0015);
         
         movingPID = new PIDController(0.01, 0, 0);
         drivetrain = new HardwareDrivetrain();
@@ -202,13 +202,11 @@ public class Drivetrain extends SubsystemBase{
     public boolean UpdateTurning(double setpointAngle) {
         double currentAngle = navx.getYawDeg();
         double turn = MathUtil.clamp(anglePID.calculate(currentAngle, setpointAngle), -1, 1);
-        if(turn< 0.08){
-            turn = 0.08;
-        }
-        System.out.println("turning @ " + turn + " m/s");
+        //System.out.println("turning @ " + turn + " m/s");
+        System.out.println(currentAngle);
         drivetrain.plugandFFDrive(turn, -turn);
 
-        return Math.abs(currentAngle-turn)<3;
+        return Math.abs(currentAngle-setpointAngle)<5;
     }
 
     public void resetNAVx(){

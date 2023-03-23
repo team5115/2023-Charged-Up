@@ -16,12 +16,13 @@ import frc.team5115.Commands.Intake.RawIntakeCommands.IntakeExtend;
 public class IntakeAndMoveGroup extends ParallelCommandGroup {
     Arm arm;
 
-    public IntakeAndMoveGroup(Arm arm, Drivetrain d, double dist, double speed){
+    public IntakeAndMoveGroup(Arm arm, Drivetrain d, double dist, double speed, HardwareIntake intake){
         this.arm = arm;
 
         addCommands(
             new GroundPickup(arm),
-            new DriveForward(d, dist, speed)
+            new DriveForward(d, dist, speed),
+            new InstantCommand(intake :: TurnIn)
         );
     }
 

@@ -25,11 +25,11 @@ public class AutoCommandGroup extends SequentialCommandGroup {
         this.hIntake = hIntake;
         System.out.println(inIdealPosition);
 
-        if (inIdealPosition) {
+        if (false) {
             cubeDrop();
             dockForward();
         } else {
-            superIdeal();
+            ehhh();
         }
     }
     
@@ -44,20 +44,42 @@ public class AutoCommandGroup extends SequentialCommandGroup {
 
     private void superIdeal() {
         addCommands(
-            new Startup(arm, hArm, hIntake),
+            new Startup(arm, hArm, hIntake),     
+            new InstantCommand(hIntake :: TurnIn),
             new HighNode(arm),
-            new IntakeTurn(arm, 12),
+            new IntakeTurn(arm, 10),
             new Stow(arm, hArm, hIntake),
             new DriveForward(drivetrain, -0.26, 0.5), // back up to node
-            new Stow(arm, hArm, hIntake),
+            //new Stow(arm, hArm, hIntake),
             new DriveTurn(drivetrain, 180),
-            new IntakeAndMoveGroup(arm, drivetrain, 3.4, 1),
-            new Stow(arm, hArm, hIntake),
-            new DriveTurn(drivetrain, -180),
-            new DockCommandGroup(drivetrain, false) // dock backwards
+            new DriveForward(drivetrain, 2.4, 1), // back up to node
+            //new IntakeAndMoveGroup(arm, drivetrain, 2.4, 1, hIntake),
+            //new Stow(arm, hArm, hIntake),
+            new DriveTurn(drivetrain, 360)
+            //,new DockCommandGroup(drivetrain, false) // dock backwards
            // ,new InstantCommand(drivetrain :: stop)
         );
     }
+
+    private void ehhh() {
+        addCommands(
+            new Startup(arm, hArm, hIntake),     
+            new InstantCommand(hIntake :: TurnIn),
+            new HighNode(arm),
+            new IntakeTurn(arm, 10),
+            new Stow(arm, hArm, hIntake),
+            new DriveForward(drivetrain, -3.5, 0.7) // back up to node
+            //new Stow(arm, hArm, hIntake),
+            //new DriveTurn(drivetrain, 170),
+            //new DriveForward(drivetrain, 2.4, 1), // back up to node
+            //new IntakeAndMoveGroup(arm, drivetrain, 2.4, 1, hIntake),
+            //new Stow(arm, hArm, hIntake),
+           // new DriveTurn(drivetrain, -170)
+            //,new DockCommandGroup(drivetrain, false) // dock backwards
+           // ,new InstantCommand(drivetrain :: stop)
+        );
+    }
+
 
     private void scoreHigh() {
         // should start facing towards grid

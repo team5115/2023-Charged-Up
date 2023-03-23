@@ -94,6 +94,7 @@ public class RobotContainer {
         System.out.println("Starting teleop");
         startup.schedule();
         arm.enableBrake();
+        drivetrain.resetEncoders();
     }
 
     public void disabledInit(){
@@ -111,6 +112,8 @@ public class RobotContainer {
     }
 
     public void startAuto(){
+        drivetrain.resetEncoders();
+        drivetrain.resetNAVx();
         goodAuto = good.getBoolean(false);
         //startup.schedule();
         drivetrain.stop();
