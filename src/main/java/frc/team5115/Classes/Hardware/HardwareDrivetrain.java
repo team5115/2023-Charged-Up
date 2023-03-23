@@ -5,6 +5,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxRelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.math.controller.*;
 import edu.wpi.first.math.MathUtil;
 
@@ -132,6 +134,21 @@ public class HardwareDrivetrain{
 
     public void plugAndVoltDrive(double leftVoltage, double rightVoltage) {
         plugAndVoltDrive(leftVoltage, rightVoltage, leftVoltage, rightVoltage);
+    }
+
+    public void setCoast(boolean a){
+        if(a){
+            frontLeft.setIdleMode(IdleMode.kCoast);
+            frontRight.setIdleMode(IdleMode.kCoast);
+            backLeft.setIdleMode(IdleMode.kCoast);
+            backRight.setIdleMode(IdleMode.kCoast);
+        }
+        else{
+            frontLeft.setIdleMode(IdleMode.kBrake);
+            frontRight.setIdleMode(IdleMode.kBrake);
+            backLeft.setIdleMode(IdleMode.kBrake);
+            backRight.setIdleMode(IdleMode.kBrake);
+        }
     }
 
     /**

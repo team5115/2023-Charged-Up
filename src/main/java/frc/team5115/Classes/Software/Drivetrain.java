@@ -2,6 +2,7 @@ package frc.team5115.Classes.Software;
 
 import static frc.team5115.Constants.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
@@ -86,7 +87,9 @@ public class Drivetrain extends SubsystemBase{
 
     public void stop() {
         drivetrain.plugandFFDrive(0, 0);
+        drivetrain.setCoast(false);
     }
+
 
     public double getLeftDistance(){
         return drivetrain.getEncoderDistance(BACK_LEFT_MOTOR_ID);
@@ -271,8 +274,9 @@ public class Drivetrain extends SubsystemBase{
     }
 
     public Command getRamseteCommand() {
-        final double MaxSpeed = 2; // m/s
-        final double MaxAcceleration = 2; // m/s^2
+        drivetrain.setCoast(true);
+        final double MaxSpeed = 0.1; // m/s
+        final double MaxAcceleration = 0.1; // m/s^2
         final SimpleMotorFeedforward simpleMotorFeedforward = new SimpleMotorFeedforward(
             HardwareDrivetrain.getFeedForwardKs(),
             HardwareDrivetrain.getFeedForwardKv(),
@@ -289,7 +293,7 @@ public class Drivetrain extends SubsystemBase{
         // An example trajectory to follow.  All units in meters.
         Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
             new Pose2d(+0, +0, new Rotation2d(+0)), 
-            null, 
+            new ArrayList<Translation2d>(), 
             new Pose2d(+3, +1, new Rotation2d(+0)),
             config
         );
