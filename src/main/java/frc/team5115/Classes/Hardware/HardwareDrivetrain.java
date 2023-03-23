@@ -142,14 +142,14 @@ public class HardwareDrivetrain{
      */
     public void plugandFFDrive(double leftSpeed, double rightSpeed) {
         
-         if(Math.abs(leftSpeed - (leftEncoder.getVelocity()*NEO_VELOCITY_CALIBRATION))>1){
+         if(Math.abs(leftSpeed - (leftEncoder.getVelocity()*NEO_VELOCITY_CALIBRATION))>1.5){
             //System.out.println("Left too fast");
-            leftSpeed = (leftEncoder.getVelocity()*NEO_VELOCITY_CALIBRATION) + 1*Math.signum((leftSpeed - (leftEncoder.getVelocity()*NEO_VELOCITY_CALIBRATION)));
+            leftSpeed = (leftEncoder.getVelocity()*NEO_VELOCITY_CALIBRATION) + 1.5*Math.signum((leftSpeed - (leftEncoder.getVelocity()*NEO_VELOCITY_CALIBRATION)));
         }
 
         if(Math.abs(rightSpeed - (rightEncoder.getVelocity()*NEO_VELOCITY_CALIBRATION))>1){
             //System.out.println("Right too fast");
-            rightSpeed = (rightEncoder.getVelocity()*NEO_VELOCITY_CALIBRATION) + 1*Math.signum((rightSpeed - (rightEncoder.getVelocity()*NEO_VELOCITY_CALIBRATION)));
+            rightSpeed = (rightEncoder.getVelocity()*NEO_VELOCITY_CALIBRATION) + 1.5*Math.signum((rightSpeed - (rightEncoder.getVelocity()*NEO_VELOCITY_CALIBRATION)));
         }        
 
         double leftVoltage = leftFeedForward.calculate(leftSpeed);

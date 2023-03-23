@@ -14,7 +14,7 @@ public class GroundPickup extends SequentialCommandGroup {
         addCommands(
             new RealExtend(intake, 0),
             new IntakeTurn(intake, -38),
-            new RealExtend(intake, 15)
+            new RealExtend(intake, 16.5)
         );
     }
 }

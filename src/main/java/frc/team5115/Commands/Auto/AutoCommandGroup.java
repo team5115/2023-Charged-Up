@@ -8,7 +8,7 @@ import frc.team5115.Classes.Software.*;
 import frc.team5115.Classes.Hardware.*;
 import frc.team5115.Commands.Auto.BasicAuto.AdjustDriveCommandGroup;
 import frc.team5115.Commands.Auto.DockAuto.DockCommandGroup;
-import frc.team5115.Commands.Intake.RealExtend;
+import frc.team5115.Commands.Intake.*;
 import frc.team5115.Commands.Intake.CombinedIntakeCommands.*;
 import frc.team5115.Commands.Intake.RawIntakeCommands.IntakeTurn;
 
@@ -26,9 +26,10 @@ public class AutoCommandGroup extends SequentialCommandGroup {
         System.out.println(inIdealPosition);
 
         if (inIdealPosition) {
+            cubeDrop();
             dockForward();
         } else {
-            scoreHigh();
+            superIdeal();
         }
     }
     
@@ -43,12 +44,16 @@ public class AutoCommandGroup extends SequentialCommandGroup {
 
     private void superIdeal() {
         addCommands(
+            new Startup(arm, hArm, hIntake),
             new HighNode(arm),
-            new IntakeTurn(arm, 15),
+            new IntakeTurn(arm, 12),
+            new Stow(arm, hArm, hIntake),
+            new DriveForward(drivetrain, -0.26, 0.5), // back up to node
             new Stow(arm, hArm, hIntake),
             new DriveTurn(drivetrain, 180),
             new IntakeAndMoveGroup(arm, drivetrain, 3.4, 1),
-            new DriveTurn(drivetrain, 180),
+            new Stow(arm, hArm, hIntake),
+            new DriveTurn(drivetrain, -180),
             new DockCommandGroup(drivetrain, false) // dock backwards
            // ,new InstantCommand(drivetrain :: stop)
         );
@@ -57,8 +62,9 @@ public class AutoCommandGroup extends SequentialCommandGroup {
     private void scoreHigh() {
         // should start facing towards grid
         addCommands(
-            new Stow(arm, hArm, hIntake),
-            new InstantCommand(hIntake :: TurnIn),
+            new Startup(arm, hArm, hIntake)
+             
+            ,new InstantCommand(hIntake :: TurnIn),
             new WaitCommand(1),
             new StowCone(arm, hArm, hIntake),
             new InstantCommand(hIntake :: StopMotor),

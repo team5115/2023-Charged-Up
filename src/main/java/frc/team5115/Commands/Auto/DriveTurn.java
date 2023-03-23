@@ -46,7 +46,7 @@ public class DriveTurn extends CommandBase{
             return true;
         }
         // finish if docked for more than the minimum dock time
-        if (doneTimer.get() > 0.5) {
+        if (doneTimer.get() > 0.2) {
             System.out.println("Successfully turned");
             return true;
         }

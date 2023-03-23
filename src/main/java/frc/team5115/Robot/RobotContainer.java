@@ -100,6 +100,7 @@ public class RobotContainer {
         goodAuto = good.getBoolean(false);
         arm.disableBrake();
         drivetrain.init();
+        drivetrain.stop();
         arm.armcontrolangle = false;
         arm.armcontrol = false;
     }
@@ -111,15 +112,15 @@ public class RobotContainer {
 
     public void startAuto(){
         goodAuto = good.getBoolean(false);
-        drivetrain.resetNAVx();
         //startup.schedule();
+        drivetrain.stop();
         autoCommandGroup = new AutoCommandGroup(drivetrain, arm, hardwareArm, intake, goodAuto);
-        if(autoCommandGroup != null) autoCommandGroup.schedule();
+        autoCommandGroup.schedule();
     }
 
     public void autoPeriod(){
        //drivetrain.UpdateOdometry();
-       arm.updateController();
+       if(arm.armcontrol && arm.armcontrolangle) arm.updateController();
     }
 
     public void teleopPeriodic(){
