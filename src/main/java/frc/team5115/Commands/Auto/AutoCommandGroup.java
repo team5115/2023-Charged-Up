@@ -68,7 +68,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
             new HighNode(arm),
             new IntakeTurn(arm, 10),
             new Stow(arm, hArm, hIntake),
-            new DriveForward(drivetrain, -3.5, 0.7) // back up to node
+            new DriveForward(drivetrain, -3.5, 1.3) // back up to node
             //new Stow(arm, hArm, hIntake),
             //new DriveTurn(drivetrain, 170),
             //new DriveForward(drivetrain, 2.4, 1), // back up to node

@@ -41,7 +41,7 @@ public class DriveUntilDock extends CommandBase {
         if (Math.abs(drivetrain.getPitchDeg()) > finishedTolerance) {
             System.out.println("found slope");
             innerTimer.start();
-            if(innerTimer.get()  > 0.75)
+            if(innerTimer.get()  > 0.85)
             return true;
         }
         else{
