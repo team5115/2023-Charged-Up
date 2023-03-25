@@ -25,7 +25,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
         this.hIntake = hIntake;
         System.out.println(inIdealPosition);
 
-        if (false) {
+        if (inIdealPosition) {
             cubeDrop();
             dockForward();
         } else {

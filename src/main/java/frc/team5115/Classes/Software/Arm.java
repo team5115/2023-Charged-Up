@@ -201,7 +201,7 @@ public class Arm extends SubsystemBase{
     }
 
     public void zeroArm(){
-        intake.setEncoders(0, -100.0);
+        intake.setEncoders(0, -106.0);
     }
 
     public boolean getFault(CANSparkMax.FaultID f){
