@@ -26,7 +26,7 @@ public class Startup_Intake extends CommandBase{
         claw.open();
         hardwareIntake.setBottomWinch(-0.1);
         hardwareIntake.setTopWinch(-0.37);
-
+        claw.TurnIn();
     }
 
     public void execute(){
@@ -38,6 +38,7 @@ public class Startup_Intake extends CommandBase{
         intake.stop();
         intake.setLength(0);
         intake.armcontrol = true;
+        claw.StopMotor();
     }
 
     public boolean isFinished() {

@@ -33,11 +33,18 @@ public class NAVx implements Subsystem {
      * @return the yaw of the navx from the last reset, ranging from -180 to 180 degrees 
      */
     public double getYawDeg() {
-        double angle = ahrs.getYaw() - yawAtReset;
-        if (angle > 180) {
-            return -360 + angle;
+        double angle = 0;
+        if(ahrs.getYaw()- yawAtReset < 0){
+        angle = 360+(ahrs.getYaw()- yawAtReset);
         }
-        return angle;
+        else{
+        angle = (ahrs.getYaw()- yawAtReset);
+        }
+
+        // if (angle > 180) {
+        //     return -360 + angle;
+        // }
+        return Math.abs(angle);
     }
 
     /**
