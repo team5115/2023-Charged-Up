@@ -15,6 +15,9 @@ public class MiddleNode extends SequentialCommandGroup {
             new RealExtend(intake, 0),
             new IntakeTurn(intake, 10),
             new RealExtend(intake, 8)
+            //, new IntakeTurn(intake, 5) not getting implemented until arm has consistent tensioning b/c this can cause nicking & arm lowering before needed driver input
+            //you cannot say one day testing where this code works disproves this claim because the tensioning changes between days, and that is why driver input is needed
+            // to correct this 
         );
     }
 }

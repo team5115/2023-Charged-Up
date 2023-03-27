@@ -18,8 +18,8 @@ public class Startup extends ParallelCommandGroup {
         this.arm = arm;
         this.intake = intake;
         this.a = a;
-        addCommands(new Startup_Angle(arm, intake));
         addCommands(new Startup_Intake(arm, intake, a));
+        addCommands(new Startup_Angle(arm, intake));
     }
 
 }

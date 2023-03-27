@@ -18,7 +18,7 @@ public class DriveForward extends CommandBase{
         this.dist = dist;
         this.drivetrain = drivetrain;
         this.speed = speed;
-        timeout = (dist / speed) + 1.0; // meters divided by m/s gives seconds! plus extra time
+        timeout = Math.abs(dist / speed) + 1; // meters divided by m/s gives seconds! plus extra time
         timer = new Timer();
     }
 
@@ -37,7 +37,7 @@ public class DriveForward extends CommandBase{
     }
 
     public void end(boolean interrupted) {
-       // drivetrain.stop();
+        drivetrain.stop();
     }
 
     @Override

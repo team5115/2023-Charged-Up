@@ -3,6 +3,7 @@ package frc.team5115.Classes.Software;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team5115.Classes.Hardware.HardwareArm;
+import frc.team5115.Classes.Hardware.HardwareIntake;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -12,6 +13,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 public class Arm extends SubsystemBase{
     private HardwareArm intake;
+    public HardwareIntake h;
     private double topLength = 0;
     private double bottomLength = 0;
     private double angle = -90;
@@ -37,8 +39,9 @@ public class Arm extends SubsystemBase{
     public boolean armcontrol = false;
     public boolean armcontrolangle = false;
 
-    public Arm(HardwareArm x){
+    public Arm(HardwareArm x, HardwareIntake y){
         intake = x;
+        h =y;
         zeroArm();
         intake.setEncoders(topLength, -90);
     }
@@ -52,19 +55,19 @@ public class Arm extends SubsystemBase{
     }
 
     public void stepBottomPID(){
-        setBottomPID(bottomWinchController.getP()*1.1);
+        setBottomPID(bottomWinchController.getP()*1.01);
     }
 
     public void slowBottomPID(){
-        setBottomPID(bottomWinchController.getP()*0.9);
+        setBottomPID(bottomWinchController.getP()*0.99);
     }
 
     public void stepTopPID(){
-        setTopPID(topWinchController.getP()*1.1);
+        setTopPID(topWinchController.getP()*1.01);
     }
 
     public void slowTopPID(){
-        setTopPID(topWinchController.getP()*0.9);
+        setTopPID(topWinchController.getP()*0.99);
     }
 
     public void resetPID(){
@@ -198,7 +201,7 @@ public class Arm extends SubsystemBase{
     }
 
     public void zeroArm(){
-        intake.setEncoders(0, -96.0);
+        intake.setEncoders(0, -106.0);
     }
 
     public boolean getFault(CANSparkMax.FaultID f){
