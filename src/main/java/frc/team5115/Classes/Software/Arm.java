@@ -219,4 +219,8 @@ public class Arm extends SubsystemBase{
     public void moveBottom(){
         intake.setBottomWinch(-0.2);
     }
+
+    public double getAngle() {
+        return angle;
+    }
 }

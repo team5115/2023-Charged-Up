@@ -38,10 +38,10 @@ public class RobotContainer {
         joy2 = new Joystick(1);
 
         photonVision = new PhotonVision();
-        drivetrain = new Drivetrain(photonVision);
         intake = new HardwareIntake();
         hardwareArm = new HardwareArm();
         arm = new Arm(hardwareArm, intake);
+        drivetrain = new Drivetrain(photonVision, arm);
         startup = new Startup(arm, hardwareArm, intake);
         
         dockSequence = new DockCommandGroup(drivetrain, false);

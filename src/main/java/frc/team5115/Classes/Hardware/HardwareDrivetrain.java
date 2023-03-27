@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxRelativeEncoder;
 import edu.wpi.first.math.controller.*;
+import frc.team5115.Classes.Software.Arm;
 import edu.wpi.first.math.MathUtil;
 
 public class HardwareDrivetrain{
@@ -57,7 +58,10 @@ public class HardwareDrivetrain{
     private final RelativeEncoder leftEncoder = frontLeft.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
     private final RelativeEncoder rightEncoder = frontRight.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
 
-    public HardwareDrivetrain(){
+    private final Arm arm;
+
+    public HardwareDrivetrain(Arm arm){
+        this.arm = arm;
         resetEncoders();
         frontRight.setInverted(true);
     }
@@ -141,21 +145,23 @@ public class HardwareDrivetrain{
      * @param rightSpeed the speed for the right motors in meters per second
      */
     public void plugandFFDrive(double leftSpeed, double rightSpeed) {
-        
-         if(Math.abs(leftSpeed - (leftEncoder.getVelocity()*NEO_VELOCITY_CALIBRATION))>1.5){
-            //System.out.println("Left too fast");
-            leftSpeed = (leftEncoder.getVelocity()*NEO_VELOCITY_CALIBRATION) + 1.5*Math.signum((leftSpeed - (leftEncoder.getVelocity()*NEO_VELOCITY_CALIBRATION)));
-        }
+        final double accelerationLimit = getAccelerationLimit(); // can't bother figuring the units, but it's not m/s^2
+        final double currentLeftVelocity = getLeftVelocity();
+        final double currentRightVelocity = getRightVelocity();
 
-        if(Math.abs(rightSpeed - (rightEncoder.getVelocity()*NEO_VELOCITY_CALIBRATION))>1){
-            //System.out.println("Right too fast");
-            rightSpeed = (rightEncoder.getVelocity()*NEO_VELOCITY_CALIBRATION) + 1.5*Math.signum((rightSpeed - (rightEncoder.getVelocity()*NEO_VELOCITY_CALIBRATION)));
-        }        
+        // limit left acceleration
+        if(Math.abs(leftSpeed - currentLeftVelocity) > accelerationLimit) {
+            leftSpeed = currentLeftVelocity + accelerationLimit * Math.signum(leftSpeed - currentLeftVelocity);
+        }
+        // limit right acceleration
+        if(Math.abs(rightSpeed - currentRightVelocity) > accelerationLimit) {
+            rightSpeed = currentRightVelocity + accelerationLimit * Math.signum(rightSpeed - currentRightVelocity);
+        }
 
         double leftVoltage = leftFeedForward.calculate(leftSpeed);
         double rightVoltage = rightFeedForward.calculate(rightSpeed);
-         leftVoltage += leftPID.calculate(leftEncoder.getVelocity() * NEO_VELOCITY_CALIBRATION, leftSpeed);
-         rightVoltage += rightPID.calculate(rightEncoder.getVelocity() * NEO_VELOCITY_CALIBRATION, rightSpeed);
+        leftVoltage += leftPID.calculate(currentLeftVelocity, leftSpeed);
+        rightVoltage += rightPID.calculate(currentRightVelocity, rightSpeed);
         // Work on better PID Analyzer
 
         leftVoltage = MathUtil.clamp(leftVoltage, -DRIVE_MOTOR_MAX_VOLTAGE, DRIVE_MOTOR_MAX_VOLTAGE);
@@ -167,8 +173,23 @@ public class HardwareDrivetrain{
         frontRight.setVoltage(rightVoltage);
     }
 
+    private double getAccelerationLimit() {
+        final double angle = arm.getAngle();
+        final double length = (arm.getBottomWinchLength() + arm.getTopWinchLength()) / 2;
+        
+        return 1.5;
+    }
+
     public void resetEncoders(){
         leftEncoder.setPosition(0);
         rightEncoder.setPosition(0);
+    }
+
+    public double getLeftVelocity() {
+        return leftEncoder.getVelocity() * NEO_VELOCITY_CALIBRATION;
+    }
+
+    public double getRightVelocity() {
+        return rightEncoder.getVelocity() * NEO_VELOCITY_CALIBRATION;
     }
 }
