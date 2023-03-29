@@ -22,7 +22,7 @@ public class MiddleNode extends CommandBase {
 
     @Override
     public final boolean isFinished() {
-        return wrappedMiddleNode.isFinished();
+        return !wrappedMiddleNode.isScheduled();
     }
 
     private class WrappedMiddleNode extends SequentialCommandGroup {

@@ -22,7 +22,7 @@ public class HighNode extends CommandBase {
 
     @Override
     public final boolean isFinished() {
-        return wrappedHighNode.isFinished();
+        return !wrappedHighNode.isScheduled();
     }
 
     private class WrappedHighNode extends SequentialCommandGroup {

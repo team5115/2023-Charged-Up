@@ -22,7 +22,7 @@ public class Startup_Angle extends CommandBase{
     public void initialize() {
         timer.reset();
         intake.armcontrolangle = false;
-        hardwareIntake.setTurn(-0.32);
+        hardwareIntake.setTurn(-0.3);
     }
 
     public void execute(){
