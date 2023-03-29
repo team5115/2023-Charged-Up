@@ -170,8 +170,9 @@ public class HardwareDrivetrain{
     private double getAccelerationLimit() {
         final double angle = arm.getAngle();
         final double length = (arm.getBottomWinchLength() + arm.getTopWinchLength()) / 2;
-        
-        return 1.5;
+        final double angleConstant = 0.01;
+        final double lengthConstant = 0.017;
+        return 1.0 / (((angle + 90.0) * angleConstant) + (length * lengthConstant) + 1.0) + 0.5;
     }
 
     public void resetEncoders(){
