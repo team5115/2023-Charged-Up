@@ -10,37 +10,31 @@ import frc.team5115.Classes.Software.Arm;
 import edu.wpi.first.math.MathUtil;
 
 public class HardwareDrivetrain{
-
-
-
-    // Competition feedforward and feedback (pid) values
-    // 6 inch diameter on COMP ROBOT WITH ARM and dumbells in back
-    private final double leftKs = 0.17463;
-    private final double leftKv = 2.8104;
-    private final double leftKa = 0.82143;
+    // Competition feedforward values - 6 inch diameter on KITT comp robot with arm and ballasts
+    private final double leftKs = 0.037895;
+    private final double leftKv = 2.7479;
+    private final double leftKa = 0.32825;
     
-    private final double rightKs = 0.17463;
-    private final double rightKv = 2.8104;
-    private final double rightKa = 0.82143;
-
-    // private final double leftKp = 1.6455;
-    // private final double rightKp = 1.6220;
-    // private final double Ki = 0.0;
-    // private final double Kd = 0.0;
-    // // END of comp robot values
-
-    // Testbed feedforward and feedback (pid) values - 6 inch diameter on testbed
-    /* private final double leftKs = 0.090949;
-    private final double leftKv = 2.783;
-    private final double leftKa = 0.16477;
+    private final double rightKs = 0.052893;
+    private final double rightKv = 2.8399;
+    private final double rightKa = 0.26071;
     
-    private final double rightKs = 0.099706;
-    private final double rightKv = 2.8314;
-    private final double rightKa = 0.14565;
-    */
+    // private final double combinedkP = 3.4349;
+    // END of comp robot values
 
-    private final double leftKp = 0.0; // 3.7203 according to sysid
-    private final double rightKp = 0.0; // 3.7203 according to sysid
+    // Testbed feedforward values - 6 inch diameter on KATT testbed
+    // private final double leftKs = 0.090949;
+    // private final double leftKv = 2.783;
+    // private final double leftKa = 0.16477;
+    
+    // private final double rightKs = 0.099706;
+    // private final double rightKv = 2.8314;
+    // private final double rightKa = 0.14565;
+    // END of testbed values
+    
+
+    private final double leftKp = 0.0;
+    private final double rightKp = 0.0;
     private final double Ki = 0.0;
     private final double Kd = 0.0;
     // END of testbed values
