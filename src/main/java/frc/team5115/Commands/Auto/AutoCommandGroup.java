@@ -26,8 +26,11 @@ public class AutoCommandGroup extends SequentialCommandGroup {
         System.out.println(inIdealPosition);
 
         addCommands(
-            new DriveForwardWVision(drivetrain, -1, 0.3),
-            new DriveForwardWVision(drivetrain, 1, 0.3)
+            new Stow(arm, hArm, hIntake),
+            new DriveForwardWVision(drivetrain, -0.5, 0.3),
+            new DriveTurn(drivetrain, 180)
+            , new DriveForwardWVision(drivetrain, 0.5, 0.3) ,
+            new DriveTurn(drivetrain, 180)
 
         );
 

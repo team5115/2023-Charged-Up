@@ -34,7 +34,7 @@ public class DriveTurn extends CommandBase{
 
     @Override
     public void execute() {
-         turned = drivetrain.UpdateTurning(absoluteAngle);
+         turned = drivetrain.TankDriveToAngle(absoluteAngle);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class DriveTurn extends CommandBase{
     @Override
     public boolean isFinished() {
         // timeout if the command has been running for too long
-        if (grandTimer.get() > 10) {
+        if (grandTimer.get() > 2) {
             System.out.println("Turning attempt timed out after 10 seconds");
             return true;
         }

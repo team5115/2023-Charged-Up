@@ -21,9 +21,6 @@ public class IntakeExtend_v2 extends CommandBase{
     final double allowed_error_in_length_to_finish_top=1;     // how close to the final target length do you need to be
     final double allowed_error_in_length_to_finish_bottom=1; // how close to the final target length do you need to be
 
-    boolean both_arms_are_at_target_value=false;
-
-
     public IntakeExtend_v2(Arm a, double topLength_target, double bottomLength_target){
         intake = a;
         this.topLength_target = topLength_target;
@@ -39,13 +36,6 @@ public class IntakeExtend_v2 extends CommandBase{
         intake.setTopPID(0.45);
         intake.setBottomPID(0.5);
         // nothing will happen till the first loop execute
-        //intake.topWinchSetLength(topLength_target);
-        //intake.bottomWinchSetLength(bottomLength_target);
-        both_arms_are_at_target_value=false;
-        if(topLength_target > 20 && bottomLength_target > 20 && !intake.h.open){
-            //topLength_target = 20;
-            //bottomLength_target = 20;
-        }
         System.out.println(intake.h.open);
     }
 
@@ -244,13 +234,11 @@ public class IntakeExtend_v2 extends CommandBase{
         }
         else innerTimer.reset();
         */
-       // /* 
+
         if((Math.abs(intake.getBottomWinchLength()-bottomLength_target)<1) && (intake.getTopWinchLength()-topLength_target)<1){
         return true;
         }
         else innerTimer.reset();
-
-      //  */
 
         
         if(timer.get() > 2){

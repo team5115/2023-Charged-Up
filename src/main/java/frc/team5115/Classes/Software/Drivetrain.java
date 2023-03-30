@@ -75,7 +75,7 @@ public class Drivetrain extends SubsystemBase{
     }
 
     public void stop() {
-        drivetrain.plugandFFDrive(0, 0);
+        drivetrain.PlugandVoltDrive(0, 0, 0, 0);
     }
 
     public double getLeftDistance(){
@@ -152,8 +152,7 @@ public class Drivetrain extends SubsystemBase{
         return new double[] {x, y};
     }
     
-    @Deprecated
-    public void TankDriveToAngle(double angleDegrees) { 
+    public boolean TankDriveToAngle(double angleDegrees) { 
         double rotationDegrees = navx.getYawDeg();
         System.out.println(rotationDegrees);
         double turn = MathUtil.clamp(anglePID.calculate(rotationDegrees, angleDegrees), -1, 1);
@@ -161,6 +160,7 @@ public class Drivetrain extends SubsystemBase{
         rightSpeed = -turn;
         
         drivetrain.plugandFFDrive(leftSpeed, rightSpeed);
+        return Math.abs(rotationDegrees-angleDegrees)<5;
     }
 
     public void TankDriveToTrajectoryState(Trajectory.State tState) {
@@ -205,7 +205,7 @@ public class Drivetrain extends SubsystemBase{
         double realdist = pose.getTranslation().getDistance(getEstimatedPose().getTranslation());
         final double speed = speedMagnitude * Math.signum(dist);
         drivetrain.plugandFFDrive(speed, speed);
-        final double tolerance = 0.05;
+        final double tolerance = 0.1;
         return Math.abs(realdist-dist) < tolerance;
     }      
 

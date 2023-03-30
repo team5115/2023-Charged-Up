@@ -42,7 +42,7 @@ public class PhotonVision extends SubsystemBase{
         aprilTagList.add(GenerateAprilTag(5, -7.908830, +2.741613, 000));
 
         AprilTagFieldLayout fieldLayout = new AprilTagFieldLayout(aprilTagList, FieldConstants.length, FieldConstants.width);
-         photonPoseEstimatorL = new PhotonPoseEstimator(fieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, photonCameraL, VisionConstants.robotToCamL);
+         photonPoseEstimatorL = new PhotonPoseEstimator(fieldLayout, PoseStrategy.CLOSEST_TO_CAMERA_HEIGHT, photonCameraL, VisionConstants.robotToCamL);
         // photonPoseEstimatorR = new PhotonPoseEstimator(fieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, photonCameraR, VisionConstants.robotToCamR);
     }
 
