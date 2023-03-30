@@ -6,8 +6,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team5115.Classes.Software.*;
 import frc.team5115.Classes.Hardware.*;
-import frc.team5115.Commands.Auto.BasicAuto.AdjustDriveCommandGroup;
 import frc.team5115.Commands.Auto.DockAuto.DockCommandGroup;
+import frc.team5115.Commands.Auto.VisionAuto.DriveForwardWVision;
 import frc.team5115.Commands.Intake.*;
 import frc.team5115.Commands.Intake.CombinedIntakeCommands.*;
 import frc.team5115.Commands.Intake.RawIntakeCommands.IntakeTurn;
@@ -25,12 +25,18 @@ public class AutoCommandGroup extends SequentialCommandGroup {
         this.hIntake = hIntake;
         System.out.println(inIdealPosition);
 
-        if (inIdealPosition) {
-            cubeDrop();
-            dockForward();
-        } else {
-            BasicHighNode();
-        }
+        addCommands(
+            new DriveForwardWVision(drivetrain, -1, 0.3),
+            new DriveForwardWVision(drivetrain, 1, 0.3)
+
+        );
+
+        // if (inIdealPosition) {
+        //     cubeDrop();
+        //     dockForward();
+        // } else {
+        //     BasicHighNode();
+        // }
     }
     
     private void cubeDrop() {

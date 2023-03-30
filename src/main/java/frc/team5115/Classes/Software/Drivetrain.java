@@ -68,7 +68,7 @@ public class Drivetrain extends SubsystemBase{
         // );
 
         poseEstimator = new DifferentialDrivePoseEstimator(
-            kinematics, navx.getYawRotation2D(), getLeftDistance(), getRightDistance(), new Pose2d()
+            kinematics, navx.getYawRotation2D(), getLeftDistance(), getRightDistance(), new Pose2d(), VecBuilder.fill(1, 1, 1), VecBuilder.fill(0, 0, 0)
         );
         System.out.println("Angle from navx" + navx.getYawDeg()
         );
@@ -180,11 +180,13 @@ public class Drivetrain extends SubsystemBase{
         Optional<EstimatedRobotPose> result = photonVision.getEstimatedGlobalPose();
         if (result.isPresent()) {
             EstimatedRobotPose camPose = result.get();
+            System.out.println("its really working");
             poseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
         }
     }
 
     public Pose2d getEstimatedPose() {
+        UpdateOdometry();
         return poseEstimator.getEstimatedPosition();
     }
 
@@ -197,6 +199,14 @@ public class Drivetrain extends SubsystemBase{
 
         final double tolerance = 0.05;
         return Math.abs(remainingLeftDistance) < tolerance || Math.abs(remainingRightDistance) < tolerance;
+    }      
+
+    public boolean UpdateMovingWithVision(double dist, Pose2d pose, double speedMagnitude) {
+        double realdist = pose.getTranslation().getDistance(getEstimatedPose().getTranslation());
+        final double speed = speedMagnitude * Math.signum(dist);
+        drivetrain.plugandFFDrive(speed, speed);
+        final double tolerance = 0.05;
+        return Math.abs(realdist-dist) < tolerance;
     }      
 
     public boolean UpdateTurning(double setpointAngle) {
