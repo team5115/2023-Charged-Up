@@ -35,8 +35,8 @@ public class HardwareDrivetrain{
 
     private final double leftKp = 0.0;
     private final double rightKp = 0.0;
-    private final double Ki = 0.0;
-    private final double Kd = 0.0;
+    private final double Ki = 0.1;
+    private final double Kd = 0.1;
     // END of testbed values
 
     private final SimpleMotorFeedforward leftFeedForward = new SimpleMotorFeedforward(leftKs, leftKv, leftKa);
