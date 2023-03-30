@@ -54,7 +54,7 @@ public class NAVx implements Subsystem {
      * @param angle the input angle to convert
      * @return the equivalent angle from -180 to 180
      */
-    private static double clampAngle(double angle) {
+    public static double clampAngle(double angle) {
         return ((angle + 180.0) % 360.0) - 180.0;
     }
 
