@@ -40,7 +40,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
         */
 // /* 
          if (inIdealPosition) {
-            scoreHighWDock();
+             cubeDrop();
              dockForward();
          } else {
              BasicHighNode();
@@ -60,7 +60,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
     private void dockForward(){
         addCommands(
             new DockCommandGroup(drivetrain, false), // dock forwards
-            new InstantCommand(drivetrain :: stop)
+            new InstantCommand(drivetrain ::  stop)
         );
     }
 
@@ -101,7 +101,6 @@ public class AutoCommandGroup extends SequentialCommandGroup {
             new DriveForward(drivetrain, -0.25, 1),
             new DriveTurn(drivetrain, 180)
         );
-        dockForward();
     }
 
     private void superIdeal() {
