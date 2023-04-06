@@ -24,12 +24,7 @@ public class DriveTurn extends CommandBase{
 
     @Override
     public void initialize() {
-        if(deltaAngle + drivetrain.getYawDeg() < 0){
-        absoluteAngle = 360+(deltaAngle + drivetrain.getYawDeg());
-        }
-        else{
-        absoluteAngle = (deltaAngle + drivetrain.getYawDeg());
-        }
+        absoluteAngle = NAVx.clampAngle(deltaAngle);
         grandTimer.reset();
         turned = false;
     }
@@ -48,7 +43,7 @@ public class DriveTurn extends CommandBase{
     @Override
     public boolean isFinished() {
         // timeout if the command has been running for too long
-        if (grandTimer.get() > 2) {
+        if (grandTimer.get() > 4) {
             System.out.println("Turning attempt timed out after 10 seconds");
             return true;
         }

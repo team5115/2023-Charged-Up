@@ -112,6 +112,7 @@ public class RobotContainer {
     }
 
     public void startAuto(){
+        if(autoCommandGroup != null) autoCommandGroup.cancel();
         drivetrain.resetEncoders();
         drivetrain.resetNAVx();
         goodAuto = good.getBoolean(false);

@@ -26,7 +26,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
         this.hArm = hArm;
         this.hIntake = hIntake;
         System.out.println(inIdealPosition);
-
+/* 
         addCommands(
             new Stow(arm, hArm, hIntake),
             new DriveForwardWVision(drivetrain, -0.5, 0.3),
@@ -37,14 +37,16 @@ public class AutoCommandGroup extends SequentialCommandGroup {
             new DriveTurn(drivetrain, 0)
 
         );
-
-        // if (inIdealPosition) {
-        //     cubeDrop();
-        //     dockForward();
-        // } else {
-        //     BasicHighNode();
-        // }
-    }
+        */
+// /* 
+         if (inIdealPosition) {
+            scoreHighWDock();
+             dockForward();
+         } else {
+             BasicHighNode();
+         }
+// */
+        }
     
     private void cubeDrop() {
         addCommands(    
@@ -57,7 +59,8 @@ public class AutoCommandGroup extends SequentialCommandGroup {
 
     private void dockForward(){
         addCommands(
-            new DockCommandGroup(drivetrain, false) // dock forwards
+            new DockCommandGroup(drivetrain, false), // dock forwards
+            new InstantCommand(drivetrain :: stop)
         );
     }
 
@@ -94,7 +97,9 @@ public class AutoCommandGroup extends SequentialCommandGroup {
             new InstantCommand(hIntake :: TurnIn),
             new HighNode(arm),
             new IntakeTurn(arm, 10),
-            new Stow(arm, hArm, hIntake)
+            new Stow(arm, hArm, hIntake),
+            new DriveForward(drivetrain, -0.25, 1),
+            new DriveTurn(drivetrain, 180)
         );
         dockForward();
     }
