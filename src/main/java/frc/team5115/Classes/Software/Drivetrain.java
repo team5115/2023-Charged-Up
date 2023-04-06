@@ -50,7 +50,7 @@ public class Drivetrain extends SubsystemBase{
     public Drivetrain(PhotonVision photonVision, Arm arm) {
         this.photonVision = photonVision;
         throttle = new ThrottleControl(3, -3, 0.2);
-        anglePID = new PIDController(0.013, 0.0001, 0.0015);
+        anglePID = new PIDController(0.016, 0.0001, 0.0015);
         
         movingPID = new PIDController(0.01, 0, 0);
         drivetrain = new HardwareDrivetrain(arm);
@@ -160,7 +160,7 @@ public class Drivetrain extends SubsystemBase{
         rightSpeed = -turn;
         
         drivetrain.plugandFFDrive(leftSpeed, rightSpeed);
-        return Math.abs(rotationDegrees-angleDegrees)<5;
+        return Math.abs(rotationDegrees-angleDegrees)<17;
     }
 
     public void TankDriveToTrajectoryState(Trajectory.State tState) {
