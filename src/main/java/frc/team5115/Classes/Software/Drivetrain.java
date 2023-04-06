@@ -207,16 +207,6 @@ public class Drivetrain extends SubsystemBase{
         drivetrain.plugandFFDrive(speed, speed);
         final double tolerance = 0.1;
         return Math.abs(realdist-dist) < tolerance;
-    }      
-
-    public boolean UpdateTurning(double setpointAngle) {
-        double currentAngle = navx.getYawDeg();
-        double turn = MathUtil.clamp(anglePID.calculate(currentAngle, setpointAngle), -1, 1);
-        //System.out.println("turning @ " + turn + " m/s");
-        System.out.println(currentAngle);
-        drivetrain.plugandFFDrive(turn, -turn);
-
-        return Math.abs(currentAngle-setpointAngle)<5;
     }
 
     public void resetNAVx(){

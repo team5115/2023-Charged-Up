@@ -2,6 +2,7 @@ package frc.team5115.Commands.Auto;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.team5115.Classes.Hardware.NAVx;
 import frc.team5115.Classes.Software.Drivetrain;
 import frc.team5115.Classes.Hardware.NAVx;
 
@@ -23,7 +24,12 @@ public class DriveTurn extends CommandBase{
 
     @Override
     public void initialize() {
-        absoluteAngle = NAVx.clampAngle(deltaAngle);
+        if(deltaAngle + drivetrain.getYawDeg() < 0){
+        absoluteAngle = 360+(deltaAngle + drivetrain.getYawDeg());
+        }
+        else{
+        absoluteAngle = (deltaAngle + drivetrain.getYawDeg());
+        }
         grandTimer.reset();
         turned = false;
     }
