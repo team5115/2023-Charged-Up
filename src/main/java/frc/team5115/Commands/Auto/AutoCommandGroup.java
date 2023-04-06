@@ -1,5 +1,7 @@
 package frc.team5115.Commands.Auto;
 
+import com.ctre.phoenix.time.StopWatch;
+
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -29,8 +31,10 @@ public class AutoCommandGroup extends SequentialCommandGroup {
             new Stow(arm, hArm, hIntake),
             new DriveForwardWVision(drivetrain, -0.5, 0.3),
             new DriveTurn(drivetrain, 180)
-            , new DriveForwardWVision(drivetrain, 0.5, 0.3) ,
-            new DriveTurn(drivetrain, 180)
+            , new WaitCommand(1)
+            ,new IntakeAndMoveGroup(arm, drivetrain, 0.8, 0.3, hIntake),
+            new StowCone(arm, hArm, hIntake),
+            new DriveTurn(drivetrain, 0)
 
         );
 
