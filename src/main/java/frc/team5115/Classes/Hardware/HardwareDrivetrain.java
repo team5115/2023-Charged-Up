@@ -11,11 +11,11 @@ import edu.wpi.first.math.MathUtil;
 
 public class HardwareDrivetrain{
     // Competition feedforward values - 6 inch diameter on KITT comp robot with arm and ballasts
-    private final double leftKs = 0.037895;
+    private final double leftKs = 0.0378;
     private final double leftKv = 2.7479;
     private final double leftKa = 0.32825;
     
-    private final double rightKs = 0.052893;
+    private final double rightKs = 0.0528;
     private final double rightKv = 2.8399;
     private final double rightKa = 0.26071;
     
