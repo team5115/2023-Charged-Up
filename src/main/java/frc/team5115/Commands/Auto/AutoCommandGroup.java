@@ -41,6 +41,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
 // /* 
          if (inIdealPosition) {
              cubeDrop();
+            // scoreHighWDock();
              dockForward();
          } else {
              BasicHighNode();
@@ -97,7 +98,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
             new InstantCommand(hIntake :: TurnIn),
             new HighNode(arm),
             new IntakeTurn(arm, 10),
-            new Stow(arm, hArm, hIntake),
+            new StowCone(arm, hArm, hIntake),
             new DriveForward(drivetrain, -0.25, 1),
             new DriveTurn(drivetrain, 180)
         );
