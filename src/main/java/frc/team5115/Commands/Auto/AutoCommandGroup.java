@@ -40,8 +40,8 @@ public class AutoCommandGroup extends SequentialCommandGroup {
         */
 // /* 
          if (inIdealPosition) {
-             cubeDrop();
-            // scoreHighWDock();
+             //cubeDrop();
+             scoreHighWDock();
              dockForward();
          } else {
              BasicHighNode();

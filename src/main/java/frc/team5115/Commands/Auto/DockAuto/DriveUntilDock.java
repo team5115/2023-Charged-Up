@@ -32,7 +32,7 @@ public class DriveUntilDock extends CommandBase {
     @Override
     public void execute() {
         // only "works" when going backwards; direction is always 1 
-        drivetrain.autoDrive(0.95 * direction);
+        drivetrain.autoDrive(1.05 * direction);
         // System.out.println("hasn't found it yet @ " + drivetrain.getPitchDeg() + " degrees");
     }
 

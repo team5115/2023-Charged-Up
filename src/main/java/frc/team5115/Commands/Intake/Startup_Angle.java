@@ -37,7 +37,7 @@ public class Startup_Angle extends CommandBase{
     }
 
     public boolean isFinished() {
-        if(timer.get()>0.1){
+        if(timer.get()>0.07){
             if(Math.abs(hardwareIntake.getTurnVelocity())<1.5){
             innerTimer.start();
             if(innerTimer.get() > 0.3) return true;
