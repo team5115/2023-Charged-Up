@@ -32,7 +32,7 @@ public class DriveUntilDock extends CommandBase {
     @Override
     public void execute() {
         // only "works" when going backwards; direction is always 1 
-        drivetrain.autoDrive(0.9 * direction);
+        drivetrain.autoDrive(0.95 * direction);
         // System.out.println("hasn't found it yet @ " + drivetrain.getPitchDeg() + " degrees");
     }
 
@@ -41,7 +41,7 @@ public class DriveUntilDock extends CommandBase {
         if (Math.abs(drivetrain.getPitchDeg()) > finishedTolerance) {
             System.out.println("found slope");
             innerTimer.start();
-            if(innerTimer.get()  > 0.85)
+            if(innerTimer.get()  > 1)
             return true;
         }
         else{

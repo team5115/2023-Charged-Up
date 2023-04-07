@@ -50,7 +50,7 @@ public class Drivetrain extends SubsystemBase{
     public Drivetrain(PhotonVision photonVision, Arm arm) {
         this.photonVision = photonVision;
         throttle = new ThrottleControl(3, -3, 0.2);
-        anglePID = new PIDController(0.016, 0.0001, 0.0015);
+        anglePID = new PIDController(0.019, 0.0001, 0.0012);
         
         movingPID = new PIDController(0.01, 0, 0);
         drivetrain = new HardwareDrivetrain(arm);
@@ -155,12 +155,12 @@ public class Drivetrain extends SubsystemBase{
     public boolean TankDriveToAngle(double angleDegrees) { 
         double rotationDegrees = navx.getYawDeg();
         System.out.println(rotationDegrees-angleDegrees);
-        double turn = MathUtil.clamp(anglePID.calculate(rotationDegrees, angleDegrees), -0.6, 0.6);
+        double turn = MathUtil.clamp(anglePID.calculate(rotationDegrees, angleDegrees), -0.75, 0.75);
         leftSpeed = turn;
         rightSpeed = -turn;
         
         drivetrain.plugandFFDrive(leftSpeed, rightSpeed);
-        return Math.abs(rotationDegrees-angleDegrees)<17;
+        return Math.abs(rotationDegrees-angleDegrees)<15;
     }
 
     public void TankDriveToTrajectoryState(Trajectory.State tState) {
@@ -190,12 +190,15 @@ public class Drivetrain extends SubsystemBase{
         return poseEstimator.getEstimatedPosition();
     }
 
-    public boolean UpdateMoving(double dist, double startLeftDist, double startRightDist, double speedMagnitude) {
+    public boolean UpdateMoving(double dist, double startLeftDist, double startRightDist, double speedMagnitude, double heading) {
         final double remainingLeftDistance = startLeftDist + dist - getLeftDistance();
         final double remainingRightDistance = startRightDist + dist - getLeftDistance();
 
-        final double speed = speedMagnitude * Math.signum((remainingLeftDistance + remainingRightDistance) / 2);
-        drivetrain.plugandFFDrive(speed, speed);
+        final double forward = speedMagnitude * Math.signum((remainingLeftDistance + remainingRightDistance) / 2);
+        final double turn = MathUtil.clamp(anglePID.calculate(getYawDeg(), heading), -0.3, +0.3);
+        leftSpeed = forward + turn;
+        rightSpeed = forward - turn;
+        drivetrain.plugandFFDrive(leftSpeed, rightSpeed);
 
         final double tolerance = 0.05;
         return Math.abs(remainingLeftDistance) < tolerance || Math.abs(remainingRightDistance) < tolerance;

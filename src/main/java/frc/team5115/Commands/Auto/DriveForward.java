@@ -12,6 +12,7 @@ public class DriveForward extends CommandBase{
     private double speed;
     private boolean doneMoving;
     private Timer timer;
+    private double startAngle;
     private final double timeout;
 
     public DriveForward(Drivetrain drivetrain, double dist, double speed) {
@@ -28,11 +29,12 @@ public class DriveForward extends CommandBase{
         timer.reset();
         startRightDist = drivetrain.getRightDistance();
         startleftDist = drivetrain.getLeftDistance();
+        startAngle = drivetrain.getYawDeg();
     }
 
     @Override
     public void execute() {
-        doneMoving = drivetrain.UpdateMoving(dist, startleftDist, startRightDist, speed);
+        doneMoving = drivetrain.UpdateMoving(dist, startleftDist, startRightDist, speed, startAngle);
         //System.out.println("Right Distance: " + drivetrain.getRightDistance() + "Left Distance: " + drivetrain.getRightDistance());
     }
 
