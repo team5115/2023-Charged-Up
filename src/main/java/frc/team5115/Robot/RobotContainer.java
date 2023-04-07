@@ -117,6 +117,7 @@ public class RobotContainer {
         drivetrain.resetNAVx();
         goodAuto = good.getBoolean(false);
         //startup.schedule();
+        System.out.println("Good auto? " + goodAuto + "!!!!!!!");
         drivetrain.stop();
         autoCommandGroup = new AutoCommandGroup(drivetrain, arm, hardwareArm, intake, goodAuto);
         autoCommandGroup.schedule();

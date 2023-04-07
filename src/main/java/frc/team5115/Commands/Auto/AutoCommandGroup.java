@@ -25,7 +25,6 @@ public class AutoCommandGroup extends SequentialCommandGroup {
         this.drivetrain = drivetrain;
         this.hArm = hArm;
         this.hIntake = hIntake;
-        System.out.println(inIdealPosition);
 /* 
         addCommands(
             new Stow(arm, hArm, hIntake),

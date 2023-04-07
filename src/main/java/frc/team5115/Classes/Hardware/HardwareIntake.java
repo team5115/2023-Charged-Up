@@ -59,7 +59,7 @@ public class HardwareIntake extends SubsystemBase{
     private void setLights(boolean wantsCones) {
         coneLight.set(wantsCones);
         cubeLight.set(!wantsCones);
-        System.out.println(wantsCones);
+        //System.out.println(wantsCones);
     }
     
 }
