@@ -154,7 +154,7 @@ public class Drivetrain extends SubsystemBase{
     
     public boolean TankDriveToAngle(double angleDegrees) { 
         double rotationDegrees = navx.getYawDeg();
-        System.out.println(rotationDegrees-angleDegrees);
+        System.out.println("remaining degrees: " + (rotationDegrees-angleDegrees));
         double turn = MathUtil.clamp(anglePID.calculate(rotationDegrees, angleDegrees), -0.75, 0.75);
         leftSpeed = turn;
         rightSpeed = -turn;

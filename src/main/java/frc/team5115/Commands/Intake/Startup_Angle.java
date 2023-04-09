@@ -29,7 +29,7 @@ public class Startup_Angle extends CommandBase{
     }
 
     public void end(boolean interrupted){
-        System.out.println("Stopped");
+        System.out.println("Stopped in Startup_Angle");
         intake.zeroArm();
         intake.stop();
         intake.setLength(0);
