@@ -33,18 +33,7 @@ public class NAVx implements Subsystem {
      * @return the yaw of the navx from the last reset, ranging from -180 to 180 degrees 
      */
     public double getYawDeg() {
-        double angle = 0;
-        if(ahrs.getYaw()- yawAtReset < 0){
-        angle = 360+(ahrs.getYaw()- yawAtReset);
-        }
-        else{
-        angle = (ahrs.getYaw()- yawAtReset);
-        }
-
-        // if (angle > 180) {
-        //     return -360 + angle;
-        // }
-        return Math.abs(angle);
+        return clampAngle(ahrs.getYaw() - yawAtReset);
     }
 
     /**
@@ -57,11 +46,16 @@ public class NAVx implements Subsystem {
         // for sideways mount
         // double angle = ahrs.getRoll() - pitchAtReset;
         // for flat mount
-        double angle = -ahrs.getRoll() - pitchAtReset;
-        if (angle > 180) {
-            return -360 + angle;
-        }
-        return angle;
+        return clampAngle(-ahrs.getRoll() - pitchAtReset);
+    }
+
+    /**
+     * Converts an angle into an equivalent angle in the range -180 to 180
+     * @param angle the input angle to convert
+     * @return the equivalent angle from -180 to 180
+     */
+    public static double clampAngle(double angle) {
+        return ((angle + 180.0) % 360.0) - 180.0;
     }
 
     public double getYawRad() {

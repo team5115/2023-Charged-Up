@@ -38,10 +38,10 @@ public class RobotContainer {
         joy2 = new Joystick(1);
 
         photonVision = new PhotonVision();
-        drivetrain = new Drivetrain(photonVision);
         intake = new HardwareIntake();
         hardwareArm = new HardwareArm();
         arm = new Arm(hardwareArm, intake);
+        drivetrain = new Drivetrain(photonVision, arm);
         startup = new Startup(arm, hardwareArm, intake);
         
         dockSequence = new DockCommandGroup(drivetrain, false);
@@ -112,10 +112,12 @@ public class RobotContainer {
     }
 
     public void startAuto(){
+        if(autoCommandGroup != null) autoCommandGroup.cancel();
         drivetrain.resetEncoders();
         drivetrain.resetNAVx();
         goodAuto = good.getBoolean(false);
         //startup.schedule();
+        System.out.println("Good auto? " + goodAuto + "!!!!!!!");
         drivetrain.stop();
         autoCommandGroup = new AutoCommandGroup(drivetrain, arm, hardwareArm, intake, goodAuto);
         autoCommandGroup.schedule();

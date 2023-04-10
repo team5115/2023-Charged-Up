@@ -24,11 +24,11 @@ public class IntakeTurn extends CommandBase{
     }
 
     public void execute(){
-        System.out.println(intake.getTurnDeg());
+        System.out.println("Arm Rotation Degrees: " + intake.getTurnDeg());
     }
 
     public void end(boolean interrupted){
-        System.out.println("Stopped");
+        System.out.println("Stopped in IntakeTurn");
     }
 
     public boolean isFinished() {

@@ -46,7 +46,7 @@ public class IntakeExtend_v2 extends CommandBase{
             //topLength_target = 20;
             //bottomLength_target = 20;
         }
-        System.out.println(intake.h.open);
+        //System.out.println(intake.h.open);
     }
 
 
@@ -212,18 +212,15 @@ public class IntakeExtend_v2 extends CommandBase{
                 if(is_extending){
                     step_bottom();
                     pause_top();
-                    System.out.println("Extending: " + is_extending);
                 }
                 else{
                     pause_bottom();
                     step_top();   
-                    System.out.println("Extending: " + is_extending);
                 }
             }
         else {// if((Math.abs(delta_length) < Math.abs(max_delta_length_when_seperated)) && Math.abs(min_delta_length_when_seperated) < Math.abs(delta_length))
             step_bottom();
             step_top();
-            System.out.println(is_overhung);
         }
 
     }
@@ -234,7 +231,7 @@ public class IntakeExtend_v2 extends CommandBase{
 
     public void end(boolean interrupted){
         intake.resetPID();
-        System.out.println("Stopped");
+        System.out.println("Stopped in IntakeExtend_v2");
     }
 
     public boolean isFinished() {

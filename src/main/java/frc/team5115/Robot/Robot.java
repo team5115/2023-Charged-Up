@@ -25,7 +25,7 @@ public class Robot extends TimedRobot {
     public void disabledInit() {
         robotContainer.disabledInit();
         robotContainer.stopEverything();
-        CameraServer.startAutomaticCapture();
+        //CameraServer.startAutomaticCapture();
     }
 
     @Override
@@ -34,7 +34,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        CameraServer.startAutomaticCapture();
+      //  CameraServer.startAutomaticCapture();
         robotContainer.startAuto();
     }
 
@@ -45,7 +45,7 @@ public class Robot extends TimedRobot {
 
     public void teleopInit () {
         robotContainer.startTeleop();
-        CameraServer.startAutomaticCapture();
+        //CameraServer.startAutomaticCapture();
     }
     
     public void teleopPeriodic () {

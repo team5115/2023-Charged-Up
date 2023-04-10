@@ -47,13 +47,13 @@ public class Drivetrain extends SubsystemBase{
     public static final double bA = 10;
     public static final double MaxArea = 0.1;
 
-    public Drivetrain(PhotonVision photonVision) {
+    public Drivetrain(PhotonVision photonVision, Arm arm) {
         this.photonVision = photonVision;
         throttle = new ThrottleControl(3, -3, 0.2);
-        anglePID = new PIDController(0.013, 0.0001, 0.0015);
+        anglePID = new PIDController(0.016, 0.0001, 0.0015);
         
         movingPID = new PIDController(0.01, 0, 0);
-        drivetrain = new HardwareDrivetrain();
+        drivetrain = new HardwareDrivetrain(arm);
         ramseteController = new RamseteController();
         kinematics = new DifferentialDriveKinematics(TRACKING_WIDTH_METERS);
         navx = new NAVx();
@@ -68,14 +68,14 @@ public class Drivetrain extends SubsystemBase{
         // );
 
         poseEstimator = new DifferentialDrivePoseEstimator(
-            kinematics, navx.getYawRotation2D(), getLeftDistance(), getRightDistance(), new Pose2d()
+            kinematics, navx.getYawRotation2D(), getLeftDistance(), getRightDistance(), new Pose2d(), VecBuilder.fill(1, 1, 1), VecBuilder.fill(0, 0, 0)
         );
         System.out.println("Angle from navx" + navx.getYawDeg()
         );
     }
 
     public void stop() {
-        drivetrain.plugandFFDrive(0, 0);
+        drivetrain.PlugandVoltDrive(0, 0, 0, 0);
     }
 
     public double getLeftDistance(){
@@ -152,15 +152,15 @@ public class Drivetrain extends SubsystemBase{
         return new double[] {x, y};
     }
     
-    @Deprecated
-    public void TankDriveToAngle(double angleDegrees) { 
+    public boolean TankDriveToAngle(double angleDegrees) { 
         double rotationDegrees = navx.getYawDeg();
-        System.out.println(rotationDegrees);
-        double turn = MathUtil.clamp(anglePID.calculate(rotationDegrees, angleDegrees), -1, 1);
+        System.out.println("remaining degrees: " + (rotationDegrees-angleDegrees));
+        double turn = MathUtil.clamp(anglePID.calculate(rotationDegrees, angleDegrees), -0.6, 0.6);
         leftSpeed = turn;
         rightSpeed = -turn;
         
         drivetrain.plugandFFDrive(leftSpeed, rightSpeed);
+        return Math.abs(rotationDegrees-angleDegrees)<17;
     }
 
     public void TankDriveToTrajectoryState(Trajectory.State tState) {
@@ -180,11 +180,13 @@ public class Drivetrain extends SubsystemBase{
         Optional<EstimatedRobotPose> result = photonVision.getEstimatedGlobalPose();
         if (result.isPresent()) {
             EstimatedRobotPose camPose = result.get();
+            System.out.println("its really working");
             poseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
         }
     }
 
     public Pose2d getEstimatedPose() {
+        UpdateOdometry();
         return poseEstimator.getEstimatedPosition();
     }
 
@@ -199,14 +201,12 @@ public class Drivetrain extends SubsystemBase{
         return Math.abs(remainingLeftDistance) < tolerance || Math.abs(remainingRightDistance) < tolerance;
     }      
 
-    public boolean UpdateTurning(double setpointAngle) {
-        double currentAngle = navx.getYawDeg();
-        double turn = MathUtil.clamp(anglePID.calculate(currentAngle, setpointAngle), -1, 1);
-        //System.out.println("turning @ " + turn + " m/s");
-        System.out.println(currentAngle);
-        drivetrain.plugandFFDrive(turn, -turn);
-
-        return Math.abs(currentAngle-setpointAngle)<5;
+    public boolean UpdateMovingWithVision(double dist, Pose2d pose, double speedMagnitude) {
+        double realdist = pose.getTranslation().getDistance(getEstimatedPose().getTranslation());
+        final double speed = speedMagnitude * Math.signum(dist);
+        drivetrain.plugandFFDrive(speed, speed);
+        final double tolerance = 0.1;
+        return Math.abs(realdist-dist) < tolerance;
     }
 
     public void resetNAVx(){

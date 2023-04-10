@@ -2,7 +2,9 @@ package frc.team5115.Commands.Auto;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.team5115.Classes.Hardware.NAVx;
 import frc.team5115.Classes.Software.Drivetrain;
+import frc.team5115.Classes.Hardware.NAVx;
 
 public class DriveTurn extends CommandBase{
     private Timer grandTimer;
@@ -22,19 +24,14 @@ public class DriveTurn extends CommandBase{
 
     @Override
     public void initialize() {
-        if(deltaAngle + drivetrain.getYawDeg() < 0){
-        absoluteAngle = 360+(deltaAngle + drivetrain.getYawDeg());
-        }
-        else{
-        absoluteAngle = (deltaAngle + drivetrain.getYawDeg());
-        }
+        absoluteAngle = NAVx.clampAngle(deltaAngle);
         grandTimer.reset();
         turned = false;
     }
 
     @Override
     public void execute() {
-         turned = drivetrain.UpdateTurning(absoluteAngle);
+         turned = drivetrain.TankDriveToAngle(absoluteAngle);
     }
 
     @Override
@@ -46,7 +43,7 @@ public class DriveTurn extends CommandBase{
     @Override
     public boolean isFinished() {
         // timeout if the command has been running for too long
-        if (grandTimer.get() > 10) {
+        if (grandTimer.get() > 4) {
             System.out.println("Turning attempt timed out after 10 seconds");
             return true;
         }
