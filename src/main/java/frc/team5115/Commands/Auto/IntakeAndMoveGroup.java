@@ -12,7 +12,6 @@ import frc.team5115.Classes.Software.Arm;
 import frc.team5115.Classes.Software.Drivetrain;
 import frc.team5115.Commands.Auto.VisionAuto.DriveForwardWVision;
 import frc.team5115.Commands.Intake.CombinedIntakeCommands.GroundPickup;
-import frc.team5115.Commands.Intake.RawIntakeCommands.IntakeExtend;
 
 public class IntakeAndMoveGroup extends ParallelCommandGroup {
     Arm arm;

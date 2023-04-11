@@ -5,11 +5,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.team5115.Classes.Acessory.*;
 import frc.team5115.Classes.Hardware.*;
 import frc.team5115.Classes.Software.*;
 import frc.team5115.Commands.Auto.AutoCommandGroup;
-import frc.team5115.Commands.Auto.DockAuto.DockCommandGroup;
 import frc.team5115.Commands.Intake.*;
 import frc.team5115.Commands.Intake.CombinedIntakeCommands.*;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -25,12 +23,11 @@ public class RobotContainer {
     private final HardwareIntake intake;
     private final Arm arm;
     private final HardwareArm hardwareArm;
+    private final Startup_Intake startup;
+    private final ShuffleboardTab tab;
+    private final GenericEntry good;
     private AutoCommandGroup autoCommandGroup;
-    private final DockCommandGroup dockSequence;
-    private Startup_Intake startup;
-    private ShuffleboardTab tab = Shuffleboard.getTab("SmartDashboard");
-    private GenericEntry good = tab.add("good auto?", false).getEntry();
-    private boolean goodAuto = false; 
+    private boolean goodAuto = false;
 
     public RobotContainer() {
         joy1 = new Joystick(0);
@@ -42,7 +39,10 @@ public class RobotContainer {
         arm = new Arm(hardwareArm, intake);
         drivetrain = new Drivetrain(photonVision, arm);
         startup = new Startup_Intake(arm, hardwareArm, intake);        
-        dockSequence = new DockCommandGroup(drivetrain, false);
+        
+        tab = Shuffleboard.getTab("SmartDashboard");
+        good = tab.add("good auto?", false).getEntry();
+
         timer = new Timer();
         timer.reset();
         configureButtonBindings();
@@ -56,8 +56,7 @@ public class RobotContainer {
         new JoystickButton(joy1, 2).onTrue(new MiddleNode(arm)); // middle node
         new JoystickButton(joy1, 1).onTrue(new GroundPickup(arm)); // low node/ground pickup
         new JoystickButton(joy1, 8).onTrue(new Stow(arm, hardwareArm, intake)); // stow fully
-        new JoystickButton(joy1, 7).onTrue(new StowCone(arm, hardwareArm, intake)); // stow with cone
-        
+        new JoystickButton(joy1, 7).onTrue(new StowCone(arm)); // stow with cone
     }
 
     public void startTeleop(){
@@ -70,7 +69,6 @@ public class RobotContainer {
     }
 
     public void disabledInit(){
-        goodAuto = good.getBoolean(false);
         arm.disableBrake();
         drivetrain.init();
         drivetrain.stop();
@@ -87,10 +85,10 @@ public class RobotContainer {
         if(autoCommandGroup != null) autoCommandGroup.cancel();
         drivetrain.resetEncoders();
         drivetrain.resetNAVx();
-        goodAuto = good.getBoolean(false);
-        //startup.schedule();
-        System.out.println("Good auto? " + goodAuto + "!!!!!!!");
         drivetrain.stop();
+        //startup.schedule();
+        goodAuto = good.getBoolean(false);
+        System.out.println("Good auto? " + goodAuto + "!!!!!!!");
         autoCommandGroup = new AutoCommandGroup(drivetrain, arm, hardwareArm, intake, goodAuto);
         autoCommandGroup.schedule();
     }
@@ -101,43 +99,43 @@ public class RobotContainer {
     }
 
     public void teleopPeriodic(){
-         if(-joy1.getRawAxis(1) > 0.5){
-             arm.turnUp();
-         }
-         else if(-joy1.getRawAxis(1) < -0.5){
-             arm.turnDown();
+        if(-joy1.getRawAxis(1) > 0.5){
+            arm.turnUp();
+        }
+        else if(-joy1.getRawAxis(1) < -0.5){
+            arm.turnDown();
         }
 
         if(joy1.getRawAxis(2) > 0.5){
             arm.topMoveIn();
-         }
-          if (joy1.getRawButton(5)){
-             arm.bottomMoveIn();
-         }
+        }
+        if (joy1.getRawButton(5)){
+            arm.bottomMoveIn();
+        }
 
-         if(joy1.getRawAxis(3) > 0.5){
+        if(joy1.getRawAxis(3) > 0.5){
             arm.topMoveOut();
-         }
-          if (joy1.getRawButton(6)){
-             arm.bottomMoveOut();
-         }
+        }
+        if (joy1.getRawButton(6)){
+            arm.bottomMoveOut();
+        }
 
-         if(-joy1.getRawAxis(5) < -0.5){
+        if(-joy1.getRawAxis(5) < -0.5){
             intake.TurnIn();
-         }
-         else if(-joy1.getRawAxis(5) > 0.5){
+        }
+        else if(-joy1.getRawAxis(5) > 0.5){
             intake.TurnOut();
-         }
-         else {
+        }
+        else {
             intake.StopMotor();
-         }
+        }
 
-         if(joy1.getPOV()>=0 && joy1.getPOV()<=180){
+        if(joy1.getPOV()>=0 && joy1.getPOV()<=180){
             intake.close();
-         }
-         else if(joy1.getPOV()<=360 && joy1.getPOV()>180 ){
+        }
+        else if(joy1.getPOV()<=360 && joy1.getPOV()>180 ){
             intake.open();
-         }
+        }
 
         //drivetrain.UpdateOdometry();
         if(arm.armcontrol && arm.armcontrolangle) arm.updateController();

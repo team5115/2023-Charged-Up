@@ -5,15 +5,15 @@ import frc.team5115.Classes.Software.Arm;
 import frc.team5115.Classes.Hardware.*;
 
 public class Startup_Intake extends CommandBase{
-    private Arm intake;
-    private HardwareArm hardwareIntake;
+    private Arm arm;
+    private HardwareArm hardwareArm;
     private HardwareIntake claw;
     private Timer timer;
     private Timer innerTimer;
 
-    public Startup_Intake(Arm a, HardwareArm b, HardwareIntake claw){
-        intake = a;
-        hardwareIntake = b;
+    public Startup_Intake(Arm arm, HardwareArm hardwareArm, HardwareIntake claw){
+        this.arm = arm;
+        this.hardwareArm = hardwareArm;
         this.claw = claw;
         timer = new Timer();
         timer.start();
@@ -22,10 +22,10 @@ public class Startup_Intake extends CommandBase{
     }
     public void initialize() {
         timer.reset();
-        intake.armcontrol = false;
+        arm.armcontrol = false;
         claw.open();
-        hardwareIntake.setBottomWinch(-0.1);
-        hardwareIntake.setTopWinch(-0.37);
+        hardwareArm.setBottomWinch(-0.1);
+        hardwareArm.setTopWinch(-0.37);
         claw.TurnIn();
     }
 
@@ -34,16 +34,16 @@ public class Startup_Intake extends CommandBase{
 
     public void end(boolean interrupted){
         System.out.println("Stopped in Startup_Intake");
-        intake.zeroLength(intake.getAngle());
-        intake.stop();
-        intake.setLength(0);
-        intake.armcontrol = true;
+        arm.zeroLength(arm.getAngle());
+        arm.stop();
+        arm.setLength(0);
+        arm.armcontrol = true;
         claw.StopMotor();
     }
 
     public boolean isFinished() {
         if(timer.get()>0.5){
-            if(Math.abs(hardwareIntake.getBottomVelocity())<1 && Math.abs(hardwareIntake.getTopVelocity())<1){
+            if(Math.abs(hardwareArm.getBottomVelocity())<1 && Math.abs(hardwareArm.getTopVelocity())<1){
             return true;
         }
     }
