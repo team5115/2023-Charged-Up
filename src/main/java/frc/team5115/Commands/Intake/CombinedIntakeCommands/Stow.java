@@ -6,6 +6,7 @@ import frc.team5115.Classes.Hardware.HardwareIntake;
 import frc.team5115.Classes.Software.Arm;
 import frc.team5115.Commands.Intake.RealExtend;
 import frc.team5115.Commands.Intake.Startup;
+import frc.team5115.Commands.Intake.Startup_Intake;
 import frc.team5115.Commands.Intake.RawIntakeCommands.IntakeExtend_v2;
 import frc.team5115.Commands.Intake.RawIntakeCommands.IntakeTurn;
 
@@ -17,7 +18,7 @@ public class Stow extends SequentialCommandGroup {
         addCommands(
             new RealExtend(intake, 0),
             new IntakeTurn(intake, -90)
-            , new Startup(intake, h, I)
+            , new Startup_Intake(intake, h, I)
         );
     }
 }

@@ -184,9 +184,6 @@ public class Arm extends SubsystemBase{
         intake.setBottomWinch(bottomSpeed);
     }
 
-    public double getTurnDeg(){
-        return intake.getArmDeg();
-    }
 
     public double getTopWinchLength(){
         return intake.getTopWinchLength();
@@ -203,6 +200,11 @@ public class Arm extends SubsystemBase{
     public void zeroArm(){
         intake.setEncoders(0, -106.0);
     }
+
+    public void zeroLength(double angle){
+        intake.setEncoders(0, angle);
+    }
+
 
     public boolean getFault(CANSparkMax.FaultID f){
         return intake.getFault(f);
@@ -221,6 +223,6 @@ public class Arm extends SubsystemBase{
     }
 
     public double getAngle() {
-        return angle;
+        return intake.getArmDeg();
     }
 }

@@ -24,7 +24,7 @@ public class IntakeTurn extends CommandBase{
     }
 
     public void execute(){
-        System.out.println("Arm Rotation Degrees: " + intake.getTurnDeg());
+        System.out.println("Arm Rotation Degrees: " + intake.getAngle());
     }
 
     public void end(boolean interrupted){
@@ -33,7 +33,7 @@ public class IntakeTurn extends CommandBase{
 
     public boolean isFinished() {
         
-        if((Math.abs(intake.getTurnDeg()-angle)<2)){
+        if((Math.abs(intake.getAngle()-angle)<2)){
             if(innerTimer.get() > 0.05) return true;
         }
         else innerTimer.reset();
