@@ -27,7 +27,7 @@ public class RobotContainer {
     private final HardwareArm hardwareArm;
     private AutoCommandGroup autoCommandGroup;
     private final DockCommandGroup dockSequence;
-    private Stow startup;
+    private Startup startup;
     private ShuffleboardTab tab = Shuffleboard.getTab("SmartDashboard");
     private GenericEntry good = tab.add("good auto?", false).getEntry();
     private boolean goodAuto = false; 
@@ -41,7 +41,7 @@ public class RobotContainer {
         hardwareArm = new HardwareArm();
         arm = new Arm(hardwareArm, intake);
         drivetrain = new Drivetrain(photonVision, arm);
-        startup = new Stow(arm, hardwareArm, intake);        
+        startup = new Startup(arm, hardwareArm, intake);        
         dockSequence = new DockCommandGroup(drivetrain, false);
         timer = new Timer();
         timer.reset();

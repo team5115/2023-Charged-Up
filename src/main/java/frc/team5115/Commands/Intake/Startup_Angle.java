@@ -45,6 +45,8 @@ public class Startup_Angle extends CommandBase{
         else{
             innerTimer.reset();
         }
+
+        if(timer.get()> 0.2) return true;
     }
         /* 
         if((Math.abs(intake.getTurnDeg()-angle)<0.1)){
