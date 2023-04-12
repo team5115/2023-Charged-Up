@@ -36,8 +36,8 @@ public class Arm extends SubsystemBase{
     public PIDController topWinchController = new PIDController(topKp, 0, 0);
     public PIDController bottomWinchController = new PIDController(bottomKp, 0, 0);
 
-    public boolean armcontrol = false;
-    public boolean armcontrolangle = false;
+    public boolean armcontrol = true;
+    public boolean armcontrolangle = true;
 
     public Arm(HardwareArm x, HardwareIntake y){
         intake = x;
