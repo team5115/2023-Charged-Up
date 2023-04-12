@@ -34,7 +34,7 @@ public class Startup_Intake extends CommandBase{
 
     public void end(boolean interrupted){
         System.out.println("Stopped in Startup_Intake");
-        intake.zeroLength(intake.getAngle());
+        intake.zeroArm();
         intake.stop();
         intake.setLength(0);
         intake.armcontrol = true;
