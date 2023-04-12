@@ -64,8 +64,8 @@ public class RobotContainer {
         if(autoCommandGroup != null) autoCommandGroup.cancel();
         // arm.zeroArm();
         System.out.println("Starting teleop");
-        startup.schedule();
         arm.enableBrake();
+        startup.schedule();
         drivetrain.resetEncoders();
     }
 
