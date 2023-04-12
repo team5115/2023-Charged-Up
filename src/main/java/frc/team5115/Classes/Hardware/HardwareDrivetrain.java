@@ -33,8 +33,8 @@ public class HardwareDrivetrain{
     // END of testbed values
     
 
-    private final double leftKp = 0.0;
-    private final double rightKp = 0.0;
+    private final double leftKp = 0.2;
+    private final double rightKp = 0.2;
     private final double Ki = 0.1;
     private final double Kd = 0.1;
     // END of testbed values
@@ -160,6 +160,9 @@ public class HardwareDrivetrain{
 
         leftVoltage = MathUtil.clamp(leftVoltage, -DRIVE_MOTOR_MAX_VOLTAGE, DRIVE_MOTOR_MAX_VOLTAGE);
         rightVoltage = MathUtil.clamp(rightVoltage, -DRIVE_MOTOR_MAX_VOLTAGE, DRIVE_MOTOR_MAX_VOLTAGE);
+
+        if(Math.abs(leftSpeed) < 0.05) leftVoltage = 0;
+        if(Math.abs(rightSpeed) < 0.05) rightVoltage = 0;
 
         backLeft.follow(frontLeft);
         backRight.follow(frontRight);

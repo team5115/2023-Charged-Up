@@ -27,7 +27,7 @@ public class RobotContainer {
     private final HardwareArm hardwareArm;
     private AutoCommandGroup autoCommandGroup;
     private final DockCommandGroup dockSequence;
-    private Startup_Intake startup;
+    private Stow startup;
     private ShuffleboardTab tab = Shuffleboard.getTab("SmartDashboard");
     private GenericEntry good = tab.add("good auto?", false).getEntry();
     private boolean goodAuto = false; 
@@ -41,7 +41,7 @@ public class RobotContainer {
         hardwareArm = new HardwareArm();
         arm = new Arm(hardwareArm, intake);
         drivetrain = new Drivetrain(photonVision, arm);
-        startup = new Startup_Intake(arm, hardwareArm, intake);        
+        startup = new Stow(arm, hardwareArm, intake);        
         dockSequence = new DockCommandGroup(drivetrain, false);
         timer = new Timer();
         timer.reset();
@@ -88,7 +88,6 @@ public class RobotContainer {
         drivetrain.resetEncoders();
         drivetrain.resetNAVx();
         goodAuto = good.getBoolean(false);
-        //startup.schedule();
         System.out.println("Good auto? " + goodAuto + "!!!!!!!");
         drivetrain.stop();
         autoCommandGroup = new AutoCommandGroup(drivetrain, arm, hardwareArm, intake, goodAuto);
@@ -97,7 +96,7 @@ public class RobotContainer {
 
     public void autoPeriod(){
        //drivetrain.UpdateOdometry();
-       if(arm.armcontrol && arm.armcontrolangle) arm.updateController();
+       arm.updateController();
     }
 
     public void teleopPeriodic(){
@@ -140,7 +139,7 @@ public class RobotContainer {
          }
 
         //drivetrain.UpdateOdometry();
-        if(arm.armcontrol && arm.armcontrolangle) arm.updateController();
+        arm.updateController();
         double forward = -joy2.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
         double turn = joy2.getRawAxis(JOY_Z_AXIS_ID);
         drivetrain.TankDrive(forward, turn);
