@@ -3,6 +3,7 @@ package frc.team5115.Robot;
 import static frc.team5115.Constants.*;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.team5115.Classes.Hardware.*;
@@ -49,14 +50,14 @@ public class RobotContainer {
     }
 
     public void configureButtonBindings() {
-        new JoystickButton(joy2, 1).onTrue(new InstantCommand(drivetrain :: toggleSlowMode));
+        new JoystickButton(joy2, XboxController.Button.kA.value).onTrue(new InstantCommand(drivetrain :: toggleSlowMode));
         
-        new JoystickButton(joy1, 3).onTrue(new ShelfSubstation(arm)); // double substation pickup
-        new JoystickButton(joy1, 4).onTrue(new HighNode(arm)); // high node
-        new JoystickButton(joy1, 2).onTrue(new MiddleNode(arm)); // middle node
-        new JoystickButton(joy1, 1).onTrue(new GroundPickup(arm)); // low node/ground pickup
-        new JoystickButton(joy1, 8).onTrue(new Stow(arm, hardwareArm, intake)); // stow fully
-        new JoystickButton(joy1, 7).onTrue(new StowCone(arm)); // stow with cone
+        new JoystickButton(joy1, XboxController.Button.kX.value).onTrue(new ShelfSubstation(arm)); // double substation pickup
+        new JoystickButton(joy1, XboxController.Button.kY.value).onTrue(new HighNode(arm)); // high node
+        new JoystickButton(joy1, XboxController.Button.kB.value).onTrue(new MiddleNode(arm)); // middle node
+        new JoystickButton(joy1, XboxController.Button.kA.value).onTrue(new GroundPickup(arm)); // low node/ground pickup
+        new JoystickButton(joy1, XboxController.Button.kStart.value).onTrue(new Stow(arm, hardwareArm, intake)); // stow fully
+        new JoystickButton(joy1, XboxController.Button.kBack.value).onTrue(new StowCone(arm)); // stow with cone
     }
 
     public void startTeleop(){
@@ -109,31 +110,33 @@ public class RobotContainer {
         if(joy1.getRawAxis(2) > 0.5){
             arm.topMoveIn();
         }
-        if (joy1.getRawButton(5)){
-            arm.bottomMoveIn();
-        }
-
-        if(joy1.getRawAxis(3) > 0.5){
+        else if(joy1.getRawAxis(3) > 0.5){
             arm.topMoveOut();
         }
-        if (joy1.getRawButton(6)){
+
+        if(joy1.getRawButton(5)){
+            arm.bottomMoveIn();
+        }
+        else if(joy1.getRawButton(6)){
             arm.bottomMoveOut();
         }
 
-        if(-joy1.getRawAxis(5) < -0.5){
+        final double rightY = -joy1.getRawAxis(XboxController.Axis.kRightY.value);
+        if(rightY < -0.5){
             intake.TurnIn();
         }
-        else if(-joy1.getRawAxis(5) > 0.5){
+        else if(rightY > 0.5){
             intake.TurnOut();
         }
         else {
             intake.StopMotor();
         }
 
-        if(joy1.getPOV()>=0 && joy1.getPOV()<=180){
+        final double pov = joy1.getPOV();
+        if(pov >= 0 && pov <= 180){
             intake.close();
         }
-        else if(joy1.getPOV()<=360 && joy1.getPOV()>180 ){
+        else if(pov <= 360 && pov > 180 ){
             intake.open();
         }
 
