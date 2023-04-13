@@ -24,7 +24,7 @@ public class IntakeTurn extends CommandBase{
     }
 
     public void execute(){
-        System.out.println("Arm Rotation Degrees: " + arm.getAngle());
+        System.out.println("Arm Rotation Degrees: " + arm.getAngle()+ " can turn? " + arm.armcontrolangle);
     }
 
     public void end(boolean interrupted){

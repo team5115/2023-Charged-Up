@@ -23,8 +23,8 @@ public class Arm extends SubsystemBase{
     public PIDController topWinchController = new PIDController(topKp, 0, 0);
     public PIDController bottomWinchController = new PIDController(bottomKp, 0, 0);
 
-    public boolean armcontrol = false;
-    public boolean armcontrolangle = false;
+    public boolean armcontrol = true;
+    public boolean armcontrolangle = true;
 
     public Arm(HardwareArm x, HardwareIntake y){
         intake = x;
@@ -157,8 +157,7 @@ public class Arm extends SubsystemBase{
         else{
             intake.FF = true;
         }
-        //intake.setTurn(0.10);
-        intake.setTurn(turnController.calculate(intake.getArmDeg(), angle));
+        if(armcontrolangle) intake.setTurn(turnController.calculate(intake.getArmDeg(), angle));
         //System.out.println("Output Current" + intake.getTurnCurrent());
         //System.out.println("Current in Amps: " + intake.getTurnCurrent() + ", The Estimated Angle: "+  Math.round(getTurnDeg()) + ", and PID Value: "+ turnController.calculate(intake.getArmDeg(), angle));
 
@@ -166,9 +165,10 @@ public class Arm extends SubsystemBase{
         double topSpeed = topWinchController.calculate(intake.getTopWinchLength(), topLength);
         //System.out.println("Top Length: " + intake.getTopWinchLength() + " Bottom Length: " + intake.getBottomWinchLength());
         //System.out.println("Top Current: " + intake.getTopCurrent() + "  Bottom Current: " + intake.getBottomCurrent() + " Turn Speed: " + turnController.calculate(intake.getArmDeg(), angle));
-
+        if(armcontrol){
         intake.setTopWinch(topSpeed);
         intake.setBottomWinch(bottomSpeed);
+        }
     }
 
 

@@ -24,7 +24,7 @@ public class RobotContainer {
     private final HardwareIntake intake;
     private final Arm arm;
     private final HardwareArm hardwareArm;
-    private final Startup_Intake startup;
+    private final Startup startup;
     private final ShuffleboardTab tab;
     private final GenericEntry good;
     private AutoCommandGroup autoCommandGroup;
@@ -39,7 +39,7 @@ public class RobotContainer {
         hardwareArm = new HardwareArm();
         arm = new Arm(hardwareArm, intake);
         drivetrain = new Drivetrain(photonVision, arm);
-        startup = new Startup_Intake(arm, hardwareArm, intake);        
+        startup = new Startup(arm, hardwareArm, intake);
         
         tab = Shuffleboard.getTab("SmartDashboard");
         good = tab.add("good auto?", false).getEntry();
@@ -64,8 +64,8 @@ public class RobotContainer {
         if(autoCommandGroup != null) autoCommandGroup.cancel();
         // arm.zeroArm();
         System.out.println("Starting teleop");
-        startup.schedule();
         arm.enableBrake();
+        startup.schedule();
         drivetrain.resetEncoders();
     }
 
@@ -96,7 +96,7 @@ public class RobotContainer {
 
     public void autoPeriod(){
        //drivetrain.UpdateOdometry();
-       if(arm.armcontrol && arm.armcontrolangle) arm.updateController();
+       arm.updateController();
     }
 
     public void teleopPeriodic(){
@@ -141,7 +141,7 @@ public class RobotContainer {
         }
 
         //drivetrain.UpdateOdometry();
-        if(arm.armcontrol && arm.armcontrolangle) arm.updateController();
+        arm.updateController();
         double forward = -joy2.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
         double turn = joy2.getRawAxis(JOY_Z_AXIS_ID);
         drivetrain.TankDrive(forward, turn);
