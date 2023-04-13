@@ -96,6 +96,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
             new HighNode(arm),
             new IntakeTurn(arm, 10),
             new StowCone(arm),
+            new InstantCommand(hIntake :: StopMotor),
             new DriveForward(drivetrain, -0.25, 1),
             new DriveTurn(drivetrain, 180)
         );

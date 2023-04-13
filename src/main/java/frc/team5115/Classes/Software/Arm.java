@@ -1,5 +1,7 @@
 package frc.team5115.Classes.Software;
 
+import java.util.function.BooleanSupplier;
+
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team5115.Classes.Hardware.HardwareArm;
@@ -185,7 +187,7 @@ public class Arm extends SubsystemBase{
     }
 
     public void zeroArm(){
-        intake.setEncoders(0, -106.0);
+        intake.setEncoders(0, -100.0);
     }
 
     public void zeroLength(double angle){

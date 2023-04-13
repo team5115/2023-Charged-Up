@@ -15,12 +15,12 @@ public class DriveTurn extends CommandBase{
         this.drivetrain = drivetrain;
         angle = NAVx.clampAngle(absoluteAngle);
         grandTimer = new Timer();
-        grandTimer.start();
     }
 
     @Override
     public void initialize() {
         grandTimer.reset();
+        grandTimer.start();
     }
 
     @Override
