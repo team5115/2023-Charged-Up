@@ -1,14 +1,12 @@
 package frc.team5115.Classes.Software;
 
+import java.util.function.BooleanSupplier;
+
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team5115.Classes.Hardware.HardwareArm;
 import frc.team5115.Classes.Hardware.HardwareIntake;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 
 public class Arm extends SubsystemBase{
@@ -18,15 +16,6 @@ public class Arm extends SubsystemBase{
     private double bottomLength = 0;
     private double angle = -90;
     private double speed = 0.25;
-    private ShuffleboardTab tab = Shuffleboard.getTab("SmartDashboard");
-    /* 
-    private GenericEntry topKp = tab.add("topKp", 0.6).getEntry();
-    private GenericEntry bottomKp = tab.add("bottomKp", 0.6).getEntry();
-    private GenericEntry topAngle = tab.add("topAngle", 0).getEntry();
-    private PIDController turnController = new PIDController(0.06, 0.0, 0.0);
-    public PIDController topWinchController = new PIDController(topKp.getDouble(0.6), 0, 0);
-    public PIDController bottomWinchController = new PIDController(bottomKp.getDouble(0.6), 0, 0);
-    */
 
     private double topKp = 0.113;
     private double bottomKp = 0.115;
@@ -198,7 +187,7 @@ public class Arm extends SubsystemBase{
     }
 
     public void zeroArm(){
-        intake.setEncoders(0, -106.0);
+        intake.setEncoders(0, -100.0);
     }
 
     public void zeroLength(double angle){

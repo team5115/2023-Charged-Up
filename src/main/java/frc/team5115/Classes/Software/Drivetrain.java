@@ -10,14 +10,12 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team5115.Classes.Acessory.ThrottleControl;
 import frc.team5115.Classes.Hardware.HardwareDrivetrain;
@@ -32,7 +30,6 @@ public class Drivetrain extends SubsystemBase{
     public NetworkTableEntry tv;
     private final ThrottleControl throttle;
     private final PIDController anglePID;
-    private final PIDController movingPID;
     private final RamseteController ramseteController;
     private final DifferentialDriveKinematics kinematics;
     private final HardwareDrivetrain drivetrain;
@@ -52,7 +49,6 @@ public class Drivetrain extends SubsystemBase{
         throttle = new ThrottleControl(3, -3, 0.2);
         anglePID = new PIDController(0.019, 0.0001, 0.0012);
         
-        movingPID = new PIDController(0.01, 0, 0);
         drivetrain = new HardwareDrivetrain(arm);
         ramseteController = new RamseteController();
         kinematics = new DifferentialDriveKinematics(TRACKING_WIDTH_METERS);
@@ -161,7 +157,7 @@ public class Drivetrain extends SubsystemBase{
         
         drivetrain.plugandFFDrive(leftSpeed, rightSpeed);
         return Math.abs(rotationDegrees-angleDegrees)<15;
-    }
+        }
 
     public void TankDriveToTrajectoryState(Trajectory.State tState) {
         final ChassisSpeeds adjustedSpeeds = ramseteController.calculate(getEstimatedPose(), tState);

@@ -3,13 +3,12 @@ package frc.team5115.Robot;
 import static frc.team5115.Constants.*;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.team5115.Classes.Acessory.*;
 import frc.team5115.Classes.Hardware.*;
 import frc.team5115.Classes.Software.*;
 import frc.team5115.Commands.Auto.AutoCommandGroup;
-import frc.team5115.Commands.Auto.DockAuto.DockCommandGroup;
 import frc.team5115.Commands.Intake.*;
 import frc.team5115.Commands.Intake.CombinedIntakeCommands.*;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -25,12 +24,11 @@ public class RobotContainer {
     private final HardwareIntake intake;
     private final Arm arm;
     private final HardwareArm hardwareArm;
+    private final Startup startup;
+    private final ShuffleboardTab tab;
+    private final GenericEntry good;
     private AutoCommandGroup autoCommandGroup;
-    private final DockCommandGroup dockSequence;
-    private Startup startup;
-    private ShuffleboardTab tab = Shuffleboard.getTab("SmartDashboard");
-    private GenericEntry good = tab.add("good auto?", false).getEntry();
-    private boolean goodAuto = false; 
+    private boolean goodAuto = false;
 
     public RobotContainer() {
         joy1 = new Joystick(0);
@@ -41,23 +39,25 @@ public class RobotContainer {
         hardwareArm = new HardwareArm();
         arm = new Arm(hardwareArm, intake);
         drivetrain = new Drivetrain(photonVision, arm);
-        startup = new Startup(arm, hardwareArm, intake);        
-        dockSequence = new DockCommandGroup(drivetrain, false);
+        startup = new Startup(arm, hardwareArm, intake);
+        
+        tab = Shuffleboard.getTab("SmartDashboard");
+        good = tab.add("good auto?", false).getEntry();
+
         timer = new Timer();
         timer.reset();
         configureButtonBindings();
     }
 
     public void configureButtonBindings() {
-        new JoystickButton(joy2, 1).onTrue(new InstantCommand(drivetrain :: toggleSlowMode));
+        new JoystickButton(joy2, XboxController.Button.kA.value).onTrue(new InstantCommand(drivetrain :: toggleSlowMode));
         
-        new JoystickButton(joy1, 3).onTrue(new ShelfSubstation(arm)); // double substation pickup
-        new JoystickButton(joy1, 4).onTrue(new HighNode(arm)); // high node
-        new JoystickButton(joy1, 2).onTrue(new MiddleNode(arm)); // middle node
-        new JoystickButton(joy1, 1).onTrue(new GroundPickup(arm)); // low node/ground pickup
-        new JoystickButton(joy1, 8).onTrue(new Stow(arm, hardwareArm, intake)); // stow fully
-        new JoystickButton(joy1, 7).onTrue(new StowCone(arm, hardwareArm, intake)); // stow with cone
-        
+        new JoystickButton(joy1, XboxController.Button.kX.value).onTrue(new ShelfSubstation(arm)); // double substation pickup
+        new JoystickButton(joy1, XboxController.Button.kY.value).onTrue(new HighNode(arm)); // high node
+        new JoystickButton(joy1, XboxController.Button.kB.value).onTrue(new MiddleNode(arm)); // middle node
+        new JoystickButton(joy1, XboxController.Button.kA.value).onTrue(new GroundPickup(arm)); // low node/ground pickup
+        new JoystickButton(joy1, XboxController.Button.kStart.value).onTrue(new Stow(arm, hardwareArm, intake)); // stow fully
+        new JoystickButton(joy1, XboxController.Button.kBack.value).onTrue(new StowCone(arm)); // stow with cone
     }
 
     public void startTeleop(){
@@ -70,7 +70,6 @@ public class RobotContainer {
     }
 
     public void disabledInit(){
-        goodAuto = good.getBoolean(false);
         arm.disableBrake();
         drivetrain.init();
         drivetrain.stop();
@@ -87,9 +86,10 @@ public class RobotContainer {
         if(autoCommandGroup != null) autoCommandGroup.cancel();
         drivetrain.resetEncoders();
         drivetrain.resetNAVx();
+        drivetrain.stop();
+        //startup.schedule();
         goodAuto = good.getBoolean(false);
         System.out.println("Good auto? " + goodAuto + "!!!!!!!");
-        drivetrain.stop();
         autoCommandGroup = new AutoCommandGroup(drivetrain, arm, hardwareArm, intake, goodAuto);
         autoCommandGroup.schedule();
     }
@@ -100,43 +100,45 @@ public class RobotContainer {
     }
 
     public void teleopPeriodic(){
-         if(-joy1.getRawAxis(1) > 0.5){
-             arm.turnUp();
-         }
-         else if(-joy1.getRawAxis(1) < -0.5){
-             arm.turnDown();
+        if(-joy1.getRawAxis(1) > 0.5){
+            arm.turnUp();
+        }
+        else if(-joy1.getRawAxis(1) < -0.5){
+            arm.turnDown();
         }
 
         if(joy1.getRawAxis(2) > 0.5){
             arm.topMoveIn();
-         }
-          if (joy1.getRawButton(5)){
-             arm.bottomMoveIn();
-         }
-
-         if(joy1.getRawAxis(3) > 0.5){
+        }
+        else if(joy1.getRawAxis(3) > 0.5){
             arm.topMoveOut();
-         }
-          if (joy1.getRawButton(6)){
-             arm.bottomMoveOut();
-         }
+        }
 
-         if(-joy1.getRawAxis(5) < -0.5){
+        if(joy1.getRawButton(5)){
+            arm.bottomMoveIn();
+        }
+        else if(joy1.getRawButton(6)){
+            arm.bottomMoveOut();
+        }
+
+        final double rightY = -joy1.getRawAxis(XboxController.Axis.kRightY.value);
+        if(rightY < -0.5){
             intake.TurnIn();
-         }
-         else if(-joy1.getRawAxis(5) > 0.5){
+        }
+        else if(rightY > 0.5){
             intake.TurnOut();
-         }
-         else {
+        }
+        else {
             intake.StopMotor();
-         }
+        }
 
-         if(joy1.getPOV()>=0 && joy1.getPOV()<=180){
+        final double pov = joy1.getPOV();
+        if(pov >= 0 && pov <= 180){
             intake.close();
-         }
-         else if(joy1.getPOV()<=360 && joy1.getPOV()>180 ){
+        }
+        else if(pov <= 360 && pov > 180 ){
             intake.open();
-         }
+        }
 
         //drivetrain.UpdateOdometry();
         arm.updateController();

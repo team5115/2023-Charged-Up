@@ -5,15 +5,15 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team5115.Classes.Software.Arm;
 import frc.team5115.Classes.Hardware.*;
 
-public class Startup_Angle extends CommandBase{
-    private Arm intake;
-    private HardwareArm hardwareIntake;
+public class Startup_Angle extends CommandBase {
+    private Arm arm;
+    private HardwareArm hardwareArm;
     private Timer timer;
     private Timer innerTimer;
 
-    public Startup_Angle(Arm a, HardwareArm b){
-        intake = a;
-        hardwareIntake = b;
+    public Startup_Angle(Arm arm, HardwareArm hardwareArm){
+        this.arm = arm;
+        this.hardwareArm = hardwareArm;
         timer = new Timer();
         timer.start();
         innerTimer = new Timer();
@@ -21,8 +21,8 @@ public class Startup_Angle extends CommandBase{
     }
     public void initialize() {
         timer.reset();
-        intake.armcontrolangle = false;
-        hardwareIntake.setTurn(-0.3);
+        arm.armcontrolangle = false;
+        hardwareArm.setTurn(-0.3);
     }
 
     public void execute(){
@@ -30,15 +30,15 @@ public class Startup_Angle extends CommandBase{
 
     public void end(boolean interrupted){
         System.out.println("Stopped in Startup_Angle");
-        intake.zeroArm();
-        intake.stop();
-        intake.setLength(0);
-        intake.armcontrolangle = true;
+        arm.zeroArm();
+        arm.stop();
+        arm.setLength(0);
+        arm.armcontrolangle = true;
     }
 
     public boolean isFinished() {
         if(timer.get()>0.07){
-            if(Math.abs(hardwareIntake.getTurnVelocity())<1.5){
+            if(Math.abs(hardwareArm.getTurnVelocity())<1.5){
             innerTimer.start();
             if(innerTimer.get() > 0.3) return true;
         }
