@@ -156,8 +156,8 @@ public class Drivetrain extends SubsystemBase{
         rightSpeed = -turn;
         
         drivetrain.plugandFFDrive(leftSpeed, rightSpeed);
-        return Math.abs(turn) < 0.1;
-    }
+        return Math.abs(rotationDegrees-angleDegrees)<15;
+        }
 
     public void TankDriveToTrajectoryState(Trajectory.State tState) {
         final ChassisSpeeds adjustedSpeeds = ramseteController.calculate(getEstimatedPose(), tState);
