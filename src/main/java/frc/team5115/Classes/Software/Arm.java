@@ -1,14 +1,12 @@
 package frc.team5115.Classes.Software;
 
+import java.util.function.BooleanSupplier;
+
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team5115.Classes.Hardware.HardwareArm;
 import frc.team5115.Classes.Hardware.HardwareIntake;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 
 public class Arm extends SubsystemBase{
@@ -18,15 +16,6 @@ public class Arm extends SubsystemBase{
     private double bottomLength = 0;
     private double angle = -90;
     private double speed = 0.25;
-    private ShuffleboardTab tab = Shuffleboard.getTab("SmartDashboard");
-    /* 
-    private GenericEntry topKp = tab.add("topKp", 0.6).getEntry();
-    private GenericEntry bottomKp = tab.add("bottomKp", 0.6).getEntry();
-    private GenericEntry topAngle = tab.add("topAngle", 0).getEntry();
-    private PIDController turnController = new PIDController(0.06, 0.0, 0.0);
-    public PIDController topWinchController = new PIDController(topKp.getDouble(0.6), 0, 0);
-    public PIDController bottomWinchController = new PIDController(bottomKp.getDouble(0.6), 0, 0);
-    */
 
     private double topKp = 0.113;
     private double bottomKp = 0.115;
@@ -36,8 +25,8 @@ public class Arm extends SubsystemBase{
     public PIDController topWinchController = new PIDController(topKp, 0, 0);
     public PIDController bottomWinchController = new PIDController(bottomKp, 0, 0);
 
-    public boolean armcontrol = false;
-    public boolean armcontrolangle = false;
+    public boolean armcontrol = true;
+    public boolean armcontrolangle = true;
 
     public Arm(HardwareArm x, HardwareIntake y){
         intake = x;
@@ -170,8 +159,7 @@ public class Arm extends SubsystemBase{
         else{
             intake.FF = true;
         }
-        //intake.setTurn(0.10);
-        intake.setTurn(turnController.calculate(intake.getArmDeg(), angle));
+        if(armcontrolangle) intake.setTurn(turnController.calculate(intake.getArmDeg(), angle));
         //System.out.println("Output Current" + intake.getTurnCurrent());
         //System.out.println("Current in Amps: " + intake.getTurnCurrent() + ", The Estimated Angle: "+  Math.round(getTurnDeg()) + ", and PID Value: "+ turnController.calculate(intake.getArmDeg(), angle));
 
@@ -179,14 +167,12 @@ public class Arm extends SubsystemBase{
         double topSpeed = topWinchController.calculate(intake.getTopWinchLength(), topLength);
         //System.out.println("Top Length: " + intake.getTopWinchLength() + " Bottom Length: " + intake.getBottomWinchLength());
         //System.out.println("Top Current: " + intake.getTopCurrent() + "  Bottom Current: " + intake.getBottomCurrent() + " Turn Speed: " + turnController.calculate(intake.getArmDeg(), angle));
-
+        if(armcontrol){
         intake.setTopWinch(topSpeed);
         intake.setBottomWinch(bottomSpeed);
+        }
     }
 
-    public double getTurnDeg(){
-        return intake.getArmDeg();
-    }
 
     public double getTopWinchLength(){
         return intake.getTopWinchLength();
@@ -201,8 +187,13 @@ public class Arm extends SubsystemBase{
     }
 
     public void zeroArm(){
-        intake.setEncoders(0, -106.0);
+        intake.setEncoders(0, -100.0);
     }
+
+    public void zeroLength(double angle){
+        intake.setEncoders(0, angle);
+    }
+
 
     public boolean getFault(CANSparkMax.FaultID f){
         return intake.getFault(f);
@@ -218,5 +209,9 @@ public class Arm extends SubsystemBase{
 
     public void moveBottom(){
         intake.setBottomWinch(-0.2);
+    }
+
+    public double getAngle() {
+        return intake.getArmDeg();
     }
 }

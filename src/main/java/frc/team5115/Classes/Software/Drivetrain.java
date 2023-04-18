@@ -10,14 +10,12 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team5115.Classes.Acessory.ThrottleControl;
 import frc.team5115.Classes.Hardware.HardwareDrivetrain;
@@ -32,7 +30,6 @@ public class Drivetrain extends SubsystemBase{
     public NetworkTableEntry tv;
     private final ThrottleControl throttle;
     private final PIDController anglePID;
-    private final PIDController movingPID;
     private final RamseteController ramseteController;
     private final DifferentialDriveKinematics kinematics;
     private final HardwareDrivetrain drivetrain;
@@ -47,13 +44,12 @@ public class Drivetrain extends SubsystemBase{
     public static final double bA = 10;
     public static final double MaxArea = 0.1;
 
-    public Drivetrain(PhotonVision photonVision) {
+    public Drivetrain(PhotonVision photonVision, Arm arm) {
         this.photonVision = photonVision;
         throttle = new ThrottleControl(3, -3, 0.2);
-        anglePID = new PIDController(0.013, 0.0001, 0.0015);
+        anglePID = new PIDController(0.019, 0.0001, 0.0012);
         
-        movingPID = new PIDController(0.01, 0, 0);
-        drivetrain = new HardwareDrivetrain();
+        drivetrain = new HardwareDrivetrain(arm);
         ramseteController = new RamseteController();
         kinematics = new DifferentialDriveKinematics(TRACKING_WIDTH_METERS);
         navx = new NAVx();
@@ -68,14 +64,14 @@ public class Drivetrain extends SubsystemBase{
         // );
 
         poseEstimator = new DifferentialDrivePoseEstimator(
-            kinematics, navx.getYawRotation2D(), getLeftDistance(), getRightDistance(), new Pose2d()
+            kinematics, navx.getYawRotation2D(), getLeftDistance(), getRightDistance(), new Pose2d(), VecBuilder.fill(1, 1, 1), VecBuilder.fill(0, 0, 0)
         );
         System.out.println("Angle from navx" + navx.getYawDeg()
         );
     }
 
     public void stop() {
-        drivetrain.plugandFFDrive(0, 0);
+        drivetrain.PlugandVoltDrive(0, 0, 0, 0);
     }
 
     public double getLeftDistance(){
@@ -152,16 +148,16 @@ public class Drivetrain extends SubsystemBase{
         return new double[] {x, y};
     }
     
-    @Deprecated
-    public void TankDriveToAngle(double angleDegrees) { 
+    public boolean TankDriveToAngle(double angleDegrees) { 
         double rotationDegrees = navx.getYawDeg();
-        System.out.println(rotationDegrees);
-        double turn = MathUtil.clamp(anglePID.calculate(rotationDegrees, angleDegrees), -1, 1);
+        System.out.println("remaining degrees: " + (rotationDegrees-angleDegrees));
+        double turn = MathUtil.clamp(anglePID.calculate(rotationDegrees, angleDegrees), -0.75, 0.75);
         leftSpeed = turn;
         rightSpeed = -turn;
         
         drivetrain.plugandFFDrive(leftSpeed, rightSpeed);
-    }
+        return Math.abs(rotationDegrees-angleDegrees)<15;
+        }
 
     public void TankDriveToTrajectoryState(Trajectory.State tState) {
         final ChassisSpeeds adjustedSpeeds = ramseteController.calculate(getEstimatedPose(), tState);
@@ -180,33 +176,36 @@ public class Drivetrain extends SubsystemBase{
         Optional<EstimatedRobotPose> result = photonVision.getEstimatedGlobalPose();
         if (result.isPresent()) {
             EstimatedRobotPose camPose = result.get();
+            System.out.println("its really working");
             poseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
         }
     }
 
     public Pose2d getEstimatedPose() {
+        UpdateOdometry();
         return poseEstimator.getEstimatedPosition();
     }
 
-    public boolean UpdateMoving(double dist, double startLeftDist, double startRightDist, double speedMagnitude) {
+    public boolean UpdateMoving(double dist, double startLeftDist, double startRightDist, double speedMagnitude, double heading) {
         final double remainingLeftDistance = startLeftDist + dist - getLeftDistance();
         final double remainingRightDistance = startRightDist + dist - getLeftDistance();
 
-        final double speed = speedMagnitude * Math.signum((remainingLeftDistance + remainingRightDistance) / 2);
-        drivetrain.plugandFFDrive(speed, speed);
+        final double forward = speedMagnitude * Math.signum((remainingLeftDistance + remainingRightDistance) / 2);
+        final double turn = MathUtil.clamp(anglePID.calculate(getYawDeg(), heading), -0.3, +0.3);
+        leftSpeed = forward + turn;
+        rightSpeed = forward - turn;
+        drivetrain.plugandFFDrive(leftSpeed, rightSpeed);
 
         final double tolerance = 0.05;
         return Math.abs(remainingLeftDistance) < tolerance || Math.abs(remainingRightDistance) < tolerance;
     }      
 
-    public boolean UpdateTurning(double setpointAngle) {
-        double currentAngle = navx.getYawDeg();
-        double turn = MathUtil.clamp(anglePID.calculate(currentAngle, setpointAngle), -1, 1);
-        //System.out.println("turning @ " + turn + " m/s");
-        System.out.println(currentAngle);
-        drivetrain.plugandFFDrive(turn, -turn);
-
-        return Math.abs(currentAngle-setpointAngle)<5;
+    public boolean UpdateMovingWithVision(double dist, Pose2d pose, double speedMagnitude) {
+        double realdist = pose.getTranslation().getDistance(getEstimatedPose().getTranslation());
+        final double speed = speedMagnitude * Math.signum(dist);
+        drivetrain.plugandFFDrive(speed, speed);
+        final double tolerance = 0.1;
+        return Math.abs(realdist-dist) < tolerance;
     }
 
     public void resetNAVx(){

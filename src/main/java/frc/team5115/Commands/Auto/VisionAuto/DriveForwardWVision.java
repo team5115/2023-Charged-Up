@@ -1,21 +1,20 @@
-package frc.team5115.Commands.Auto;
+package frc.team5115.Commands.Auto.VisionAuto;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team5115.Classes.Software.Drivetrain;
 
-public class DriveForward extends CommandBase{
+public class DriveForwardWVision extends CommandBase{
     private Drivetrain drivetrain;
     private double dist;
-    private double startRightDist;
-    private double startleftDist;
+    private Pose2d start;
     private double speed;
     private boolean doneMoving;
     private Timer timer;
-    private double startAngle;
     private final double timeout;
 
-    public DriveForward(Drivetrain drivetrain, double dist, double speed) {
+    public DriveForwardWVision(Drivetrain drivetrain, double dist, double speed) {
         this.dist = dist;
         this.drivetrain = drivetrain;
         this.speed = speed;
@@ -27,14 +26,12 @@ public class DriveForward extends CommandBase{
     public void initialize() {
         timer.start();
         timer.reset();
-        startRightDist = drivetrain.getRightDistance();
-        startleftDist = drivetrain.getLeftDistance();
-        startAngle = drivetrain.getYawDeg();
+        start = drivetrain.getEstimatedPose();
     }
 
     @Override
     public void execute() {
-        doneMoving = drivetrain.UpdateMoving(dist, startleftDist, startRightDist, speed, startAngle);
+        doneMoving = drivetrain.UpdateMovingWithVision(dist, start, speed);
         //System.out.println("Right Distance: " + drivetrain.getRightDistance() + "Left Distance: " + drivetrain.getRightDistance());
     }
 

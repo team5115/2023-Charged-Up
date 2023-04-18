@@ -4,13 +4,13 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team5115.Classes.Software.Arm;
 
 public class IntakeTurn extends CommandBase{
-    private Arm intake;
+    private Arm arm;
     private Timer timer;
     private Timer innerTimer;
     private double angle;
 
-    public IntakeTurn(Arm a, double angle){
-        intake = a;
+    public IntakeTurn(Arm arm, double angle){
+        this.arm = arm;
         this.angle = angle;
         timer = new Timer();
         timer.start();
@@ -20,20 +20,20 @@ public class IntakeTurn extends CommandBase{
     public void initialize() {
         timer.reset();
         //innerTimer.reset();
-        intake.turnSetAngle(angle);
+        arm.turnSetAngle(angle);
     }
 
     public void execute(){
-        System.out.println(intake.getTurnDeg());
+        System.out.println("Arm Rotation Degrees: " + arm.getAngle()+ " can turn? " + arm.armcontrolangle);
     }
 
     public void end(boolean interrupted){
-        System.out.println("Stopped");
+        System.out.println("Stopped in IntakeTurn");
     }
 
     public boolean isFinished() {
         
-        if((Math.abs(intake.getTurnDeg()-angle)<2)){
+        if((Math.abs(arm.getAngle()-angle)<2)){
             if(innerTimer.get() > 0.05) return true;
         }
         else innerTimer.reset();
