@@ -18,6 +18,33 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team5115.Classes.Acessory.ThrottleControl;
+import java.util.ArrayList;
+import frc.team5115.Classes.Hardware.HardwareDrivetrain;
+import frc.team5115.Classes.Hardware.NAVx;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.team5115.Classes.Acessory.ThrottleControl;
 import frc.team5115.Classes.Hardware.HardwareDrivetrain;
 import frc.team5115.Classes.Hardware.NAVx;
 import edu.wpi.first.math.VecBuilder;
@@ -184,6 +211,56 @@ public class Drivetrain extends SubsystemBase{
     public Pose2d getEstimatedPose() {
         UpdateOdometry();
         return poseEstimator.getEstimatedPosition();
+    }
+
+    public Command getRamseteCommand() {
+        //drivetrain.setCoast(true);
+        final double MaxSpeed = 0.1; // m/s
+        final double MaxAcceleration = 0.1; // m/s^2
+        final SimpleMotorFeedforward simpleMotorFeedforward = new SimpleMotorFeedforward(
+            drivetrain.leftKs,
+            drivetrain.leftKv,
+            drivetrain.leftKa
+        );
+        final var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(simpleMotorFeedforward, kinematics, 10);
+        
+        // Create config for trajectory
+        TrajectoryConfig config = new TrajectoryConfig(MaxSpeed, MaxAcceleration);
+        config.setKinematics(kinematics);
+        config.addConstraint(autoVoltageConstraint);
+        config.setReversed(true);
+    
+        // An example trajectory to follow.  All units in meters.
+        Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+            new Pose2d(+0, +0, new Rotation2d(+0)), 
+            new ArrayList<Translation2d>(), 
+            new Pose2d(+3, +1, new Rotation2d(+0)),
+            config
+        );
+    
+        RamseteCommand ramseteCommand =
+            new RamseteCommand(
+                exampleTrajectory,
+                this :: getEstimatedPose,
+                new RamseteController(),
+                simpleMotorFeedforward,
+                kinematics,
+                getWheelSpeeds(),
+                new PIDController(0, 0, 0),
+                new PIDController(0, 0, 0),
+                // RamseteCommand passes volts to the callback
+                drivetrain :: plugAndVoltDrive
+                );
+    
+        // Reset odometry to the starting pose of the trajectory.
+        //resetOdometry(exampleTrajectory.getInitialPose());
+    
+        // Run path following command, then stop at the end.
+        return ramseteCommand.andThen(() -> stop());
+    }
+
+    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+        return new DifferentialDriveWheelSpeeds(drivetrain.getEncoderVelocity(1), drivetrain.getEncoderVelocity(2));
     }
 
     public boolean UpdateMoving(double dist, double startLeftDist, double startRightDist, double speedMagnitude, double heading) {
