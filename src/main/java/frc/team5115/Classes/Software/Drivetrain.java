@@ -203,8 +203,8 @@ public class Drivetrain extends SubsystemBase{
         Optional<EstimatedRobotPose> result = photonVision.getEstimatedGlobalPose();
         if (result.isPresent()) {
             EstimatedRobotPose camPose = result.get();
-            System.out.println("its really working");
             poseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
+            System.out.println("vision is really working");
         }
     }
 
