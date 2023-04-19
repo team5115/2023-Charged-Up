@@ -245,11 +245,11 @@ public class Drivetrain extends SubsystemBase{
                 new RamseteController(),
                 simpleMotorFeedforward,
                 kinematics,
-                getWheelSpeeds(),
+                this :: getWheelSpeeds,
                 new PIDController(0, 0, 0),
                 new PIDController(0, 0, 0),
                 // RamseteCommand passes volts to the callback
-                drivetrain :: plugAndVoltDrive
+                drivetrain :: PlugandVoltDrive
                 );
     
         // Reset odometry to the starting pose of the trajectory.
