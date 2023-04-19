@@ -48,7 +48,6 @@ import frc.team5115.Classes.Acessory.ThrottleControl;
 import frc.team5115.Classes.Hardware.HardwareDrivetrain;
 import frc.team5115.Classes.Hardware.NAVx;
 import edu.wpi.first.math.VecBuilder;
-import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 
 public class Drivetrain extends SubsystemBase{
     
