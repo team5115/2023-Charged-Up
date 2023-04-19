@@ -42,8 +42,8 @@ public class Constants{
     public static class FieldConstants {
         public static final double length = Units.feetToMeters(54);
         public static final double width = Units.feetToMeters(27);
-        public static final double startX = -7;
-        public static final double startY = -1;
+        public static final double startX = 7;
+        public static final double startY = -0; 
         public static final double startAngleDeg = 0;
         public static final Rotation2d startAngle = Rotation2d.fromDegrees(startAngleDeg);
     }
