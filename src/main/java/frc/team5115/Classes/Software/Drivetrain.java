@@ -48,6 +48,7 @@ import frc.team5115.Classes.Acessory.ThrottleControl;
 import frc.team5115.Classes.Hardware.HardwareDrivetrain;
 import frc.team5115.Classes.Hardware.NAVx;
 import edu.wpi.first.math.VecBuilder;
+import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 
 public class Drivetrain extends SubsystemBase{
     
@@ -213,7 +214,7 @@ public class Drivetrain extends SubsystemBase{
         return poseEstimator.getEstimatedPosition();
     }
 
-    public Command getRamseteCommand() {
+    public Command getRamseteCommand(Trajectory trajectory) {
         //drivetrain.setCoast(true);
         final double MaxSpeed = 0.1; // m/s
         final double MaxAcceleration = 0.1; // m/s^2
@@ -231,16 +232,16 @@ public class Drivetrain extends SubsystemBase{
         config.setReversed(true);
     
         // An example trajectory to follow.  All units in meters.
-        Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-            new Pose2d(+0, +0, new Rotation2d(+0)), 
-            new ArrayList<Translation2d>(), 
-            new Pose2d(+3, +1, new Rotation2d(+0)),
-            config
-        );
+        // Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+        //     new Pose2d(+0, +0, new Rotation2d(+0)), 
+        //     new ArrayList<Translation2d>(), 
+        //     new Pose2d(+3, +1, new Rotation2d(+0)),
+        //     config
+        // );
     
         RamseteCommand ramseteCommand =
             new RamseteCommand(
-                exampleTrajectory,
+                trajectory,
                 this :: getEstimatedPose,
                 new RamseteController(),
                 simpleMotorFeedforward,

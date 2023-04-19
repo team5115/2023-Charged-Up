@@ -11,18 +11,21 @@ import frc.team5115.Commands.Auto.VisionAuto.DriveForwardWVision;
 import frc.team5115.Commands.Intake.*;
 import frc.team5115.Commands.Intake.CombinedIntakeCommands.*;
 import frc.team5115.Commands.Intake.RawIntakeCommands.IntakeTurn;
+import frc.team5115.Classes.Software.Paths;
 
 public class AutoCommandGroup extends SequentialCommandGroup {
     Drivetrain drivetrain;
     Arm arm;
     HardwareArm hArm;
     HardwareIntake hIntake;
+	Paths paths;
 
     public AutoCommandGroup(Drivetrain drivetrain, Arm arm, HardwareArm hArm, HardwareIntake hIntake, boolean inIdealPosition){
         this.arm = arm;
         this.drivetrain = drivetrain;
         this.hArm = hArm;
         this.hIntake = hIntake;
+		this.paths = new Paths();
 /* 
         addCommands(
             new Stow(arm, hArm, hIntake),
@@ -36,13 +39,13 @@ public class AutoCommandGroup extends SequentialCommandGroup {
         );
         */
 // /* 
-         if (inIdealPosition) {
-             //cubeDrop();
-             scoreHighWDock();
-             dockForward();
-         } else {
-             BasicHighNode();
-         }
+        if (inIdealPosition) {
+            //cubeDrop();
+            scoreHighWDock();
+            dockForward();
+        } else {
+			BasicHighNode();
+        }
 // */
         }
     
@@ -68,6 +71,18 @@ public class AutoCommandGroup extends SequentialCommandGroup {
             new InstantCommand(drivetrain :: stop)
         );
     }
+
+	private void PathPlannerHighNode() {
+		addCommands(
+            new Startup(arm, hArm, hIntake),
+            new InstantCommand(hIntake :: TurnIn),
+            new HighNode(arm),
+            new IntakeTurn(arm, 10),
+			new InstantCommand(hIntake :: StopMotor),
+            new Stow(arm, hArm, hIntake),
+			drivetrain.getRamseteCommand(paths.badAutoPath)
+		);
+	}
 
     private void BasicHighNode() {
         addCommands(
