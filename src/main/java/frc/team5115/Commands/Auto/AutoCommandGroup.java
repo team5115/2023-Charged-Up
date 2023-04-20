@@ -63,6 +63,26 @@ public class AutoCommandGroup extends SequentialCommandGroup {
         // this should finish with the robot pushed up against the node
     }
 
+    private void PathPlannerHighNodeOld() {
+		addCommands(
+            new Startup(arm, hArm, hIntake),
+            new InstantCommand(hIntake :: TurnIn),
+            new HighNode(arm),
+            new IntakeTurn(arm, 10),
+			new InstantCommand(hIntake :: StopMotor),
+            new Stow(arm, hArm, hIntake),
+			drivetrain.getRamseteCommand(paths.badAutoPt1),
+			new GroundPickup(arm),
+			new InstantCommand(hIntake :: TurnIn),
+			drivetrain.getRamseteCommand(paths.badAutoPt2),
+			new HighNode(arm),
+			new IntakeTurn(arm, 10),
+			new InstantCommand(hIntake :: StopMotor),
+			new StowCone(arm),
+			drivetrain.getRamseteCommand(paths.badAutoPt3)
+		);
+    }
+
     private void dockForward(){
         addCommands(
             new DockCommandGroup(drivetrain, false), // dock forwards
