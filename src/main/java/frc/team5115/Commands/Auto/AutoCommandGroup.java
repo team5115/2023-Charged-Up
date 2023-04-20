@@ -54,6 +54,9 @@ public class AutoCommandGroup extends SequentialCommandGroup {
 // */
         }
     
+	/**
+	 * Places a cube in a low node. Expects that the robot has its back facing the grid and has a cube on its base.
+	 */
     private void cubeDrop() {
         addCommands(    
             new DriveForward(drivetrain, -0.26, 0.5), // back up to node
@@ -63,6 +66,9 @@ public class AutoCommandGroup extends SequentialCommandGroup {
         // this should finish with the robot pushed up against the node
     }
 
+	/**
+	 * Scores two cones in high nodes, one that starts in the intake and one that is picked up from the ground. Ends outside of the community.
+	 */
     private void PathPlannerHighNodeOld() {
 		addCommands(
             new Startup(arm, hArm, hIntake),
@@ -83,26 +89,9 @@ public class AutoCommandGroup extends SequentialCommandGroup {
 		);
     }
 
-    private void dockForward(){
-        addCommands(
-            new DockCommandGroup(drivetrain, false), // dock forwards
-            new InstantCommand(drivetrain ::  stop)
-        );
-    }
-
-    private void exitCommunity() {
-        addCommands(
-            new DriveForward(drivetrain, +3, 1.0), // exit community
-            new InstantCommand(drivetrain :: stop)
-        );
-    }
-
-	private void exitCommunityPathPlanner() {
-		addCommands(
-			drivetrain.getRamseteCommand(paths.ExitCommunity)
-		);
-	}
-
+	/**
+	 * Scores two cones in high nodes, one that starts in the intake and one that is picked up from the ground. Ends outside of the community. Uses PathPlanner instead of `DriveForward`. The path uses Stop Events to run commands as part of the trajectory following.
+	 */
 	private void PathPlannerHighNode() {
 		HashMap<String, Command> eventMap = new HashMap<>();
 		eventMap.put("Stow", new Stow(arm, hArm, hIntake));
@@ -117,6 +106,38 @@ public class AutoCommandGroup extends SequentialCommandGroup {
 		addCommands(new FollowPathWithEvents(drivetrain.getRamseteCommand(paths.SideAuto), paths.SideAuto.getMarkers(), eventMap));
 	}
 
+	/**
+	 * Docks the robot by moving forward.
+	 */
+    private void dockForward(){
+        addCommands(
+            new DockCommandGroup(drivetrain, false), // dock forwards
+            new InstantCommand(drivetrain ::  stop)
+        );
+    }
+
+	/**
+	 * Exits the community.
+	 */
+    private void exitCommunity() {
+        addCommands(
+            new DriveForward(drivetrain, +3, 1.0), // exit community
+            new InstantCommand(drivetrain :: stop)
+        );
+    }
+
+	/**
+	 * Exits the community. Uses PathPlanner instead of the `DriveForward`.
+	 */
+	private void exitCommunityPathPlanner() {
+		addCommands(
+			drivetrain.getRamseteCommand(paths.ExitCommunity)
+		);
+	}
+
+	/**
+	 * Scores a cone in a high node.
+	 */
     private void BasicHighNode() {
         addCommands(
             new Startup(arm, hArm, hIntake),     
@@ -136,6 +157,9 @@ public class AutoCommandGroup extends SequentialCommandGroup {
         );
     }
 
+	/**
+	 * Scores a cone in a high node, then moves the robot into a good position to begin docking with `dockForward`.
+	 */
     private void scoreHighWDock() {
         // should start facing towards grid
         addCommands(
@@ -150,6 +174,9 @@ public class AutoCommandGroup extends SequentialCommandGroup {
         );
     }
 
+	/**
+	 * Scores a cone in a high node, then moves the robot into a good position to begin docking with `dockForward`. Uses PathPlanner instead of `DriveForward`.
+	 */
 	private void scoreHighWDockPathPlanner() {
 		addCommands(
 			new Startup(arm, hArm, hIntake),

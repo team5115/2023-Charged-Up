@@ -49,8 +49,10 @@ import frc.team5115.Classes.Hardware.HardwareDrivetrain;
 import frc.team5115.Classes.Hardware.NAVx;
 import edu.wpi.first.math.VecBuilder;
 
+/**
+ * Provides a number of high-complexity utility functions for interacting with the drivetrain.
+ */
 public class Drivetrain extends SubsystemBase{
-    
     public NetworkTable ShooterCam;
     public NetworkTableEntry ty;
     public NetworkTableEntry tx;
@@ -204,17 +206,20 @@ public class Drivetrain extends SubsystemBase{
         if (result.isPresent()) {
             EstimatedRobotPose camPose = result.get();
             poseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
-            //System.out.println("vision is really working");
+            System.out.println("vision is really working");
         }
     }
 
     public Pose2d getEstimatedPose() {
         UpdateOdometry();
-        Pose2d x = poseEstimator.getEstimatedPosition();
-        System.out.println(x);
-        return x;
+        return poseEstimator.getEstimatedPosition();
     }
 
+	/**
+	 * Generate a command that will make the robot follow a given trajectory.
+	 * 
+	 * @param trajectory The trajectory to follow
+	 */
     public Command getRamseteCommand(Trajectory trajectory) {
         //drivetrain.setCoast(true);
         final double MaxSpeed = 0.1; // m/s
