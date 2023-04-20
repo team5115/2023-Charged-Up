@@ -20,7 +20,7 @@
           "Intake",
           "High Node",
           "Stop Intake",
-          "Arm Down 10"
+          "Down & Stow"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",

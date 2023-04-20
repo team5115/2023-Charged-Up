@@ -106,6 +106,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
 		eventMap.put("Stop Intake", new InstantCommand(hIntake :: StopMotor));
 		eventMap.put("Stow With Cone", new StowCone(arm));
 		eventMap.put("Ground Pickup", new GroundPickup(arm));
+		eventMap.put("Down & Stow", new IntakeTurn(arm, 10).andThen(new Stow(arm, hArm, hIntake)));
 
 		addCommands(new FollowPathWithEvents(drivetrain.getRamseteCommand(paths.SideAuto), paths.SideAuto.getMarkers(), eventMap));
 	}
