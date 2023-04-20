@@ -101,7 +101,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
 		HashMap<String, Command> eventMap = new HashMap<>();
 		eventMap.put("Stow", new Stow(arm, hArm, hIntake));
 		eventMap.put("Intake", new InstantCommand(hIntake :: TurnIn));
-		eventMap.put("HighNode", new HighNode(arm));
+		eventMap.put("High Node", new HighNode(arm));
 		eventMap.put("Arm Down 10", new IntakeTurn(arm, 10));
 		eventMap.put("Stop Intake", new InstantCommand(hIntake :: StopMotor));
 		eventMap.put("Stow With Cone", new StowCone(arm));
