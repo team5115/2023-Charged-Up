@@ -51,7 +51,7 @@ public class RobotContainer {
     }
 
     public void configureButtonBindings() {
-        new JoystickButton(joy2, 1).onTrue(new InstantCommand(drivetrain :: toggleSlowMode));
+        //new JoystickButton(joy2, 1).onTrue(new InstantCommand(drivetrain :: toggleSlowMode));
         //new JoystickButton(joy2, 9).onTrue(dockSequence);
         //new JoystickButton(joy1, 2).onTrue(new RealExtend(arm, 0));
         //new JoystickButton(joy1, 1).onTrue(new RealExtend(arm, 25.5));
