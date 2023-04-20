@@ -87,7 +87,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
 			new HighNode(arm),
 			new IntakeTurn(arm, 10),
 			new InstantCommand(hIntake :: StopMotor),
-			new Stow(arm, hArm, hIntake),
+			new StowCone(arm),
 			drivetrain.getRamseteCommand(paths.badAutoPt3)
 		);
 	}
