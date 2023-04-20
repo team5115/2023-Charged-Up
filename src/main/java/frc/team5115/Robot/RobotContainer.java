@@ -26,9 +26,9 @@ public class RobotContainer {
     private final HardwareArm hardwareArm;
     private final Startup startup;
     private final ShuffleboardTab tab;
-    private final GenericEntry good;
+    private final GenericEntry center;
     private AutoCommandGroup autoCommandGroup;
-    private boolean goodAuto = false;
+    private boolean centerAuto = false;
 
     public RobotContainer() {
         joy1 = new Joystick(0);
@@ -42,7 +42,7 @@ public class RobotContainer {
         startup = new Startup(arm, hardwareArm, intake);
         
         tab = Shuffleboard.getTab("SmartDashboard");
-        good = tab.add("good auto?", false).getEntry();
+        center = tab.add("Are we doing center balacing auto?", false).getEntry();
 
         timer = new Timer();
         timer.reset();
@@ -88,9 +88,9 @@ public class RobotContainer {
         drivetrain.resetNAVx();
         drivetrain.stop();
         //startup.schedule();
-        goodAuto = good.getBoolean(false);
-        System.out.println("Good auto? " + goodAuto + "!!!!!!!");
-        autoCommandGroup = new AutoCommandGroup(drivetrain, arm, hardwareArm, intake, goodAuto);
+        centerAuto = center.getBoolean(false);
+        System.out.println("Good auto? " + centerAuto + "!!!!!!!");
+        autoCommandGroup = new AutoCommandGroup(drivetrain, arm, hardwareArm, intake, centerAuto);
         autoCommandGroup.schedule();
     }
 
