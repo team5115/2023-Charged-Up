@@ -97,6 +97,12 @@ public class AutoCommandGroup extends SequentialCommandGroup {
         );
     }
 
+	private void exitCommunityPathPlanner() {
+		addCommands(
+			drivetrain.getRamseteCommand(paths.ExitCommunity)
+		);
+	}
+
 	private void PathPlannerHighNode() {
 		HashMap<String, Command> eventMap = new HashMap<>();
 		eventMap.put("Stow", new Stow(arm, hArm, hIntake));
