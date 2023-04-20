@@ -97,7 +97,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
         );
     }
 
-	private FollowPathWithEvents PathPlannerHighNode() {
+	private void PathPlannerHighNode() {
 		HashMap<String, Command> eventMap = new HashMap<>();
 		eventMap.put("Stow", new Stow(arm, hArm, hIntake));
 		eventMap.put("Intake", new InstantCommand(hIntake :: TurnIn));
@@ -107,22 +107,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
 		eventMap.put("Stow With Cone", new StowCone(arm));
 		eventMap.put("Ground Pickup", new GroundPickup(arm));
 
-		return new FollowPathWithEvents(drivetrain.getRamseteCommand(paths.SideAuto), paths.SideAuto.getMarkers(), eventMap);
-		// addCommands(
-		// 	drivetrain.getRamseteCommand(paths.SideAuto)
-            // new Startup(arm, hArm, hIntake),
-            // new InstantCommand(hIntake :: TurnIn),
-            // new HighNode(arm),
-            // new IntakeTurn(arm, 10),
-			// new InstantCommand(hIntake :: StopMotor),
-            // new Stow(arm, hArm, hIntake),
-			// new GroundPickup(arm),
-			// new InstantCommand(hIntake :: TurnIn),
-			// new HighNode(arm),
-			// new IntakeTurn(arm, 10),
-			// new InstantCommand(hIntake :: StopMotor),
-			// new StowCone(arm)
-		// );
+		addCommands(new FollowPathWithEvents(drivetrain.getRamseteCommand(paths.SideAuto), paths.SideAuto.getMarkers(), eventMap));
 	}
 
     private void BasicHighNode() {
