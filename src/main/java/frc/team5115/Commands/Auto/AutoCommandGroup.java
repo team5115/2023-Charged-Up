@@ -144,6 +144,18 @@ public class AutoCommandGroup extends SequentialCommandGroup {
         );
     }
 
+	private void scoreHighWDockPathPlanner() {
+		addCommands(
+			new Startup(arm, hArm, hIntake),
+			new InstantCommand(hIntake :: TurnIn),
+			new HighNode(arm),
+			new IntakeTurn(arm, 10),
+			new InstantCommand(hIntake :: StopMotor),
+			new Stow(arm, hArm, hIntake),
+			drivetrain.getRamseteCommand(paths.ScoreHighWithDock)
+		);
+	}
+
     private void superIdeal() {
         addCommands(
             new Startup(arm, hArm, hIntake),     
