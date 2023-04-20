@@ -1,5 +1,10 @@
 package frc.team5115.Commands.Auto;
 
+import java.util.HashMap;
+
+import com.pathplanner.lib.commands.FollowPathWithEvents;
+
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -72,24 +77,32 @@ public class AutoCommandGroup extends SequentialCommandGroup {
         );
     }
 
-	private void PathPlannerHighNode() {
-		addCommands(
-            new Startup(arm, hArm, hIntake),
-            new InstantCommand(hIntake :: TurnIn),
-            new HighNode(arm),
-            new IntakeTurn(arm, 10),
-			new InstantCommand(hIntake :: StopMotor),
-            new Stow(arm, hArm, hIntake),
-			drivetrain.getRamseteCommand(paths.badAutoPt1),
-			new GroundPickup(arm),
-			new InstantCommand(hIntake :: TurnIn),
-			drivetrain.getRamseteCommand(paths.badAutoPt2),
-			new HighNode(arm),
-			new IntakeTurn(arm, 10),
-			new InstantCommand(hIntake :: StopMotor),
-			new StowCone(arm),
-			drivetrain.getRamseteCommand(paths.badAutoPt3)
-		);
+	private FollowPathWithEvents PathPlannerHighNode() {
+		HashMap<String, Command> eventMap = new HashMap<>();
+		eventMap.put("Stow", new Stow(arm, hArm, hIntake));
+		eventMap.put("Intake", new InstantCommand(hIntake :: TurnIn));
+		eventMap.put("HighNode", new HighNode(arm));
+		eventMap.put("Arm Down 10", new IntakeTurn(arm, 10));
+		eventMap.put("Stop Intake", new InstantCommand(hIntake :: StopMotor));
+		eventMap.put("Stow With Cone", new StowCone(arm));
+		eventMap.put("Ground Pickup", new GroundPickup(arm));
+
+		return new FollowPathWithEvents(drivetrain.getRamseteCommand(paths.SideAuto), paths.SideAuto.getMarkers(), eventMap);
+		// addCommands(
+		// 	drivetrain.getRamseteCommand(paths.SideAuto)
+            // new Startup(arm, hArm, hIntake),
+            // new InstantCommand(hIntake :: TurnIn),
+            // new HighNode(arm),
+            // new IntakeTurn(arm, 10),
+			// new InstantCommand(hIntake :: StopMotor),
+            // new Stow(arm, hArm, hIntake),
+			// new GroundPickup(arm),
+			// new InstantCommand(hIntake :: TurnIn),
+			// new HighNode(arm),
+			// new IntakeTurn(arm, 10),
+			// new InstantCommand(hIntake :: StopMotor),
+			// new StowCone(arm)
+		// );
 	}
 
     private void BasicHighNode() {
