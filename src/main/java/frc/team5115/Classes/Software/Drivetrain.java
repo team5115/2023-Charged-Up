@@ -204,13 +204,15 @@ public class Drivetrain extends SubsystemBase{
         if (result.isPresent()) {
             EstimatedRobotPose camPose = result.get();
             poseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
-            System.out.println("vision is really working");
+            //System.out.println("vision is really working");
         }
     }
 
     public Pose2d getEstimatedPose() {
         UpdateOdometry();
-        return poseEstimator.getEstimatedPosition();
+        Pose2d x = poseEstimator.getEstimatedPosition();
+        System.out.println(x);
+        return x;
     }
 
     public Command getRamseteCommand(Trajectory trajectory) {

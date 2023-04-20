@@ -63,9 +63,11 @@ public class RobotContainer {
     public void startTeleop(){
         if(autoCommandGroup != null) autoCommandGroup.cancel();
         // arm.zeroArm();
+        /* 
         System.out.println("Starting teleop");
         arm.enableBrake();
         startup.schedule();
+        */
         drivetrain.resetEncoders();
     }
 
@@ -99,7 +101,8 @@ public class RobotContainer {
        arm.updateController();
     }
 
-    public void teleopPeriodic(){
+    public void teleopPeriodic(){/*
+         
         if(-joy1.getRawAxis(1) > 0.5){
             arm.turnUp();
         }
@@ -145,5 +148,7 @@ public class RobotContainer {
         double forward = -joy2.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
         double turn = joy2.getRawAxis(JOY_Z_AXIS_ID);
         drivetrain.TankDrive(forward, turn);
+        */
+        drivetrain.getEstimatedPose();
     }
 }
