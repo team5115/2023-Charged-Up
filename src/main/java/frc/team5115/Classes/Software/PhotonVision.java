@@ -29,17 +29,17 @@ public class PhotonVision extends SubsystemBase{
 
         //Red Grid
         aprilTagList.add(GenerateAprilTag(1, -7.908830, +2.741613, 000));
-        aprilTagList.add(GenerateAprilTag(2, -7.243604, +1.260189, 180));
-        aprilTagList.add(GenerateAprilTag(3, -7.243604, -0.416211, 180));
+        aprilTagList.add(GenerateAprilTag(2, -7.243604, +1.260189, 000));
+        aprilTagList.add(GenerateAprilTag(3, -7.243604, -0.416211, 000));
 
         //Blue Grid
-        aprilTagList.add(GenerateAprilTag(8, +7.243604, +2.936589, 000));
-        aprilTagList.add(GenerateAprilTag(7, +7.243604, +1.260189, 000));
-        aprilTagList.add(GenerateAprilTag(6, +7.243604, -0.416211, 000));
+        aprilTagList.add(GenerateAprilTag(8, +7.243604, +2.936589, 180));
+        aprilTagList.add(GenerateAprilTag(7, +7.243604, +1.260189, 180));
+        aprilTagList.add(GenerateAprilTag(6, +7.243604, -0.416211, 180));
 
         //Substations
-        aprilTagList.add(GenerateAprilTag(4, +7.908830, +2.741613, 180));
-        aprilTagList.add(GenerateAprilTag(5, +7.243604, -2.936589, 000));
+        aprilTagList.add(GenerateAprilTag(4, +7.908830, +2.741613, 000));
+        aprilTagList.add(GenerateAprilTag(5, +7.243604, -2.936589, 180));
 
         AprilTagFieldLayout fieldLayout = new AprilTagFieldLayout(aprilTagList, FieldConstants.length, FieldConstants.width);
          photonPoseEstimatorL = new PhotonPoseEstimator(fieldLayout, PoseStrategy.CLOSEST_TO_CAMERA_HEIGHT, photonCameraL, VisionConstants.robotToCamL);
