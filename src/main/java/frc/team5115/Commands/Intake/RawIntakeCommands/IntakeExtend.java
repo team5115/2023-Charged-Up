@@ -58,7 +58,7 @@ public class IntakeExtend extends CommandBase{
     }
 
 
-   private double calculate_next_step_length(double current_length, double suggested_length_step, double target_length) {
+   public static double calculate_next_step_length(double current_length, double suggested_length_step, double target_length) {
         /**
          * calculates the next length value usually based on step, but limits at target
          * @return the new length for this step
