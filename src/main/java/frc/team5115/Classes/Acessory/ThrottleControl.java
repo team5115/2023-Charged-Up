@@ -1,5 +1,8 @@
 package frc.team5115.Classes.Acessory;
 
+/**
+ * Main use is to multiply getThrottle() by an input [-1, 1] to get a value that is adjusted based on throttle and slow-mode.
+ */
 public class ThrottleControl{
     
     private boolean isThrottleSwitched;
@@ -10,10 +13,10 @@ public class ThrottleControl{
     private boolean enabled;
  
     /**
-     * Main use is to multiply getThrottle() by an input [-1, 1] to get a value that is adjusted based on throttle and slow-mode.
-     * @param primaryThrottle the primary throttle to return
-     * @param secondaryThrottle the other throttle to return, usually the negative version of the primary throttle
-     * @param slowModeMultiplier the value to multiply the throttle by if slow mode is on
+	 *  `ThrottleControl` constructor.
+     * @param primaryThrottle - The primary throttle to return
+     * @param secondaryThrottle - The other throttle to return, usually the negative version of the primary throttle
+     * @param slowModeMultiplier - The value to multiply the throttle by if slow mode is on
      */
     public ThrottleControl(double primaryThrottle, double secondaryThrottle, double slowModeMultiplier){
         this.primaryThrottle = primaryThrottle;
@@ -33,7 +36,7 @@ public class ThrottleControl{
     }
 
     /**
-     * @param isThrottleSwitched set to true to use secondary throttle, false to use primary throttle
+     * @param isThrottleSwitched - Set to true to use secondary throttle, false to use primary throttle
      */
     public void setThrottleSwitched(boolean isThrottleSwitched) {
         this.isThrottleSwitched = isThrottleSwitched;
@@ -48,7 +51,7 @@ public class ThrottleControl{
     }
 
     /**
-     * @return the chosen throttle (primary or secondary) times the slowmode multiplier (if it's enabled)
+     * @return The chosen throttle (primary or secondary) times the slowmode multiplier (if it's enabled)
      */
     public double getThrottle() {
         // look up ternary operator if this doesn't make sense

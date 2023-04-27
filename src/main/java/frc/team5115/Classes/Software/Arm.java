@@ -8,7 +8,9 @@ import frc.team5115.Classes.Hardware.HardwareArm;
 import frc.team5115.Classes.Hardware.HardwareIntake;
 import edu.wpi.first.math.controller.PIDController;
 
-
+/**
+ * The arm subsystem. Provides methods for controlling and getting information about the arm.
+ */
 public class Arm extends SubsystemBase{
     private HardwareArm intake;
     public HardwareIntake h;
@@ -28,9 +30,14 @@ public class Arm extends SubsystemBase{
     public boolean armcontrol = true;
     public boolean armcontrolangle = true;
 
-    public Arm(HardwareArm x, HardwareIntake y){
-        intake = x;
-        h =y;
+	/**
+	 * `Arm` constructor.
+	 * @param hardwareArm - The arm hardware subsystem to be used
+	 * @param hardwareIntake - The intake hardware subsystem to be used
+	 */
+    public Arm(HardwareArm hardwareArm, HardwareIntake hardwareIntake){
+        intake = hardwareArm;
+        h =hardwareIntake;
         zeroArm();
         intake.setEncoders(topLength, -90);
     }
@@ -68,6 +75,10 @@ public class Arm extends SubsystemBase{
         intake.setTopWinch(speed);
     }
 
+	/**
+	 * Extends or retracts the arm to the specified length.
+	 * @param length - The target arm length
+	 */
     public void setLength(double length){
         topLength = length;
         bottomLength = length;
@@ -144,10 +155,16 @@ public class Arm extends SubsystemBase{
         bottomLength -= 10*0.02;
     }
 
+	/**
+	 * Disable brake mode on the arm's motors.
+	 */
     public void disableBrake(){
         intake.disableBrake();
     }
 
+	/**
+	 * Enable brake mode on the arm's motors.
+	 */
     public void enableBrake(){
         intake.enableBrake();
     }

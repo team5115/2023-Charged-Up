@@ -9,6 +9,9 @@ import edu.wpi.first.math.controller.*;
 import frc.team5115.Classes.Software.Arm;
 import edu.wpi.first.math.MathUtil;
 
+/**
+ * The drivetrain hardware subsystem. Provides methods to interact with the actual hardware of the drivetrain.
+ */
 public class HardwareDrivetrain{
     // Competition feedforward values - 6 inch diameter on KITT comp robot with arm and ballasts
     public final double leftKs = 0.0378;
@@ -54,6 +57,10 @@ public class HardwareDrivetrain{
 
     private final Arm arm;
 
+	/**
+	 * `HardwareDrivetrain` constructor.
+	 * @param arm - The arm subsystem to use
+	 */
     public HardwareDrivetrain(Arm arm){
         this.arm = arm;
         resetEncoders();
@@ -61,8 +68,8 @@ public class HardwareDrivetrain{
     }
 
     /**
-     * @param motorID of the motor to get an encoder of.
-     * @return a reference to an encoder matching the id
+     * @param motorID - The ID of the motor to get an encoder of.
+     * @return A reference to an encoder matching the id
      */
     public RelativeEncoder getEncoder(int motorID){
         switch (motorID) {
@@ -79,6 +86,10 @@ public class HardwareDrivetrain{
         }
     }
 
+	/**
+	 * @param motorID - The ID of the motor to get the encoder distance of
+	 * @return The distance traveled by the motor of the given ID
+	 */
     public double getEncoderDistance(int motorID){
         switch (motorID) {
             case BACK_LEFT_MOTOR_ID:
@@ -94,6 +105,10 @@ public class HardwareDrivetrain{
         }
     }
 
+	/**
+	 * @param motorID - The ID of the motor to get the encoder velocity of
+	 * @return The velocity of the motor of the given ID
+	 */
     public Double getEncoderVelocity(int motorID){
         switch (motorID) {
             case BACK_LEFT_MOTOR_ID:
@@ -110,30 +125,34 @@ public class HardwareDrivetrain{
     }
 
     /**
-     * Sets the voltages of the indvidiual motors, without PID for mecanum compatability
-     * 
-     * @param frontLeftSpeed the speed of the front left motor     
-     * @param frontRightSpeed the speed of the front right motor
-     * @param backLeftSpeed the speed of the back left motor     
-     * @param backRightSpeed the speed of the back right motor
+     * Sets the voltages of the individual motors, without PID for mecanum compatibility
+     * @param frontLeftSpeed - The speed of the front left motor     
+     * @param frontRightSpeed - The speed of the front right motor
+     * @param backLeftSpeed - The speed of the back left motor     
+     * @param backRightSpeed - The speed of the back right motor
      */
     @Deprecated
-    public void plugandChugDrive(double frontLeftSpeed, double frontRightSpeed, double backLeftSpeed, double backRightSpeed){
+    public void plugAndChugDrive(double frontLeftSpeed, double frontRightSpeed, double backLeftSpeed, double backRightSpeed){
         frontLeft.set(frontLeftSpeed);
         frontRight.set(frontRightSpeed);
         backLeft.set(backLeftSpeed);
         backRight.set(backRightSpeed);
     }
 
-    public void PlugandVoltDrive(double frontLeftVoltage, double frontRightVoltage, double backLeftVoltage, double backRightVoltage){
+    public void PlugAndVoltDrive(double frontLeftVoltage, double frontRightVoltage, double backLeftVoltage, double backRightVoltage){
         frontLeft.setVoltage(frontLeftVoltage);
         frontRight.setVoltage(frontRightVoltage);
         backLeft.setVoltage(backLeftVoltage);
         backRight.setVoltage(backRightVoltage);
     }
 
-    public void PlugandVoltDrive(double leftVoltage, double rightVoltage) {
-        PlugandVoltDrive(leftVoltage, rightVoltage, leftVoltage, rightVoltage);
+	// ^^^
+	// What the ****
+	// Why do these have the same names?
+	// ˅˅˅
+
+    public void PlugAndVoltDrive(double leftVoltage, double rightVoltage) {
+        PlugAndVoltDrive(leftVoltage, rightVoltage, leftVoltage, rightVoltage);
     }
 
     /**
@@ -142,7 +161,7 @@ public class HardwareDrivetrain{
      * @param leftSpeed the speed for the left motors in meters per second
      * @param rightSpeed the speed for the right motors in meters per second
      */
-    public void plugandFFDrive(double leftSpeed, double rightSpeed) {
+    public void plugAndFFDrive(double leftSpeed, double rightSpeed) {
         final double accelerationLimit = getAccelerationLimit(); // can't bother figuring the units, but it's not m/s^2
         final double currentLeftVelocity = getLeftVelocity();
         final double currentRightVelocity = getRightVelocity();

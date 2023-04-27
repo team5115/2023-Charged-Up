@@ -14,12 +14,18 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team5115.Constants.*;
 
+/**
+ * The Photon Vision subsystem. Allows for the use of vision to estimate the robot's pose.
+ */
 public class PhotonVision extends SubsystemBase{
      private PhotonCamera photonCameraL;
     // private PhotonCamera photonCameraR;
      private PhotonPoseEstimator photonPoseEstimatorL;
     // private PhotonPoseEstimator photonPoseEstimatorR;
 
+	/**
+	 * `PhotonVision` constructor.
+	 */
     public PhotonVision() {
          photonCameraL = new PhotonCamera(VisionConstants.leftCameraName);
         // photonCameraR = new PhotonCamera(VisionConstants.rightCameraName);
@@ -46,6 +52,9 @@ public class PhotonVision extends SubsystemBase{
         // photonPoseEstimatorR = new PhotonPoseEstimator(fieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, photonCameraR, VisionConstants.robotToCamR);
     }
 
+	/**
+	 * @return The estimated pose of the robot
+	 */
     public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
         // The teeam assignment of the first grid the robot looks at is the team assignment of the robot
         // otherwise if we cant see any april tags trust the team assignment inputted on shuffle board

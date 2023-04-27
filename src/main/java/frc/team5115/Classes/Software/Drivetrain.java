@@ -50,7 +50,7 @@ import frc.team5115.Classes.Hardware.NAVx;
 import edu.wpi.first.math.VecBuilder;
 
 /**
- * Provides a number of high-complexity utility functions for interacting with the drivetrain.
+ * The drivetrain subsystem. Provides a number of high-complexity utility functions for interacting with the drivetrain.
  */
 public class Drivetrain extends SubsystemBase{
     public NetworkTable ShooterCam;
@@ -73,6 +73,11 @@ public class Drivetrain extends SubsystemBase{
     public static final double bA = 10;
     public static final double MaxArea = 0.1;
 
+	/**
+	 * `Drivetrain` constructor.
+	 * @param photonVision - The PhotonVision instance to use for vision processing
+	 * @param arm - The arm subsystem to use
+	 */
     public Drivetrain(PhotonVision photonVision, Arm arm) {
         this.photonVision = photonVision;
         throttle = new ThrottleControl(3, -3, 0.2);
@@ -99,18 +104,30 @@ public class Drivetrain extends SubsystemBase{
         );
     }
 
+	/**
+	 * Stops all motors on the drivetrain.
+	 */
     public void stop() {
-        drivetrain.PlugandVoltDrive(0, 0, 0, 0);
+        drivetrain.PlugAndVoltDrive(0, 0, 0, 0);
     }
 
+	/**
+	 * @return The distance the left side of the drivetrain has traveled
+	 */
     public double getLeftDistance(){
         return drivetrain.getEncoderDistance(BACK_LEFT_MOTOR_ID);
     }
 
+	/**
+	 * @return The distance the right side of the drivetrain has traveled
+	 */
     public double getRightDistance(){
         return drivetrain.getEncoderDistance(BACK_RIGHT_MOTOR_ID);
     }
 
+	/**
+	 * Sets the encoder values to 0.
+	 */
     public void resetEncoders() {
         drivetrain.resetEncoders();
     }
@@ -124,7 +141,7 @@ public class Drivetrain extends SubsystemBase{
     }
 
     /**
-     * enable or disable throttle. set to false to make throttle.getThrottle() return 0, true for normal function
+     * Enable or disable throttle. set to false to make throttle.getThrottle() return 0, true for normal function
      * @param enable true to allow stuff using throttle to move, false will just make getThrottle return 0
      */    
     public void setThrottleEnabled(boolean enable) {
@@ -142,11 +159,11 @@ public class Drivetrain extends SubsystemBase{
         rightSpeed = v[1];
 
         //System.out.println(leftSpeed*12);
-        drivetrain.plugandChugDrive(leftSpeed, rightSpeed, leftSpeed, rightSpeed);
+        drivetrain.plugAndChugDrive(leftSpeed, rightSpeed, leftSpeed, rightSpeed);
     }
 
     /**
-     * Drive the robot using a tankdrive setup.
+     * Drive the robot using a tank drive setup.
      * @param forward is for driving forward/backward: positive is forward, negative is backward
      * @param turn is for turning right/left: positive is right, negative is left
      */
@@ -162,7 +179,7 @@ public class Drivetrain extends SubsystemBase{
 
         leftSpeed *= throttle.getThrottle();
         rightSpeed *= throttle.getThrottle();
-        drivetrain.plugandFFDrive(leftSpeed, rightSpeed);
+        drivetrain.plugAndFFDrive(leftSpeed, rightSpeed);
     }
 
     private double[] normalizeVector(double x, double y) {
@@ -184,21 +201,28 @@ public class Drivetrain extends SubsystemBase{
         leftSpeed = turn;
         rightSpeed = -turn;
         
-        drivetrain.plugandFFDrive(leftSpeed, rightSpeed);
+        drivetrain.plugAndFFDrive(leftSpeed, rightSpeed);
         return Math.abs(rotationDegrees-angleDegrees)<15;
         }
 
+	/**
+	 * Drives the robot to a trajectory state.
+	 * @param tState - The trajectory state to drive to
+	 */
     public void TankDriveToTrajectoryState(Trajectory.State tState) {
         final ChassisSpeeds adjustedSpeeds = ramseteController.calculate(getEstimatedPose(), tState);
         final DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(adjustedSpeeds);
         leftSpeed = wheelSpeeds.leftMetersPerSecond;
         rightSpeed = wheelSpeeds.rightMetersPerSecond;
-        drivetrain.plugandFFDrive(leftSpeed, rightSpeed);
+        drivetrain.plugAndFFDrive(leftSpeed, rightSpeed);
         System.out.println("left: " + leftSpeed + " | right: " + rightSpeed);
         System.out.println(wheelSpeeds);
         System.out.println(getEstimatedPose());
     }
 
+	/**
+	 * Updates the odometry of the robot.
+	 */
     public void UpdateOdometry() {
         poseEstimator.update(navx.getYawRotation2D(), getLeftDistance(), getRightDistance());
 
@@ -210,6 +234,9 @@ public class Drivetrain extends SubsystemBase{
         }
     }
 
+	/**
+	 * @return The estimated pose of the robot
+	 */
     public Pose2d getEstimatedPose() {
         UpdateOdometry();
         return poseEstimator.getEstimatedPosition();
@@ -217,7 +244,6 @@ public class Drivetrain extends SubsystemBase{
 
 	/**
 	 * Generate a command that will make the robot follow a given trajectory.
-	 * 
 	 * @param trajectory The trajectory to follow
 	 */
     public Command getRamseteCommand(Trajectory trajectory) {
@@ -256,7 +282,7 @@ public class Drivetrain extends SubsystemBase{
                 new PIDController(0, 0, 0),
                 new PIDController(0, 0, 0),
                 // RamseteCommand passes volts to the callback
-                drivetrain :: PlugandVoltDrive
+                drivetrain :: PlugAndVoltDrive
                 );
     
         // Reset odometry to the starting pose of the trajectory.
@@ -266,6 +292,9 @@ public class Drivetrain extends SubsystemBase{
         return ramseteCommand.andThen(() -> stop());
     }
 
+	/**
+	 * @return A `DifferentialDriveWheelSpeeds` object containing the current speeds of the wheels
+	 */
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
         return new DifferentialDriveWheelSpeeds(drivetrain.getEncoderVelocity(1), drivetrain.getEncoderVelocity(2));
     }
@@ -278,7 +307,7 @@ public class Drivetrain extends SubsystemBase{
         final double turn = MathUtil.clamp(anglePID.calculate(getYawDeg(), heading), -0.3, +0.3);
         leftSpeed = forward + turn;
         rightSpeed = forward - turn;
-        drivetrain.plugandFFDrive(leftSpeed, rightSpeed);
+        drivetrain.plugAndFFDrive(leftSpeed, rightSpeed);
 
         final double tolerance = 0.05;
         return Math.abs(remainingLeftDistance) < tolerance || Math.abs(remainingRightDistance) < tolerance;
@@ -287,50 +316,55 @@ public class Drivetrain extends SubsystemBase{
     public boolean UpdateMovingWithVision(double dist, Pose2d pose, double speedMagnitude) {
         double realdist = pose.getTranslation().getDistance(getEstimatedPose().getTranslation());
         final double speed = speedMagnitude * Math.signum(dist);
-        drivetrain.plugandFFDrive(speed, speed);
+        drivetrain.plugAndFFDrive(speed, speed);
         final double tolerance = 0.1;
         return Math.abs(realdist-dist) < tolerance;
     }
 
+	/**
+	 * Resets the NAVx.
+	 */
     public void resetNAVx(){
         navx.resetNAVx();
     }
 
+	/**
+	 * @return The current pitch in degrees, given by the NAVx
+	 */
     public double getPitchDeg() {
         return navx.getPitchDeg();
     }
 
+	/**
+	 * @return The current yaw in degrees, given by the NAVx
+	 */
     public double getYawDeg() {
         return navx.getPitchDeg();
     }
 
     /**
-     * Drive forward at speed m/s
-     * @param speed
+     * Drive forward at a given speed.
+     * @param speed - The speed to drive at in m/s
      */
     public void autoDrive(double speed){
-        drivetrain.plugandFFDrive(speed, speed);
+        drivetrain.plugAndFFDrive(speed, speed);
     }
 
     @Deprecated
     public void autoDriveF(){
-        drivetrain.plugandChugDrive(0.3, -0.3, 0.3, -0.3);
+        drivetrain.plugAndChugDrive(0.3, -0.3, 0.3, -0.3);
     }
 
     @Deprecated
     public void autoDriveB(){
-        drivetrain.plugandChugDrive(-0.3, 0.3, -0.3, 0.3);
+        drivetrain.plugAndChugDrive(-0.3, 0.3, -0.3, 0.3);
     }
     /**
      * Drive backward at 1 m/s
      */
     public void autoDriveBackward(){
-        drivetrain.plugandFFDrive(-1, -1);
+        drivetrain.plugAndFFDrive(-1, -1);
     }
-    /**
-     * Drive all motors at a specific voltage
-     * @param percent voltage to drive at
-     */
 
     @Deprecated
     public void AdjustAngle(){
@@ -351,15 +385,21 @@ public class Drivetrain extends SubsystemBase{
         }
 
         rightSpeed = leftSpeed;
-        drivetrain.plugandFFDrive(leftSpeed, rightSpeed);
+        drivetrain.plugAndFFDrive(leftSpeed, rightSpeed);
         System.out.println("left speed "+ leftSpeed);
         System.out.println("right speed "+ rightSpeed);
     }
 
+	/**
+	 * @return The current x position
+	 */
     public double getX(){
         return tx.getDouble(0);
     }
 
+	/**
+	 * @return The current y position
+	 */
     public double getY(){
         return ty.getDouble(0);
     }
@@ -382,7 +422,7 @@ public class Drivetrain extends SubsystemBase{
             leftSpeed = -(TARGET_ANGLE - yangle)*hD;
             leftSpeed = Math.max(-0.3, Math.min(0.3, leftSpeed));
             rightSpeed = leftSpeed;
-            drivetrain.plugandFFDrive(leftSpeed, rightSpeed);
+            drivetrain.plugAndFFDrive(leftSpeed, rightSpeed);
         }
     }
 }

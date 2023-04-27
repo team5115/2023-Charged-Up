@@ -10,6 +10,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.controller.*;
 import edu.wpi.first.math.util.Units;
 
+/**
+ * The arm hardware subsystem. Provides methods to interact with the actual hardware of the arm.
+ */
 public class HardwareArm extends SubsystemBase{
     private CANSparkMax intakeTop;
     private CANSparkMax intakeBottom;
@@ -27,6 +30,9 @@ public class HardwareArm extends SubsystemBase{
     private double startingTurnValue = Units.degreesToRadians(-96); //Rads
     private double WinchDiameter = Units.metersToInches(0.12); 
 
+	/**
+	 * `HardwareArm` constructor.
+	 */
     public HardwareArm(){
         intakeTop = new CANSparkMax(5, MotorType.kBrushless);   
         intakeBottom = new CANSparkMax(6, MotorType.kBrushless);    
@@ -159,16 +165,15 @@ public class HardwareArm extends SubsystemBase{
         TurningEncoder.setPosition(0);
     }
 
-public void setEncoders(double Length, double angle){
-    BottomWinchEncoder.setPosition((7*Length)/((WinchDiameter)));
-    TopWinchEncoder.setPosition((7*Length)/((WinchDiameter)));
-    TurningEncoder.setPosition(angle/(360.0 / (48.0 * 49.0 / 10.0))); // Set the angle 
-    // TurningEncoder.setPosition(Units.radiansToDegrees(startingTurnValue)/(360.0 / (48.0 * 49.0 / 10.0)));
-}
+	public void setEncoders(double Length, double angle){
+		BottomWinchEncoder.setPosition((7*Length)/((WinchDiameter)));
+		TopWinchEncoder.setPosition((7*Length)/((WinchDiameter)));
+	    TurningEncoder.setPosition(angle/(360.0 / (48.0 * 49.0 / 10.0))); // Set the angle 
+	    // TurningEncoder.setPosition(Units.radiansToDegrees(startingTurnValue)/(360.0 / (48.0 * 49.0 / 10.0)));
+	}
 
     /** 
-     * Returns the length of the Top Winch
-     * @return the length of the Top Winch, converted from rots to in
+     * @return The length of the top winch in inches
      */
     public double getTopWinchLength() {
         //System.out.println((getTopEncoder()/7)*(WinchDiameter*3.14159));
@@ -178,8 +183,7 @@ public void setEncoders(double Length, double angle){
     }
 
     /** 
-     * Returns the length of the Bottom Winch
-     * @return the length of the Bottm Winch, converted from rots to in
+     * @return The length of the bottom winch in inches
      */
     public double getBottomWinchLength() {
         //System.out.println((getBottomEncoder()/7)*(WinchDiameter*3.14159));
@@ -188,25 +192,32 @@ public void setEncoders(double Length, double angle){
     }
 
     /** 
-     * Returns the angle of the turning arm
-     * @return the angle the arm turned
+     * @return The angle the arm has turned in degrees
      */
-
     public double getArmDeg(){
         return getTurnEncoder() * (360.0 / (48.0 * 49.0 / 10.0));
     }
 
+	/**
+	 * @return The angle the arm has turned in radians
+	 */
     public double getArmRad(){
         //return Math.toRadians(getArmDeg());
         return Math.toRadians(getArmDeg() + startingTurnValue);
     }
 
+	/**
+	 * Disables brake mode on the arm's motors
+	 */
     public void disableBrake(){
         intakeBottom.setIdleMode(IdleMode.kCoast);
         intakeTop.setIdleMode(IdleMode.kCoast);
         //intakeTurn.setIdleMode(IdleMode.kCoast);
     }
 
+	/**
+	 * Enables brake mode on the arm's motors
+	 */
     public void enableBrake(){
         intakeBottom.setIdleMode(IdleMode.kBrake);
         intakeTop.setIdleMode(IdleMode.kBrake);

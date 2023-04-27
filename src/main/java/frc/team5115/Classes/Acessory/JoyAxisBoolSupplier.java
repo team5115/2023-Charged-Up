@@ -3,6 +3,9 @@ import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj.Joystick;
 
+/**
+ * A BooleanSupplier for making Triggers that watches a joystick axis and returns true if the axis reading rises above/below a threshold.
+ */
 public class JoyAxisBoolSupplier implements BooleanSupplier{
 
     private Joystick joystick;
@@ -11,11 +14,11 @@ public class JoyAxisBoolSupplier implements BooleanSupplier{
     private boolean triggerOnGreater;
 
     /**
-     * Construct a BooleanSupplier for making Triggers that watches a joystick axis and returns true if the axis reading rises above/below a threshold
-     * @param joystick the joystick to watch
-     * @param axis the analog joystick on the axis
-     * @param threshold the threshold value to rise above or below
-     * @param triggerOnGreater true will make getAsBoolean() return true when the read value is greater than the threshold, false will do the opposite
+     * `JoyAxisBoolSupplier` constructor.    
+	 * @param joystick - The joystick to watch
+     * @param axis - The analog joystick on the axis
+     * @param threshold - The threshold value to rise above or below
+     * @param triggerOnGreater - True will make getAsBoolean() return true when the read value is greater than the threshold, false will do the opposite
      */
     public JoyAxisBoolSupplier(Joystick joystick, int axis, double threshold, boolean triggerOnGreater) {
         this.joystick = joystick;
@@ -25,10 +28,11 @@ public class JoyAxisBoolSupplier implements BooleanSupplier{
     }
 
     /**
-     * Construct a BooleanSupplier for making Triggers that watches a joystick axis and returns true if the axis reading rises above a threshold
-     * @param joystick the joystick to watch
-     * @param axis the analog joystick on the axis
-     * @param threshold the threshold value to rise above or below
+     * `JoyAxisBoolSupplier` constructor.    
+	 * @param joystick - The joystick to watch
+     * @param axis - The analog joystick on the axis
+     * @param threshold - The threshold value to rise above or below
+     * @param triggerOnGreater - True will make getAsBoolean() return true when the read value is greater than the threshold, false will do the opposite
      */
     public JoyAxisBoolSupplier(Joystick joystick, int axis, double threshold) {
         this.joystick = joystick;
@@ -37,6 +41,9 @@ public class JoyAxisBoolSupplier implements BooleanSupplier{
         triggerOnGreater = true;
     }
 
+	/**
+	 * @return True if the joystick axis reading is greater than the threshold, false if not
+	 */
     public boolean getAsBoolean() {
         if (triggerOnGreater) {
             return joystick.getRawAxis(axis) > threshold;
