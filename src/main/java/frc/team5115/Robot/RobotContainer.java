@@ -98,11 +98,11 @@ public class RobotContainer {
 
     public void autoPeriod(){
        //drivetrain.UpdateOdometry();
-       arm.updateController();
+		arm.updateController();
     }
 
-    public void teleopPeriodic(){/*
-         
+    public void teleopPeriodic(){
+
         if(-joy1.getRawAxis(1) > 0.5){
             arm.turnUp();
         }
@@ -110,17 +110,17 @@ public class RobotContainer {
             arm.turnDown();
         }
 
-        if(joy1.getRawAxis(2) > 0.5){
+        if(joy1.getRawButton(5)){
             arm.topMoveIn();
         }
-        else if(joy1.getRawAxis(3) > 0.5){
+        else if(joy1.getRawButton(6)){
             arm.topMoveOut();
         }
 
-        if(joy1.getRawButton(5)){
+        if(joy1.getRawAxis(2) > 0.5){
             arm.bottomMoveIn();
         }
-        else if(joy1.getRawButton(6)){
+        else if(joy1.getRawAxis(3) > 0.5){
             arm.bottomMoveOut();
         }
 
