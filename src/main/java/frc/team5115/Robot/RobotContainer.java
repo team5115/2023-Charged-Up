@@ -143,12 +143,13 @@ public class RobotContainer {
             intake.open();
         }
 
-        //drivetrain.UpdateOdometry();
         arm.updateController();
+        */
+        // drivetrain.UpdateOdometry();
         double forward = -joy2.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
         double turn = joy2.getRawAxis(JOY_Z_AXIS_ID);
         drivetrain.TankDrive(forward, turn);
-        */
-        drivetrain.getEstimatedPose();
+        
+        System.out.println(drivetrain.getEstimatedPose());
     }
 }
