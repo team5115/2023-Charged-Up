@@ -24,7 +24,7 @@ public class RobotContainer {
     private final HardwareIntake intake;
     private final Arm arm;
     private final HardwareArm hardwareArm;
-    private final Startup startup;
+    // private final Startup startup;
     private final ShuffleboardTab tab;
     private final GenericEntry center;
     private AutoCommandGroup autoCommandGroup;
@@ -39,7 +39,7 @@ public class RobotContainer {
         hardwareArm = new HardwareArm();
         arm = new Arm(hardwareArm, intake);
         drivetrain = new Drivetrain(photonVision, arm);
-        startup = new Startup(arm, hardwareArm, intake);
+        // startup = new Startup(arm, hardwareArm, intake);
         
         tab = Shuffleboard.getTab("SmartDashboard");
         center = tab.add("Are we doing center balacing auto?", false).getEntry();
