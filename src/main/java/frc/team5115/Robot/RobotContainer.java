@@ -103,24 +103,24 @@ public class RobotContainer {
 
     public void teleopPeriodic(){
 
-        if(-joy1.getRawAxis(1) > 0.5){
+        if(-joy1.getRawAxis(XboxController.Axis.kLeftY.value) > 0.5){
             arm.turnUp();
         }
-        else if(-joy1.getRawAxis(1) < -0.5){
+        else if(-joy1.getRawAxis(XboxController.Axis.kLeftY.value) < -0.5){
             arm.turnDown();
         }
 
-        if(joy1.getRawButton(5)){
+        if(joy1.getRawButton(XboxController.Button.kLeftBumper.value)){
             arm.topMoveIn();
         }
-        else if(joy1.getRawButton(6)){
+        else if(joy1.getRawButton(XboxController.Button.kRightBumper.value)){
             arm.topMoveOut();
         }
 
-        if(joy1.getRawAxis(2) > 0.5){
+        if(joy1.getRawAxis(XboxController.Axis.kLeftTrigger.value) > 0.5){
             arm.bottomMoveIn();
         }
-        else if(joy1.getRawAxis(3) > 0.5){
+        else if(joy1.getRawAxis(XboxController.Axis.kRightTrigger.value) > 0.5){
             arm.bottomMoveOut();
         }
 
@@ -144,7 +144,6 @@ public class RobotContainer {
         }
 
         arm.updateController();
-        */
         // drivetrain.UpdateOdometry();
         double forward = -joy2.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
         double turn = joy2.getRawAxis(JOY_Z_AXIS_ID);
