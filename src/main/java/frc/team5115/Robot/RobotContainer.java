@@ -82,7 +82,7 @@ public class RobotContainer {
         drivetrain.stop();
         arm.armcontrolangle = false;
         arm.armcontrol = false;
-        i2cHandler.Disable();
+        // i2cHandler.Disable();
     }
 
     public void stopEverything(){
