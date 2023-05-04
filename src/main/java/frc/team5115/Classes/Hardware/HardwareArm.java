@@ -7,6 +7,7 @@ import com.revrobotics.SparkMaxRelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.team5115.Classes.Acessory.I2CHandler;
 import edu.wpi.first.math.controller.*;
 import edu.wpi.first.math.util.Units;
 
@@ -26,8 +27,10 @@ public class HardwareArm extends SubsystemBase{
     //private double encoderConstant = 1/49;
     private double startingTurnValue = Units.degreesToRadians(-96); //Rads
     private double WinchDiameter = Units.metersToInches(0.12); 
+    private final NAVx navx;
+    private final I2CHandler i2cHandler;
 
-    public HardwareArm(){
+    public HardwareArm(NAVx nav, I2CHandler i2c){
         intakeTop = new CANSparkMax(5, MotorType.kBrushless);   
         intakeBottom = new CANSparkMax(6, MotorType.kBrushless);    
         intakeTurn = new CANSparkMax(7, MotorType.kBrushless);  
@@ -39,6 +42,8 @@ public class HardwareArm extends SubsystemBase{
         intakeBottom.setIdleMode(IdleMode.kBrake);
         intakeTurn.setIdleMode(IdleMode.kBrake);
 
+        navx = nav;
+        i2cHandler = i2c;
         
         //intakeTop.setSmartCurrentLimit(40, 40);
         //intakeBottom.setSmartCurrentLimit(40, 40);
@@ -193,7 +198,14 @@ public void setEncoders(double Length, double angle){
      */
 
     public double getArmDeg(){
-        return getTurnEncoder() * (360.0 / (48.0 * 49.0 / 10.0));
+        // return getTurnEncoder() * (360.0 / (48.0 * 49.0 / 10.0));
+        return getAbsArmDeg();
+    }
+
+    public double getAbsArmDeg() {
+        final double navxPitch = navx.getPitchDeg();
+        final double bnoPitch = i2cHandler.getPitch();
+        return bnoPitch - navxPitch;
     }
 
     public double getArmRad(){
