@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.team5115.Classes.Acessory.I2CHandler;
 import frc.team5115.Classes.Hardware.*;
 import frc.team5115.Classes.Software.*;
 import frc.team5115.Commands.Auto.AutoCommandGroup;
@@ -28,16 +29,21 @@ public class RobotContainer {
     private final GenericEntry center;
     private AutoCommandGroup autoCommandGroup;
     private boolean centerAuto = false;
+    private I2CHandler i2cHandler;
+    private final NAVx navx;
 
     public RobotContainer() {
         joy1 = new Joystick(0);
         joy2 = new Joystick(1);
 
+        navx = new NAVx();
+        i2cHandler = new I2CHandler();
+
         photonVision = new PhotonVision();
         intake = new HardwareIntake();
-        hardwareArm = new HardwareArm();
+        hardwareArm = new HardwareArm(navx, i2cHandler);
         arm = new Arm(hardwareArm, intake);
-        drivetrain = new Drivetrain(photonVision, arm);
+        drivetrain = new Drivetrain(photonVision, arm, navx);
         // startup = new Startup(arm, hardwareArm, intake);
         
         tab = Shuffleboard.getTab("SmartDashboard");
@@ -76,6 +82,7 @@ public class RobotContainer {
         drivetrain.stop();
         arm.armcontrolangle = false;
         arm.armcontrol = false;
+        i2cHandler.Disable();
     }
 
     public void stopEverything(){
