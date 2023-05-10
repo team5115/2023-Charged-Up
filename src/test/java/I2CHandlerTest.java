@@ -24,4 +24,18 @@ public class I2CHandlerTest {
         final short expected = 2313;
         Assertions.assertEquals(expected, combined);
     }
+
+    @Test
+    void testCombineBytes_nineNineArray() {
+        final short combined = I2CHandler.combineBytes(new byte[] {42, 101});
+        final short expected = 25898;
+        Assertions.assertEquals(expected, combined);
+    }
+
+    @Test
+    void testCombineBytes_oneElemArray() {
+        final short combined = I2CHandler.combineBytes(new byte[] {42});
+        final short expected = 42;
+        Assertions.assertEquals(expected, combined);
+    }
 }

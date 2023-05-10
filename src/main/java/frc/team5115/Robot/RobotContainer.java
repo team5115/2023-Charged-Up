@@ -32,6 +32,8 @@ public class RobotContainer {
     private I2CHandler i2cHandler;
     private final NAVx navx;
 
+    private int printCounter = 0;
+
     public RobotContainer() {
         joy1 = new Joystick(0);
         joy2 = new Joystick(1);
@@ -151,10 +153,19 @@ public class RobotContainer {
 
         arm.updateController();
         // drivetrain.UpdateOdometry();
-        double forward = -joy2.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
-        double turn = joy2.getRawAxis(JOY_Z_AXIS_ID);
-        drivetrain.TankDrive(forward, turn);
+        // double forward = -joy2.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
+        // double turn = joy2.getRawAxis(JOY_Z_AXIS_ID);
+        // drivetrain.TankDrive(forward, turn);
         
-        System.out.println(drivetrain.getEstimatedPose());
+        // System.out.println(drivetrain.getEstimatedPose());
+
+        printCounter++;
+        if (printCounter % 20 == 0) {
+            // right now it looks like the yawAddress is actually pitch
+            // System.out.println(hardwareArm.getArmDeg());
+            // System.out.println("Pitch: " + i2cHandler.getPitch());
+            System.out.println("Yaw: " + i2cHandler.getYaw());
+            // System.out.println("Roll: " + i2cHandler.getRoll());
+        }
     }
 }
