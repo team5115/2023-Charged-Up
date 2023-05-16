@@ -68,6 +68,7 @@ public class RobotContainer {
     }
 
     public void startTeleop(){
+        drivetrain.init();
         if(autoCommandGroup != null) autoCommandGroup.cancel();
         // arm.zeroArm();
         /* 
@@ -80,7 +81,6 @@ public class RobotContainer {
 
     public void disabledInit(){
         arm.disableBrake();
-        drivetrain.init();
         drivetrain.stop();
         arm.armcontrolangle = false;
         arm.armcontrol = false;

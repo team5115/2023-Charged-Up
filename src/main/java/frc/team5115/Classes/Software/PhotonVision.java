@@ -56,10 +56,11 @@ public class PhotonVision extends SubsystemBase{
 	 * @return The estimated pose of the robot
 	 */
     public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
+        final Optional<EstimatedRobotPose> x = photonPoseEstimatorL.update();
         // The teeam assignment of the first grid the robot looks at is the team assignment of the robot
         // otherwise if we cant see any april tags trust the team assignment inputted on shuffle board
         //Trusting the left camera more, no idea on how to use filters to get the most information out of both cameras 2-6-2022
-        if(photonPoseEstimatorL.update().isPresent()) return photonPoseEstimatorL.update();
+        if(x.isPresent()) return x;
         // if(photonPoseEstimatorR.update().isPresent()) return photonPoseEstimatorR.update();
         return Optional.empty();
     }
