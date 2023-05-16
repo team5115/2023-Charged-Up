@@ -1,6 +1,7 @@
 package frc.team5115.Classes.Acessory;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.team5115.Classes.Hardware.NAVx;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
 
@@ -31,30 +32,34 @@ public class I2CHandler extends SubsystemBase {
         return combineBytes(bytes[1], bytes[0]);
     }
 
-    public short getPitch() {
+    private short getPitch() {
         // right now it looks like the yawAddress is actually pitch
         lastPitch = readFromSensor(pitchAddress, 2, lastPitch);
         return lastPitch;
     }
 
-    public short getRoll() {
+    private short getRoll() {
         lastRoll = readFromSensor(rollAddress, 2, lastRoll);
         return lastRoll;
     }
 
-    public short getYaw() {
+    private short getYaw() {
         lastYaw = readFromSensor(yawAddress, 2, lastYaw);
         return lastYaw;
+    }
+
+    public double getPitchReal() {
+        return NAVx.clampAngle((double) getYaw() / 16.0 - 63.777);
     }
 
     private short readFromSensor(byte registerAddress, int count, short defaultValue) {
         final boolean aborted = i2c.read(registerAddress, count, buffer);
 
         if (aborted) {
-            System.out.println("Failed to read roll from BNO055");
+            System.out.println("Failed to read from BNO055");
             return defaultValue;
         }
-        return combineBytes(buffer);
+        return combineBytes(buffer); // 3500 = down, 4800 = horizontal
     }
 
     public void Disable() {
