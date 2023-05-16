@@ -71,7 +71,11 @@ public class NAVx implements Subsystem {
      * @return The equivalent angle from -180 to 180
      */
     public static double clampAngle(double angle) {
-        return ((angle + 180.0) % 360.0) - 180.0;
+        return (goodModulo((angle + 180.0), 360.0)) - 180.0;
+    }
+
+    private static double goodModulo(double a, double b) {
+        return a < 0 ? b + a : a % b;
     }
 
 	/**

@@ -207,8 +207,8 @@ public class HardwareArm extends SubsystemBase{
      */
     public double getAbsoluteArmDeg() {
         final double navxPitch = navx.getPitchDeg();
-        final double bnoPitch = i2cHandler.getPitch();
-        return bnoPitch - navxPitch;
+        final double bnoPitch = i2cHandler.getPitchReal();
+        return NAVx.clampAngle(bnoPitch - navxPitch);
     }
 
 	/**
