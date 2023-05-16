@@ -12,6 +12,8 @@ import frc.team5115.Classes.Software.*;
 import frc.team5115.Commands.Auto.AutoCommandGroup;
 import frc.team5115.Commands.Intake.CombinedIntakeCommands.*;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.networktables.GenericEntry;
 
@@ -31,6 +33,7 @@ public class RobotContainer {
     private boolean centerAuto = false;
     private I2CHandler i2cHandler;
     private final NAVx navx;
+	private final Field2d field = new Field2d();
 
     private int printCounter = 0;
 
@@ -54,6 +57,8 @@ public class RobotContainer {
         timer = new Timer();
         timer.reset();
         configureButtonBindings();
+
+		SmartDashboard.putData("Field", field);
     }
 
     public void configureButtonBindings() {
@@ -107,6 +112,7 @@ public class RobotContainer {
     public void autoPeriod(){
        //drivetrain.UpdateOdometry();
 		arm.updateController();
+		field.setRobotPose(drivetrain.getEstimatedPose());
     }
 
     public void teleopPeriodic(){
@@ -167,5 +173,7 @@ public class RobotContainer {
             System.out.println("Yaw: " + i2cHandler.getYaw());
             // System.out.println("Roll: " + i2cHandler.getRoll());
         }
+
+		field.setRobotPose(drivetrain.getEstimatedPose());
     }
 }
