@@ -71,7 +71,7 @@ public class Drivetrain extends SubsystemBase{
         // );
 
         poseEstimator = new DifferentialDrivePoseEstimator(
-            kinematics, navx.getYawRotation2D(), getLeftDistance(), getRightDistance(), new Pose2d(), VecBuilder.fill(1, 1, 1), VecBuilder.fill(0, 0, 0)
+            kinematics, navx.getYawRotation2D(), getLeftDistance(), getRightDistance(), new Pose2d(FieldConstants.startX, FieldConstants.startY, FieldConstants.startAngle), VecBuilder.fill(1, 1, 1), VecBuilder.fill(0, 0, 0)
         );
         System.out.println("Angle from navx" + navx.getYawDeg()
         );
