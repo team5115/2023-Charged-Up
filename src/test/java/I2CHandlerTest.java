@@ -13,7 +13,7 @@ public class I2CHandlerTest {
 
     @Test
     void testCombineBytes_oneeight() {
-        final short combined = I2CHandler.combineBytes((byte) 1, (byte) 8);
+        final short combined = I2CHandler.combineBytes((byte) 8, (byte) 1);
         final short expected = 264;
         Assertions.assertEquals(expected, combined);
     }
