@@ -60,7 +60,9 @@ public class I2CHandler extends SubsystemBase {
     }
 
     public double getPitchReal() {
-        return NAVx.clampAngle((double) getYaw() / 16.0 - 63.777);
+        return NAVx.clampAngle((double) getYaw() / 16.0 - 96.0);
+        System.out.println("Gravity: " + Arrays.toString(getGravity()));
+        return NAVx.clampAngle((double) getYaw() / 16.0);
     }
 
     private short readFromSensor(byte registerAddress, int count, short defaultValue) {
