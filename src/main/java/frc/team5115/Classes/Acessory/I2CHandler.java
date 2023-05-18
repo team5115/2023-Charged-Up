@@ -59,7 +59,7 @@ public class I2CHandler extends SubsystemBase {
     }
 
     public double getPitchReal() {
-        return NAVx.clampAngle((double) getYaw() / 16.0 - 63.777);
+        return NAVx.clampAngle((double) getYaw() / 16.0 - 96.0);
     }
 
     private short readFromSensor(byte registerAddress, int count, short defaultValue) {
@@ -70,7 +70,7 @@ public class I2CHandler extends SubsystemBase {
             System.out.println("Failed to read from BNO055");
             return defaultValue;
         }
-        return combineBytes(buffer); // 3500 = down, 4800 = horizontal
+        return combineBytes(buffer); 
     }
 
     public void Disable() {
