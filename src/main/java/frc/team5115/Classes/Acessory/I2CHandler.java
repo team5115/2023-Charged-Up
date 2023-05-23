@@ -43,26 +43,18 @@ public class I2CHandler extends SubsystemBase {
         return combineBytes(bytes[0], bytes[1]);
     }
 
-    private short getPitch() {
-        // right now it looks like the yawAddress is actually pitch
-        lastPitch = readFromSensor(pitchAddress, 2, lastPitch);
-        return lastPitch;
+    private double[] getGravity() {
+        gravX = readFromSensor(xGravAddress, 2, gravX);
+        gravY = readFromSensor(yGravAddress, 2, gravY);
+        gravZ = readFromSensor(zGravAddress, 2, gravZ);
+        return new double[] {gravX/100.0, gravY/100.0, gravZ/100.0};
     }
 
-    private short getRoll() {
-        lastRoll = readFromSensor(rollAddress, 2, lastRoll);
-        return lastRoll;
-    }
+    public double getPitch() {
+        double[] gravity = getGravity();
+        final double angle = Math.atan2(-gravity[1], -gravity[0]);
+        return Math.toDegrees(angle);
 
-    private short getYaw() {
-        lastYaw = readFromSensor(yawAddress, 2, lastYaw);
-        return lastYaw;
-    }
-
-    public double getPitchReal() {
-        return NAVx.clampAngle((double) getYaw() / 16.0 - 96.0);
-        System.out.println("Gravity: " + Arrays.toString(getGravity()));
-        return NAVx.clampAngle((double) getYaw() / 16.0);
     }
 
     private short readFromSensor(byte registerAddress, int count, short defaultValue) {
@@ -73,7 +65,7 @@ public class I2CHandler extends SubsystemBase {
             System.out.println("Failed to read from BNO055");
             return defaultValue;
         }
-        return combineBytes(buffer); // 3500 = down, 4800 = horizontal
+        return combineBytes(buffer);
     }
 
     public void Disable() {
