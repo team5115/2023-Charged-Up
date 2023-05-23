@@ -81,6 +81,7 @@ public class RobotContainer {
         startup.schedule();
         */
         drivetrain.resetEncoders();
+		drivetrain.RevSim.run();
     }
 
     public void disabledInit(){
@@ -106,6 +107,7 @@ public class RobotContainer {
         System.out.println("Good auto? " + centerAuto + "!!!!!!!");
         autoCommandGroup = new AutoCommandGroup(drivetrain, arm, hardwareArm, intake, centerAuto);
         autoCommandGroup.schedule();
+		drivetrain.RevSim.run();
     }
 
     public void autoPeriod(){

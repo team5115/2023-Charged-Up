@@ -2,6 +2,7 @@ package frc.team5115.Classes.Hardware;
 
 import static frc.team5115.Constants.*;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxRelativeEncoder;
@@ -55,6 +56,8 @@ public class HardwareDrivetrain{
     private final RelativeEncoder leftEncoder = frontLeft.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
     private final RelativeEncoder rightEncoder = frontRight.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
 
+	public final REVPhysicsSim RevSim = new REVPhysicsSim();
+
 	/**
 	 * `HardwareDrivetrain` constructor.
 	 * @param arm - The arm subsystem to use
@@ -62,6 +65,10 @@ public class HardwareDrivetrain{
     public HardwareDrivetrain(Arm arm){
         resetEncoders();
         frontRight.setInverted(true);
+		RevSim.addSparkMax(frontLeft, 0.7f, 5820);
+		RevSim.addSparkMax(backLeft, 0.7f, 5820);
+		RevSim.addSparkMax(frontRight, 0.7f, 5820);
+		RevSim.addSparkMax(backRight, 0.7f, 5820);
     }
 
     /**

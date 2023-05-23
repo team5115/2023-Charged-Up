@@ -5,6 +5,8 @@ import static frc.team5115.Constants.*;
 import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
 
+import com.revrobotics.REVPhysicsSim;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
@@ -50,6 +52,7 @@ public class Drivetrain extends SubsystemBase{
     public static final double hD = 0.044;
     public static final double bA = 10;
     public static final double MaxArea = 0.1;
+	public REVPhysicsSim RevSim;
 
     public Drivetrain(PhotonVision photonVision, Arm arm, NAVx nav) {
         this.photonVision = photonVision;
@@ -60,6 +63,7 @@ public class Drivetrain extends SubsystemBase{
         ramseteController = new RamseteController();
         kinematics = new DifferentialDriveKinematics(TRACKING_WIDTH_METERS);
         navx = nav;
+		this.RevSim = drivetrain.RevSim;
     }
 
     public void init() {
