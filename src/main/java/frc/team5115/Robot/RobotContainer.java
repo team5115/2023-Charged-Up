@@ -160,12 +160,13 @@ public class RobotContainer {
         // System.out.println(drivetrain.getEstimatedPose());
 
         printCounter++;
-        if (printCounter % 20 == 0) {
+        if (printCounter % 40 == 0) {
             // right now it looks like the yawAddress is actually pitch
             System.out.println(hardwareArm.getAbsoluteArmDeg());
             // System.out.println("Pitch: " + i2cHandler.getPitch());
             // System.out.println("Yaw: " + i2cHandler.getYaw());
             // System.out.println("Roll: " + i2cHandler.getRoll());
+            // System.out.println(i2cHandler.getPitchReal());
         }
     }
 }
