@@ -55,14 +55,11 @@ public class HardwareDrivetrain{
     private final RelativeEncoder leftEncoder = frontLeft.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
     private final RelativeEncoder rightEncoder = frontRight.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
 
-    private final Arm arm;
-
 	/**
 	 * `HardwareDrivetrain` constructor.
 	 * @param arm - The arm subsystem to use
 	 */
     public HardwareDrivetrain(Arm arm){
-        this.arm = arm;
         resetEncoders();
         frontRight.setInverted(true);
     }

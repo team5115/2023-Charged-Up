@@ -1,6 +1,5 @@
 package frc.team5115.Robot;
 
-import static frc.team5115.Constants.*;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;

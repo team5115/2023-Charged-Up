@@ -12,7 +12,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
  */
 public class HardwareIntake extends SubsystemBase{
     private DoubleSolenoid intake;
-    private PneumaticsControlModule pcm;
     private TalonSRX intakeL = new TalonSRX(9);
     private TalonSRX intakeR = new TalonSRX(8);
     //PCM IS 10 this season YOU HAVE TO LABEL THE MODULE/CAN ID in everything you instantiate
@@ -28,7 +27,6 @@ public class HardwareIntake extends SubsystemBase{
         intakeL.enableCurrentLimit(true);
         intakeR.configPeakCurrentLimit(35);
         intakeR.enableCurrentLimit(true);
-        pcm = new PneumaticsControlModule(10);
         intake = new DoubleSolenoid(10, PneumaticsModuleType.CTREPCM, 0, 1);
         coneLight = new DigitalOutput(0);
         coneLight.set(true);
