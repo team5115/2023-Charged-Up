@@ -1,5 +1,6 @@
 package frc.team5115.Robot;
 
+import frc.team5115.Constants;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
@@ -160,9 +161,9 @@ public class RobotContainer {
 
         arm.updateController();
         // drivetrain.UpdateOdometry();
-        // double forward = -joy2.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
-        // double turn = joy2.getRawAxis(JOY_Z_AXIS_ID);
-        // drivetrain.TankDrive(forward, turn);
+        double forward = -joy2.getRawAxis(Constants.JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
+        double turn = joy2.getRawAxis(Constants.JOY_Z_AXIS_ID);
+        drivetrain.TankDrive(forward, turn);
         
         // System.out.println(drivetrain.getEstimatedPose());
 
