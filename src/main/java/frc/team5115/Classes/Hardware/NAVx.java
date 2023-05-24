@@ -11,6 +11,11 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
  */
 public class NAVx implements Subsystem {
 
+    // --DEBUGGING TIP--
+    // is this not working? Make sure the navx is calibrated properly!
+    // if you suspect it is not calibrated, go to:
+    // https://pdocs.kauailabs.com/navx-mxp/installation/omnimount/
+
     private final AHRS ahrs = new AHRS();
     private double yawAtReset = 0;
     private double pitchAtReset = 0;
@@ -59,9 +64,8 @@ public class NAVx implements Subsystem {
     public double getPitchDeg() {
         // uses roll because the navx is on the side of the robot -- navx roll is robot pitch
         // getRoll() is negated because tilting up (i.e. front of robot is high) should return a positive value out of this function
+        
         // for sideways mount
-        // double angle = ahrs.getRoll() - pitchAtReset;
-        // for flat mount
         return clampAngle(-ahrs.getRoll() - pitchAtReset);
     }
 
