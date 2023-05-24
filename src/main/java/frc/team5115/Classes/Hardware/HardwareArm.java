@@ -197,15 +197,25 @@ public class HardwareArm extends SubsystemBase{
      * @return The angle the arm has turned in degrees
      */
     public double getArmDeg(){
-        return getTurnEncoder() * (360.0 / (48.0 * 49.0 / 10.0));
-        // return getAbsoluteArmDeg();
+        // return angleFromEncoder();
+        return angleFromSensors();
+    }
+
+    /**
+     * This uses the turn encoder and then does some math to convert it into degrees
+     * @return
+     */
+    private double angleFromEncoder() {
+        // the encoder one has changed SLIGHTLY because the gearbox ratio changed from 49 to 48
+        // the old number was (360.0 / (48.0 * 49.0 / 10.0) so i changed 49 to 48
+        return getTurnEncoder() * (360.0 / (48.0 * 48.0 / 10.0));
     }
 
     /**
      * This uses the navx and the bno to get the arm degree instead of motor encoder
      * @return the angle the arm is at in degrees relative to the horizontal
      */
-    public double getAbsoluteArmDeg() {
+    private double angleFromSensors() {
         final double navxPitch = navx.getPitchDeg();
         final double bnoPitch = i2cHandler.getPitch();
         return NAVx.clampAngle(bnoPitch - navxPitch);
