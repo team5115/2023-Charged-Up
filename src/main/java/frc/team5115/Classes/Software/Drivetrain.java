@@ -199,7 +199,7 @@ public class Drivetrain extends SubsystemBase{
     public void UpdateOdometry() {
         poseEstimator.update(navx.getYawRotation2D(), getLeftDistance(), getRightDistance());
 
-        Optional<EstimatedRobotPose> result = photonVision.getEstimatedGlobalPose();
+        Optional<EstimatedRobotPose> result = photonVision.getEstimatedGlobalPose(poseEstimator.getEstimatedPosition());
         if (result.isPresent()) {
             EstimatedRobotPose camPose = result.get();
             poseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
