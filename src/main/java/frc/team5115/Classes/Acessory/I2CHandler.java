@@ -1,16 +1,11 @@
 package frc.team5115.Classes.Acessory;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.team5115.Classes.Hardware.NAVx;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
-import java.util.Arrays;
-import java.util.Locale;
 
 public class I2CHandler extends SubsystemBase {
-    I2C i2c;
-    byte[] buffer;
-
+    
     static final byte OPERATION_MODE = 12;
     static final byte OPERATION_MODE_ADDRESS = 0x3D;
     static final byte rollAddress = 0x1C;
@@ -20,14 +15,20 @@ public class I2CHandler extends SubsystemBase {
     static final byte xGravAddress = 0x2E;
     static final byte yGravAddress = 0x30;
     static final byte zGravAddress = 0x32;
+
+    private final I2C i2c;
+    private final byte[] buffer;
+
     short gravX;
     short gravY;
     short gravZ;
+    double pitch;
 
     public I2CHandler() {
         i2c = new I2C(Port.kMXP, 0x28);
-        i2c.write(OPERATION_MODE_ADDRESS, OPERATION_MODE);
         buffer = new byte[2];
+
+        i2c.write(OPERATION_MODE_ADDRESS, OPERATION_MODE);
     }
 
     public static short combineBytes(byte lsb, byte msb) {
@@ -48,11 +49,15 @@ public class I2CHandler extends SubsystemBase {
         return new double[] {gravX/100.0, gravY/100.0, gravZ/100.0};
     }
 
-    public double getPitch() {
+    public void updatePitch() {
         double[] gravity = getGravity();
-        final double angle = Math.atan2(-gravity[1], -gravity[0]);
-        return Math.toDegrees(angle);
+        final double radians = Math.atan2(-gravity[1], -gravity[0]);
+        final double degrees = Math.toDegrees(radians);
+        pitch = degrees;
+    }
 
+    public double getPitch() {
+        return pitch;
     }
 
     private short readFromSensor(byte registerAddress, int count, short defaultValue) {

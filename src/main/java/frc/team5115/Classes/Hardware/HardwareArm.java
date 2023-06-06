@@ -32,6 +32,7 @@ public class HardwareArm extends SubsystemBase{
     private double WinchDiameter = Units.metersToInches(0.12); 
     private final NAVx navx;
     private final I2CHandler i2cHandler;
+    private final boolean sensor = true;
 
     public HardwareArm(NAVx nav, I2CHandler i2c){
         intakeTop = new CANSparkMax(5, MotorType.kBrushless);   
@@ -197,15 +198,18 @@ public class HardwareArm extends SubsystemBase{
      * @return The angle the arm has turned in degrees
      */
     public double getArmDeg(){
-        // return angleFromEncoder();
-        return angleFromSensors();
+        if(sensor){
+            return angleFromSensors();
+        } else {
+            return angleFromEncoder();
+        }
     }
 
     /**
      * This uses the turn encoder and then does some math to convert it into degrees
      * @return
      */
-    private double angleFromEncoder() {
+    public double angleFromEncoder() {
         // the encoder one has changed SLIGHTLY because the gearbox ratio changed from 49 to 48
         // the old number was (360.0 / (48.0 * 49.0 / 10.0) so i changed 49 to 48
         return getTurnEncoder() * (360.0 / (48.0 * 48.0 / 10.0));
@@ -215,9 +219,10 @@ public class HardwareArm extends SubsystemBase{
      * This uses the navx and the bno to get the arm degree instead of motor encoder
      * @return the angle the arm is at in degrees relative to the horizontal
      */
-    private double angleFromSensors() {
+    public double angleFromSensors() {
         final double navxPitch = navx.getPitchDeg();
         final double bnoPitch = i2cHandler.getPitch();
+        // return Math.round(NAVx.clampAngle(bnoPitch - navxPitch)*100.0)/100.0;
         return NAVx.clampAngle(bnoPitch - navxPitch);
     }
 

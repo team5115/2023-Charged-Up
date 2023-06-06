@@ -10,6 +10,10 @@ import edu.wpi.first.math.controller.PIDController;
  * The arm subsystem. Provides methods for controlling and getting information about the arm.
  */
 public class Arm extends SubsystemBase{
+    private static final double TURN_PID_TOLERANCE = 0;
+    private static final double TURN_PID_KP = 0.05;
+    private static final double TURN_PID_KI = 0.001;
+    private static final double TURN_PID_KD = 0.00;
     private HardwareArm intake;
     public HardwareIntake h;
     private double topLength = 0;
@@ -21,7 +25,7 @@ public class Arm extends SubsystemBase{
     private double bottomKp = 0.115;
 
 
-    private PIDController turnController = new PIDController(0.08, 0.0, 0.0);
+    private PIDController turnController = new PIDController(TURN_PID_KP, TURN_PID_KI, TURN_PID_KD);
     public PIDController topWinchController = new PIDController(topKp, 0, 0);
     public PIDController bottomWinchController = new PIDController(bottomKp, 0, 0);
 
@@ -38,6 +42,7 @@ public class Arm extends SubsystemBase{
         h =hardwareIntake;
         zeroArm();
         intake.setEncoders(topLength, -90);
+        turnController.setTolerance(TURN_PID_TOLERANCE);
     }
 
     public void setTopPID(double kP){
@@ -174,7 +179,15 @@ public class Arm extends SubsystemBase{
         else{
             intake.FF = true;
         }
-        if(armcontrolangle) intake.setTurn(turnController.calculate(intake.getArmDeg(), angle));
+
+        if(armcontrolangle) {
+            // final double delta = angle - intake.getArmDeg();
+            final double pidOutput = turnController.calculate(intake.getArmDeg(), angle);
+            
+            if (!turnController.atSetpoint()) {
+                intake.setTurn(pidOutput);
+            }
+        }
         //System.out.println("Output Current" + intake.getTurnCurrent());
         //System.out.println("Current in Amps: " + intake.getTurnCurrent() + ", The Estimated Angle: "+  Math.round(getTurnDeg()) + ", and PID Value: "+ turnController.calculate(intake.getArmDeg(), angle));
 
@@ -183,8 +196,8 @@ public class Arm extends SubsystemBase{
         //System.out.println("Top Length: " + intake.getTopWinchLength() + " Bottom Length: " + intake.getBottomWinchLength());
         //System.out.println("Top Current: " + intake.getTopCurrent() + "  Bottom Current: " + intake.getBottomCurrent() + " Turn Speed: " + turnController.calculate(intake.getArmDeg(), angle));
         if(armcontrol){
-        intake.setTopWinch(topSpeed);
-        intake.setBottomWinch(bottomSpeed);
+            intake.setTopWinch(topSpeed);
+            intake.setBottomWinch(bottomSpeed);
         }
     }
 

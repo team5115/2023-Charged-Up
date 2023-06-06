@@ -12,7 +12,7 @@ public class ShelfSubstation extends SequentialCommandGroup {
         this.intake = arm;
         addCommands(
             new IntakeExtend(arm, 0),
-            new IntakeTurn(arm, 15.5),
+            new IntakeTurn(arm, 8),
             new IntakeExtend(arm, 0)
         );
     }

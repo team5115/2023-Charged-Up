@@ -10,9 +10,11 @@ import frc.team5115.Classes.Acessory.I2CHandler;
 import frc.team5115.Classes.Hardware.*;
 import frc.team5115.Classes.Software.*;
 import frc.team5115.Commands.Auto.AutoCommandGroup;
+import frc.team5115.Commands.Intake.*;
 import frc.team5115.Commands.Intake.CombinedIntakeCommands.*;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.math.estimator.AngleStatistics;
 import edu.wpi.first.networktables.GenericEntry;
 
 public class RobotContainer {
@@ -24,15 +26,13 @@ public class RobotContainer {
     private final HardwareIntake intake;
     private final Arm arm;
     private final HardwareArm hardwareArm;
-    // private final Startup startup;
+     private final Startup startup;
     private final ShuffleboardTab tab;
     private final GenericEntry center;
     private AutoCommandGroup autoCommandGroup;
     private boolean centerAuto = false;
-    private I2CHandler i2cHandler;
+    private final I2CHandler i2cHandler;
     private final NAVx navx;
-
-    private int printCounter = 0;
 
     public RobotContainer() {
         joy1 = new Joystick(0);
@@ -46,7 +46,7 @@ public class RobotContainer {
         hardwareArm = new HardwareArm(navx, i2cHandler);
         arm = new Arm(hardwareArm, intake);
         drivetrain = new Drivetrain(photonVision, arm, navx);
-        // startup = new Startup(arm, hardwareArm, intake);
+        startup = new Startup(arm, hardwareArm, intake);
         
         tab = Shuffleboard.getTab("SmartDashboard");
         center = tab.add("Are we doing center balacing auto?", false).getEntry();
@@ -71,11 +71,11 @@ public class RobotContainer {
         drivetrain.init();
         if(autoCommandGroup != null) autoCommandGroup.cancel();
         // arm.zeroArm();
-        /* 
+        
         System.out.println("Starting teleop");
         arm.enableBrake();
         startup.schedule();
-        */
+        
         drivetrain.resetEncoders();
     }
 
@@ -97,7 +97,7 @@ public class RobotContainer {
         drivetrain.resetEncoders();
         drivetrain.resetNAVx();
         drivetrain.stop();
-        //startup.schedule();
+        startup.schedule();
         centerAuto = center.getBoolean(false);
         System.out.println("Good auto? " + centerAuto + "!!!!!!!");
         autoCommandGroup = new AutoCommandGroup(drivetrain, arm, hardwareArm, intake, centerAuto);
@@ -107,6 +107,7 @@ public class RobotContainer {
     public void autoPeriod(){
        //drivetrain.UpdateOdometry();
 		arm.updateController();
+        i2cHandler.updatePitch();
     }
 
     public void teleopPeriodic(){
@@ -152,16 +153,13 @@ public class RobotContainer {
         }
 
         arm.updateController();
+        i2cHandler.updatePitch();
+
         // drivetrain.UpdateOdometry();
         // double forward = -joy2.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
         // double turn = joy2.getRawAxis(JOY_Z_AXIS_ID);
         // drivetrain.TankDrive(forward, turn);
         
         // System.out.println(drivetrain.getEstimatedPose());
-
-        printCounter++;
-        if (printCounter % 20 == 0) {
-            System.out.println("!!!" + hardwareArm.getArmDeg() + "!!!");
-        }
     }
 }
