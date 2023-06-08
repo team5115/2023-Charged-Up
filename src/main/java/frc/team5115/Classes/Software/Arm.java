@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team5115.Classes.Hardware.HardwareArm;
 import frc.team5115.Classes.Hardware.HardwareIntake;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.networktables.GenericEntry;
 
 /**
  * The arm subsystem. Provides methods for controlling and getting information about the arm.
@@ -32,7 +31,7 @@ public class Arm extends SubsystemBase{
     public PIDController bottomWinchController = new PIDController(bottomKp, 0, 0);
 
     public boolean armcontrol = true;
-    public boolean armcontrolangle = true;
+    public boolean armcontrolangle = false;
 
 	/**
 	 * `Arm` constructor.
@@ -182,22 +181,17 @@ public class Arm extends SubsystemBase{
             intake.FF = true;
         }
 
-        if(armcontrolangle) {
-            // final double delta = angle - intake.getArmDeg();
-            final double pidOutput = turnController.calculate(intake.getArmDeg(), angle);
-            
-            if (!turnController.atSetpoint()) {
-                intake.setTurn(pidOutput);
-            }
+        // final double delta = angle - intake.getArmDeg();
+        final double pidOutput = turnController.calculate(intake.getArmDeg(), angle);
+        
+        if (!turnController.atSetpoint()) {
+            intake.setTurn(pidOutput);
         }
-        //System.out.println("Output Current" + intake.getTurnCurrent());
-        //System.out.println("Current in Amps: " + intake.getTurnCurrent() + ", The Estimated Angle: "+  Math.round(getTurnDeg()) + ", and PID Value: "+ turnController.calculate(intake.getArmDeg(), angle));
 
-        double bottomSpeed = bottomWinchController.calculate(intake.getBottomWinchLength(), bottomLength);
-        double topSpeed = topWinchController.calculate(intake.getTopWinchLength(), topLength);
-        //System.out.println("Top Length: " + intake.getTopWinchLength() + " Bottom Length: " + intake.getBottomWinchLength());
-        //System.out.println("Top Current: " + intake.getTopCurrent() + "  Bottom Current: " + intake.getBottomCurrent() + " Turn Speed: " + turnController.calculate(intake.getArmDeg(), angle));
         if(armcontrol){
+            
+            double topSpeed = topWinchController.calculate(intake.getTopWinchLength(), topLength);
+            double bottomSpeed = bottomWinchController.calculate(intake.getBottomWinchLength(), bottomLength);
             intake.setTopWinch(topSpeed);
             intake.setBottomWinch(bottomSpeed);
         }
@@ -210,10 +204,6 @@ public class Arm extends SubsystemBase{
 
     public double getBottomWinchLength(){
         return intake.getBottomWinchLength();
-    }
-    
-    public double getArmSpeed(){
-        return intake.getTurnVelocity();
     }
 
     public void zeroArm(){

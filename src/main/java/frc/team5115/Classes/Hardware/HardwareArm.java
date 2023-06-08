@@ -18,7 +18,6 @@ public class HardwareArm extends SubsystemBase{
     private CANSparkMax intakeTop;
     private CANSparkMax intakeBottom;
     private CANSparkMax intakeTurn;
-    private RelativeEncoder TurningEncoder;
     private RelativeEncoder TopWinchEncoder;
     private RelativeEncoder BottomWinchEncoder;
     private final double Ks = 0.13;
@@ -32,7 +31,6 @@ public class HardwareArm extends SubsystemBase{
     private double WinchDiameter = Units.metersToInches(0.12); 
     private final NAVx navx;
     private final I2CHandler i2cHandler;
-    private final boolean sensor = true;
 
     public HardwareArm(NAVx nav, I2CHandler i2c){
         intakeTop = new CANSparkMax(5, MotorType.kBrushless);   
@@ -55,14 +53,11 @@ public class HardwareArm extends SubsystemBase{
 
         //intakeBottom.follow(intakeTop);
  
-        TurningEncoder = intakeTurn.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
         TopWinchEncoder = intakeTop.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
         BottomWinchEncoder = intakeBottom.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
 
-        TurningEncoder.setPositionConversionFactor(1);
         TopWinchEncoder.setPositionConversionFactor(1);
         BottomWinchEncoder.setPositionConversionFactor(1);
-        TurningEncoder.setVelocityConversionFactor(1);
         TopWinchEncoder.setVelocityConversionFactor(1);
         BottomWinchEncoder.setVelocityConversionFactor(1);
 
@@ -123,11 +118,6 @@ public class HardwareArm extends SubsystemBase{
     public double getBottomCurrent(){
         return intakeBottom.getOutputCurrent();
     }
-    
-    
-    public double getTurnEncoder(){
-        return (TurningEncoder.getPosition());
-    }
 
     public double getTopEncoder(){
         return (TopWinchEncoder.getPosition());
@@ -135,10 +125,6 @@ public class HardwareArm extends SubsystemBase{
 
     public double getBottomEncoder(){
         return (BottomWinchEncoder.getPosition());
-    }
-
-    public double getTurnVelocity(){
-        return (TurningEncoder.getVelocity());
     }
 
     public double getTopVelocity(){
@@ -149,15 +135,6 @@ public class HardwareArm extends SubsystemBase{
         return -(BottomWinchEncoder.getVelocity());
     }
 
-
-    public String getEncoders(){
-        return ("Bottom Winch Val:" + BottomWinchEncoder.getPosition() + " Top Winch Val:" + TopWinchEncoder.getPosition() + " Turn Motor Val:" + TurningEncoder.getPosition());
-    }
-
-    public String getVelocities(){
-        return ("Bottom Winch Velocity:" + BottomWinchEncoder.getVelocity() + " Top Winch Val:" + TopWinchEncoder.getVelocity() + " Turn Motor Val:" + TurningEncoder.getVelocity());
-    }
-
     public boolean getFault(CANSparkMax.FaultID f){
         return intakeTurn.getFault(f);
     }
@@ -165,14 +142,11 @@ public class HardwareArm extends SubsystemBase{
     public void zeroEncoders(){
         BottomWinchEncoder.setPosition(0);
         TopWinchEncoder.setPosition(0);
-        TurningEncoder.setPosition(0);
     }
 
 	public void setEncoders(double Length, double angle){
 		BottomWinchEncoder.setPosition((7*Length)/((WinchDiameter)));
 		TopWinchEncoder.setPosition((7*Length)/((WinchDiameter)));
-	    TurningEncoder.setPosition(angle/(360.0 / (48.0 * 49.0 / 10.0))); // Set the angle 
-	    // TurningEncoder.setPosition(Units.radiansToDegrees(startingTurnValue)/(360.0 / (48.0 * 49.0 / 10.0)));
 	}
 
     /** 
@@ -198,28 +172,14 @@ public class HardwareArm extends SubsystemBase{
      * @return The angle the arm has turned in degrees
      */
     public double getArmDeg(){
-        if(sensor){
-            return angleFromSensors();
-        } else {
-            return angleFromEncoder();
-        }
-    }
-
-    /**
-     * This uses the turn encoder and then does some math to convert it into degrees
-     * @return
-     */
-    public double angleFromEncoder() {
-        // the encoder one has changed SLIGHTLY because the gearbox ratio changed from 49 to 48
-        // the old number was (360.0 / (48.0 * 49.0 / 10.0) so i changed 49 to 48
-        return getTurnEncoder() * (360.0 / (48.0 * 48.0 / 10.0));
+        return angleFromSensors();
     }
 
     /**
      * This uses the navx and the bno to get the arm degree instead of motor encoder
      * @return the angle the arm is at in degrees relative to the horizontal
      */
-    public double angleFromSensors() {
+    private double angleFromSensors() {
         final double navxPitch = navx.getPitchDeg();
         final double bnoPitch = i2cHandler.getPitch();
         // return Math.round(NAVx.clampAngle(bnoPitch - navxPitch)*100.0)/100.0;

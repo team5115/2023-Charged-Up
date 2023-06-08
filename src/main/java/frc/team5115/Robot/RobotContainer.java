@@ -25,7 +25,7 @@ public class RobotContainer {
     private final HardwareIntake intake;
     private final Arm arm;
     private final HardwareArm hardwareArm;
-    private final Startup startup;
+    private final StartupWinch startupWinch;
     private final ShuffleboardTab tab;
     private final GenericEntry center;
     private AutoCommandGroup autoCommandGroup;
@@ -45,7 +45,7 @@ public class RobotContainer {
         hardwareArm = new HardwareArm(navx, i2cHandler);
         arm = new Arm(hardwareArm, intake);
         drivetrain = new Drivetrain(photonVision, arm, navx);
-        startup = new Startup(arm, hardwareArm, intake);
+        startupWinch = new StartupWinch(arm, hardwareArm, intake);
         
         tab = Shuffleboard.getTab("SmartDashboard");
         center = tab.add("Are we doing center balacing auto?", false).getEntry();
@@ -73,8 +73,8 @@ public class RobotContainer {
         
         System.out.println("Starting teleop");
         arm.enableBrake();
-        startup.schedule();
-        
+        startupWinch.schedule();
+        arm.armcontrolangle = true;
         drivetrain.resetEncoders();
     }
 
@@ -83,6 +83,7 @@ public class RobotContainer {
         drivetrain.stop();
         arm.armcontrolangle = false;
         arm.armcontrol = false;
+        arm.turnSetAngle(-90);
         // i2cHandler.Disable();
     }
 
@@ -96,7 +97,8 @@ public class RobotContainer {
         drivetrain.resetEncoders();
         drivetrain.resetNAVx();
         drivetrain.stop();
-        startup.schedule();
+        startupWinch.schedule();
+        arm.armcontrolangle = true;
         centerAuto = center.getBoolean(false);
         System.out.println("Good auto? " + centerAuto + "!!!!!!!");
         autoCommandGroup = new AutoCommandGroup(drivetrain, arm, hardwareArm, intake, centerAuto);

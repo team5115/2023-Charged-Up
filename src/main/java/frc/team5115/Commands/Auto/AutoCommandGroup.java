@@ -68,7 +68,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
 	 */
     private void PathPlannerHighNodeOld() {
 		addCommands(
-            new Startup(arm, hArm, hIntake),
+            new StartupWinch(arm, hArm, hIntake),
             new InstantCommand(hIntake :: TurnIn),
             new HighNode(arm),
             new IntakeTurn(arm, 10),
@@ -137,7 +137,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
 	 */
     private void BasicHighNode() {
         addCommands(
-            new Startup(arm, hArm, hIntake),     
+            new StartupWinch(arm, hArm, hIntake),     
             new InstantCommand(hIntake :: TurnIn),
             new HighNode(arm),
             new IntakeTurn(arm, 10),
@@ -160,7 +160,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
     private void scoreHighWDock() {
         // should start facing towards grid
         addCommands(
-            new Startup(arm, hArm, hIntake),     
+            new StartupWinch(arm, hArm, hIntake),     
             new InstantCommand(hIntake :: TurnIn),
             new HighNode(arm),
             new IntakeTurn(arm, 10),
@@ -176,7 +176,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
 	 */
 	private void scoreHighWDockPathPlanner() {
 		addCommands(
-			new Startup(arm, hArm, hIntake),
+			new StartupWinch(arm, hArm, hIntake),
 			new InstantCommand(hIntake :: TurnIn),
 			new HighNode(arm),
 			new IntakeTurn(arm, 10),
@@ -188,7 +188,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
 
     private void superIdeal() {
         addCommands(
-            new Startup(arm, hArm, hIntake),     
+            new StartupWinch(arm, hArm, hIntake),     
             new InstantCommand(hIntake :: TurnIn),
             new HighNode(arm),
             new IntakeTurn(arm, 10),
