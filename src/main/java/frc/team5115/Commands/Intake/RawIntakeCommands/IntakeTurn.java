@@ -34,7 +34,10 @@ public class IntakeTurn extends CommandBase{
     public boolean isFinished() {
         
         if((Math.abs(arm.getAngle()-angle)<2)){
-            if(innerTimer.get() > 0.05) return true;
+            if(innerTimer.get() > 0.05) {
+                System.out.println("time to turn: " + timer.get());
+                return true;
+            }
         }
         else innerTimer.reset();
 

@@ -14,7 +14,6 @@ import frc.team5115.Commands.Intake.*;
 import frc.team5115.Commands.Intake.CombinedIntakeCommands.*;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.math.estimator.AngleStatistics;
 import edu.wpi.first.networktables.GenericEntry;
 
 public class RobotContainer {
@@ -26,7 +25,7 @@ public class RobotContainer {
     private final HardwareIntake intake;
     private final Arm arm;
     private final HardwareArm hardwareArm;
-     private final Startup startup;
+    private final Startup startup;
     private final ShuffleboardTab tab;
     private final GenericEntry center;
     private AutoCommandGroup autoCommandGroup;

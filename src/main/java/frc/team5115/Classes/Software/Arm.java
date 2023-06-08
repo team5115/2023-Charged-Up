@@ -5,15 +5,17 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team5115.Classes.Hardware.HardwareArm;
 import frc.team5115.Classes.Hardware.HardwareIntake;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.networktables.GenericEntry;
 
 /**
  * The arm subsystem. Provides methods for controlling and getting information about the arm.
  */
 public class Arm extends SubsystemBase{
     private static final double TURN_PID_TOLERANCE = 0;
-    private static final double TURN_PID_KP = 0.05;
-    private static final double TURN_PID_KI = 0.001;
-    private static final double TURN_PID_KD = 0.00;
+    private static final double TURN_PID_KP = 0.04;
+    private static final double TURN_PID_KI = 0.0;
+    private static final double TURN_PID_KD = 0.0004;
+    
     private HardwareArm intake;
     public HardwareIntake h;
     private double topLength = 0;
