@@ -6,14 +6,11 @@ import frc.team5115.Commands.Intake.RawIntakeCommands.IntakeExtend;
 import frc.team5115.Commands.Intake.RawIntakeCommands.IntakeTurn;
 
 public class GroundPickup extends SequentialCommandGroup {
-    Arm intake;
-
-    public GroundPickup(Arm intake){
-        this.intake = intake;
+    public GroundPickup(Arm arm){
         addCommands(
-            new IntakeExtend(intake, 0),
-            new IntakeTurn(intake, -45),
-            new IntakeExtend(intake, 17.5)
+            new IntakeExtend(arm, 0),
+            new IntakeTurn(arm, -45),
+            new IntakeExtend(arm, 17.5)
         );
     }
 }

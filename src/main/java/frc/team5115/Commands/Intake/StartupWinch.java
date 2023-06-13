@@ -6,14 +6,12 @@ import frc.team5115.Classes.Hardware.*;
 
 public class StartupWinch extends CommandBase{
     private Arm arm;
-    private HardwareArm hardwareArm;
     private HardwareIntake claw;
     private Timer timer;
     private Timer innerTimer;
 
-    public StartupWinch(Arm arm, HardwareArm hardwareArm, HardwareIntake claw){
+    public StartupWinch(Arm arm, HardwareIntake claw){
         this.arm = arm;
-        this.hardwareArm = hardwareArm;
         this.claw = claw;
         timer = new Timer();
         timer.start();
@@ -24,8 +22,8 @@ public class StartupWinch extends CommandBase{
         timer.reset();
         arm.armcontrol = false;
         claw.open();
-        hardwareArm.setBottomWinch(-0.1);
-        hardwareArm.setTopWinch(-0.37);
+        arm.setBottomWinchSpeed(-0.1);
+        arm.setTopWinchSpeed(-0.37);
         claw.TurnIn();
     }
 
@@ -43,7 +41,7 @@ public class StartupWinch extends CommandBase{
 
     public boolean isFinished() {
         if(timer.get() > 0.5){
-            if (Math.abs(hardwareArm.getBottomVelocity())<1 && Math.abs(hardwareArm.getTopVelocity())<1){
+            if (Math.abs(arm.getBottomWinchVelocity())<1 && Math.abs(arm.getTopWinchVelocity())<1){
                 return true;
             }
         }
