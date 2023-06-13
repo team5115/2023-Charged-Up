@@ -6,10 +6,7 @@ import frc.team5115.Commands.Intake.RawIntakeCommands.IntakeExtend;
 import frc.team5115.Commands.Intake.RawIntakeCommands.IntakeTurn;
 
 public class ShelfSubstation extends SequentialCommandGroup {
-    Arm intake;
-
     public ShelfSubstation(Arm arm){
-        this.intake = arm;
         addCommands(
             new IntakeExtend(arm, 0),
             new IntakeTurn(arm, 8),

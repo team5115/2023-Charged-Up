@@ -35,6 +35,9 @@ public class Constants{
     // distance between the left wheels and the right wheels in meters
     // 0.70 for wide, 0.57 for long
     public static final double TRACKING_WIDTH_METERS = 0.70;
+    // distance between the front and back axles in meters
+    // UNKOWN!!!!! somebody needs to measure this. 0.58 is ARBITRARY
+    public static final double TRACKING_LENGTH_METERS = 0.58;
 
     public static final double TARGET_ANGLE = 1;
 

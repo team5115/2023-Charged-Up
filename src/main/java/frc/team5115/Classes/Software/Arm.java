@@ -15,12 +15,11 @@ public class Arm extends SubsystemBase{
     private static final double TURN_PID_KI = 0.0;
     private static final double TURN_PID_KD = 0.0004;
     
-    private HardwareArm intake;
+    private HardwareArm hardwareArm;
     public HardwareIntake h;
     private double topLength = 0;
     private double bottomLength = 0;
     private double angle = -90;
-    private double speed = 0.25;
 
     private double topKp = 0.113;
     private double bottomKp = 0.115;
@@ -38,11 +37,11 @@ public class Arm extends SubsystemBase{
 	 * @param hardwareArm - The arm hardware subsystem to be used
 	 * @param hardwareIntake - The intake hardware subsystem to be used
 	 */
-    public Arm(HardwareArm hardwareArm, HardwareIntake hardwareIntake){
-        intake = hardwareArm;
+    public Arm(HardwareIntake hardwareIntake, HardwareArm hardwareArm){
+        this.hardwareArm = hardwareArm;
         h =hardwareIntake;
         zeroArm();
-        intake.setEncoders(topLength, -90);
+        hardwareArm.setEncoders(topLength, -90);
         turnController.setTolerance(TURN_PID_TOLERANCE);
     }
 
@@ -75,10 +74,6 @@ public class Arm extends SubsystemBase{
         setBottomPID(0.115);
     }
 
-    public void setTopWinchSpeed(){
-        intake.setTopWinch(speed);
-    }
-
 	/**
 	 * Extends or retracts the arm to the specified length.
 	 * @param length - The target arm length
@@ -88,32 +83,8 @@ public class Arm extends SubsystemBase{
         bottomLength = length;
     }
 
-    public void setNegTopWinchSpeed(){
-        intake.setTopWinch(-speed);
-    }
-
-    public void setBottomWinchSpeed(){
-        intake.setBottomWinch(speed);
-    }
-
-    public void setNegBottomWinchSpeed(){
-        intake.setBottomWinch(-speed);
-    }
-
-    public void setTurnSpeed(){
-        intake.setTurn(speed);
-    }
-
-    public void topWinchController(){
-        topWinchController.calculate(intake.getTopWinchLength(), topLength);
-    }
-
     public void topWinchSetLength(double length){
         this.topLength = length;
-    }
-
-    public void bottomWinchController(){
-        bottomWinchController.calculate(intake.getBottomWinchLength(), bottomLength);
     }
 
     public void bottomWinchSetLength(double length){
@@ -122,17 +93,6 @@ public class Arm extends SubsystemBase{
 
     public void turnSetAngle(double angle){
         this.angle = angle;
-    }
-
-    public void setArmUp(){
-        //angle = 25.5;
-        angle = 20;// for ff
-        System.out.println("up");
-    }
-
-    public void setArmDown(){
-        angle = -20;
-        System.out.println("down");
     }
 
     public void turnUp() {
@@ -163,75 +123,82 @@ public class Arm extends SubsystemBase{
 	 * Disable brake mode on the arm's motors.
 	 */
     public void disableBrake(){
-        intake.disableBrake();
+        hardwareArm.disableBrake();
     }
 
 	/**
 	 * Enable brake mode on the arm's motors.
 	 */
     public void enableBrake(){
-        intake.enableBrake();
+        hardwareArm.enableBrake();
     }
 
     public void updateController(){
         if(bottomLength>5 || topLength>5){
-            intake.FF = false;
+            hardwareArm.FF = false;
         }
         else{
-            intake.FF = true;
+            hardwareArm.FF = true;
         }
 
         // final double delta = angle - intake.getArmDeg();
-        final double pidOutput = turnController.calculate(intake.getArmDeg(), angle);
+        final double pidOutput = turnController.calculate(hardwareArm.getArmDeg(), angle);
         
         if (!turnController.atSetpoint()) {
-            intake.setTurn(pidOutput);
+            hardwareArm.setTurn(pidOutput);
         }
 
         if(armcontrol){
             
-            double topSpeed = topWinchController.calculate(intake.getTopWinchLength(), topLength);
-            double bottomSpeed = bottomWinchController.calculate(intake.getBottomWinchLength(), bottomLength);
-            intake.setTopWinch(topSpeed);
-            intake.setBottomWinch(bottomSpeed);
+            double topSpeed = topWinchController.calculate(hardwareArm.getTopWinchLength(), topLength);
+            double bottomSpeed = bottomWinchController.calculate(hardwareArm.getBottomWinchLength(), bottomLength);
+            hardwareArm.setTopWinch(topSpeed);
+            hardwareArm.setBottomWinch(bottomSpeed);
         }
     }
 
 
     public double getTopWinchLength(){
-        return intake.getTopWinchLength();
+        return hardwareArm.getTopWinchLength();
     }
 
     public double getBottomWinchLength(){
-        return intake.getBottomWinchLength();
+        return hardwareArm.getBottomWinchLength();
+    }
+
+    public double getBottomWinchVelocity() {
+        return hardwareArm.getBottomVelocity();
+    }
+
+    public double getTopWinchVelocity() {
+        return hardwareArm.getTopVelocity();
     }
 
     public void zeroArm(){
-        intake.setEncoders(0, -100.0);
+        hardwareArm.setEncoders(0, -100.0);
     }
 
     public void zeroLength(double angle){
-        intake.setEncoders(0, angle);
+        hardwareArm.setEncoders(0, angle);
     }
 
-
     public boolean getFault(CANSparkMax.FaultID f){
-        return intake.getFault(f);
+        return hardwareArm.getFault(f);
     }
 
     public void stop(){
-        intake.stop();
-    }
-
-    public void moveTop(){
-        intake.setTopWinch(-0.2);
-    }
-
-    public void moveBottom(){
-        intake.setBottomWinch(-0.2);
+        hardwareArm.stop();
     }
 
     public double getAngle() {
-        return intake.getArmDeg();
+        return hardwareArm.getArmDeg();
+    }
+
+    public void setTopWinchSpeed(double speed) {
+        hardwareArm.setTopWinch(speed);
+    }
+
+    public void setBottomWinchSpeed(double speed) {
+        hardwareArm.setBottomWinch(speed);
     }
 }

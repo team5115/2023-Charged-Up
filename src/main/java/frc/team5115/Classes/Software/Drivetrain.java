@@ -1,6 +1,6 @@
 package frc.team5115.Classes.Software;
 
-import static frc.team5115.Constants.*;
+import frc.team5115.Constants;
 
 import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
@@ -51,14 +51,14 @@ public class Drivetrain extends SubsystemBase{
     public static final double bA = 10;
     public static final double MaxArea = 0.1;
 
-    public Drivetrain(PhotonVision photonVision, Arm arm, NAVx nav) {
+    public Drivetrain(PhotonVision photonVision, HardwareDrivetrain hardwareDrivetrain, NAVx nav) {
         this.photonVision = photonVision;
         throttle = new ThrottleControl(3, -3, 0.2);
         anglePID = new PIDController(0.019, 0.0001, 0.0012);
         
-        drivetrain = new HardwareDrivetrain(arm);
+        drivetrain = hardwareDrivetrain;
         ramseteController = new RamseteController();
-        kinematics = new DifferentialDriveKinematics(TRACKING_WIDTH_METERS);
+        kinematics = new DifferentialDriveKinematics(Constants.TRACKING_WIDTH_METERS);
         navx = nav;
     }
 
@@ -88,14 +88,14 @@ public class Drivetrain extends SubsystemBase{
 	 * @return The distance the left side of the drivetrain has traveled
 	 */
     public double getLeftDistance(){
-        return drivetrain.getEncoderDistance(BACK_LEFT_MOTOR_ID);
+        return drivetrain.getEncoderDistance(Constants.BACK_LEFT_MOTOR_ID);
     }
 
 	/**
 	 * @return The distance the right side of the drivetrain has traveled
 	 */
     public double getRightDistance(){
-        return drivetrain.getEncoderDistance(BACK_RIGHT_MOTOR_ID);
+        return drivetrain.getEncoderDistance(Constants.BACK_RIGHT_MOTOR_ID);
     }
 
 	/**
@@ -392,7 +392,7 @@ public class Drivetrain extends SubsystemBase{
             rightSpd = -(d - HUB_DISTANCE)*hD;
             */
             double yangle = 0; 
-            leftSpeed = -(TARGET_ANGLE - yangle)*hD;
+            leftSpeed = -(Constants.TARGET_ANGLE - yangle)*hD;
             leftSpeed = Math.max(-0.3, Math.min(0.3, leftSpeed));
             rightSpeed = leftSpeed;
             drivetrain.plugAndFFDrive(leftSpeed, rightSpeed);

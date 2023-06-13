@@ -7,16 +7,16 @@ import frc.team5115.Commands.Intake.RawIntakeCommands.IntakeExtend;
 import frc.team5115.Commands.Intake.RawIntakeCommands.IntakeTurn;
 
 public class HighNode extends CommandBase {
-    Arm intake;
+    Arm arm;
     WrappedHighNode wrappedHighNode; 
 
-    public HighNode(Arm intake){
-        this.intake = intake;
+    public HighNode(Arm arm){
+        this.arm = arm;
     }
 
     @Override
     public void initialize() {
-        wrappedHighNode = new WrappedHighNode(intake);
+        wrappedHighNode = new WrappedHighNode(arm);
         wrappedHighNode.schedule();
     }
 
@@ -38,9 +38,9 @@ public class HighNode extends CommandBase {
             }
 
             addCommands(
-                new IntakeExtend(intake, 0),
-                new IntakeTurn(intake, angle),
-                new IntakeExtend(intake, length)
+                new IntakeExtend(arm, 0),
+                new IntakeTurn(arm, angle),
+                new IntakeExtend(arm, length)
             );
         }
     }

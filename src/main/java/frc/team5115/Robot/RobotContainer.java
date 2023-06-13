@@ -24,7 +24,6 @@ public class RobotContainer {
     private final Drivetrain drivetrain;
     private final HardwareIntake intake;
     private final Arm arm;
-    private final HardwareArm hardwareArm;
     private final StartupWinch startupWinch;
     private final ShuffleboardTab tab;
     private final GenericEntry center;
@@ -42,10 +41,14 @@ public class RobotContainer {
 
         photonVision = new PhotonVision();
         intake = new HardwareIntake();
-        hardwareArm = new HardwareArm(navx, i2cHandler);
-        arm = new Arm(hardwareArm, intake);
-        drivetrain = new Drivetrain(photonVision, arm, navx);
-        startupWinch = new StartupWinch(arm, hardwareArm, intake);
+
+        HardwareArm hardwareArm = new HardwareArm(navx, i2cHandler);
+        arm = new Arm(intake, hardwareArm);
+
+        HardwareDrivetrain hardwareDrivetrain = new HardwareDrivetrain(arm);
+        drivetrain = new Drivetrain(photonVision, hardwareDrivetrain, navx);
+        
+        startupWinch = new StartupWinch(arm, intake);
         
         tab = Shuffleboard.getTab("SmartDashboard");
         center = tab.add("Are we doing center balacing auto?", false).getEntry();
@@ -62,7 +65,7 @@ public class RobotContainer {
         new JoystickButton(joy1, XboxController.Button.kY.value).onTrue(new HighNode(arm)); // high node
         new JoystickButton(joy1, XboxController.Button.kB.value).onTrue(new MiddleNode(arm)); // middle node
         new JoystickButton(joy1, XboxController.Button.kA.value).onTrue(new GroundPickup(arm)); // low node/ground pickup
-        new JoystickButton(joy1, XboxController.Button.kStart.value).onTrue(new Stow(arm, hardwareArm, intake)); // stow fully
+        new JoystickButton(joy1, XboxController.Button.kStart.value).onTrue(new Stow(arm, intake)); // stow fully
         new JoystickButton(joy1, XboxController.Button.kBack.value).onTrue(new StowCone(arm)); // stow with cone
     }
 
@@ -101,7 +104,7 @@ public class RobotContainer {
         arm.armcontrolangle = true;
         centerAuto = center.getBoolean(false);
         System.out.println("Good auto? " + centerAuto + "!!!!!!!");
-        autoCommandGroup = new AutoCommandGroup(drivetrain, arm, hardwareArm, intake, centerAuto);
+        autoCommandGroup = new AutoCommandGroup(drivetrain, arm, intake, centerAuto);
         autoCommandGroup.schedule();
     }
 

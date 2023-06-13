@@ -16,16 +16,14 @@ import frc.team5115.Commands.Intake.RawIntakeCommands.IntakeTurn;
 import frc.team5115.Classes.Software.Paths;
 
 public class AutoCommandGroup extends SequentialCommandGroup {
-    Drivetrain drivetrain;
-    Arm arm;
-    HardwareArm hArm;
-    HardwareIntake hIntake;
-	Paths paths;
+    final Drivetrain drivetrain;
+    final Arm arm;
+    final HardwareIntake hIntake;
+	final Paths paths;
 
-    public AutoCommandGroup(Drivetrain drivetrain, Arm arm, HardwareArm hArm, HardwareIntake hIntake, boolean inIdealPosition){
+    public AutoCommandGroup(Drivetrain drivetrain, Arm arm, HardwareIntake hIntake, boolean inIdealPosition){
         this.arm = arm;
         this.drivetrain = drivetrain;
-        this.hArm = hArm;
         this.hIntake = hIntake;
 		this.paths = new Paths();
 /* 
@@ -68,12 +66,12 @@ public class AutoCommandGroup extends SequentialCommandGroup {
 	 */
     private void PathPlannerHighNodeOld() {
 		addCommands(
-            new StartupWinch(arm, hArm, hIntake),
+            new StartupWinch(arm, hIntake),
             new InstantCommand(hIntake :: TurnIn),
             new HighNode(arm),
             new IntakeTurn(arm, 10),
 			new InstantCommand(hIntake :: StopMotor),
-            new Stow(arm, hArm, hIntake),
+            new Stow(arm, hIntake),
 			drivetrain.getRamseteCommand(paths.SideAutoPt1),
 			new GroundPickup(arm),
 			new InstantCommand(hIntake :: TurnIn),
@@ -91,14 +89,14 @@ public class AutoCommandGroup extends SequentialCommandGroup {
 	 */
 	private void PathPlannerHighNode() {
 		HashMap<String, Command> eventMap = new HashMap<>();
-		eventMap.put("Stow", new Stow(arm, hArm, hIntake));
+		eventMap.put("Stow", new Stow(arm, hIntake));
 		eventMap.put("Intake", new InstantCommand(hIntake :: TurnIn));
 		eventMap.put("High Node", new HighNode(arm));
 		eventMap.put("Arm Down 10", new IntakeTurn(arm, 10));
 		eventMap.put("Stop Intake", new InstantCommand(hIntake :: StopMotor));
 		eventMap.put("Stow With Cone", new StowCone(arm));
 		eventMap.put("Ground Pickup", new GroundPickup(arm));
-		eventMap.put("Down & Stow", new IntakeTurn(arm, 10).andThen(new Stow(arm, hArm, hIntake)));
+		eventMap.put("Down & Stow", new IntakeTurn(arm, 10).andThen(new Stow(arm, hIntake)));
 
 		addCommands(new FollowPathWithEvents(drivetrain.getRamseteCommand(paths.SideAuto), paths.SideAuto.getMarkers(), eventMap));
 	}
@@ -137,11 +135,11 @@ public class AutoCommandGroup extends SequentialCommandGroup {
 	 */
     private void BasicHighNode() {
         addCommands(
-            new StartupWinch(arm, hArm, hIntake),     
+            new StartupWinch(arm, hIntake),     
             new InstantCommand(hIntake :: TurnIn),
             new HighNode(arm),
             new IntakeTurn(arm, 10),
-            new Stow(arm, hArm, hIntake),
+            new Stow(arm, hIntake),
             new DriveForward(drivetrain, -3.5, 1.3) // back up to node
             //new Stow(arm, hArm, hIntake),
             //new DriveTurn(drivetrain, 170),
@@ -160,7 +158,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
     private void scoreHighWDock() {
         // should start facing towards grid
         addCommands(
-            new StartupWinch(arm, hArm, hIntake),     
+            new StartupWinch(arm, hIntake),     
             new InstantCommand(hIntake :: TurnIn),
             new HighNode(arm),
             new IntakeTurn(arm, 10),
@@ -176,23 +174,23 @@ public class AutoCommandGroup extends SequentialCommandGroup {
 	 */
 	private void scoreHighWDockPathPlanner() {
 		addCommands(
-			new StartupWinch(arm, hArm, hIntake),
+			new StartupWinch(arm, hIntake),
 			new InstantCommand(hIntake :: TurnIn),
 			new HighNode(arm),
 			new IntakeTurn(arm, 10),
 			new InstantCommand(hIntake :: StopMotor),
-			new Stow(arm, hArm, hIntake),
+			new Stow(arm, hIntake),
 			drivetrain.getRamseteCommand(paths.ScoreHighWithDock)
 		);
 	}
 
     private void superIdeal() {
         addCommands(
-            new StartupWinch(arm, hArm, hIntake),     
+            new StartupWinch(arm, hIntake),     
             new InstantCommand(hIntake :: TurnIn),
             new HighNode(arm),
             new IntakeTurn(arm, 10),
-            new Stow(arm, hArm, hIntake),
+            new Stow(arm, hIntake),
             new DriveForward(drivetrain, -0.26, 0.5), // back up to node
             //new Stow(arm, hArm, hIntake),
             new DriveTurn(drivetrain, 180),

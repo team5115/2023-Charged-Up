@@ -106,26 +106,6 @@ public class HardwareArm extends SubsystemBase{
         setBottomWinch(0);
         setTurn(0);
     }
-    
-    public double getTurnCurrent(){
-        return intakeTurn.getOutputCurrent();
-    }
-
-    public double getTopCurrent(){
-        return intakeTop.getOutputCurrent();
-    }
-    
-    public double getBottomCurrent(){
-        return intakeBottom.getOutputCurrent();
-    }
-
-    public double getTopEncoder(){
-        return (TopWinchEncoder.getPosition());
-    }
-
-    public double getBottomEncoder(){
-        return (BottomWinchEncoder.getPosition());
-    }
 
     public double getTopVelocity(){
         return -(TopWinchEncoder.getVelocity());
@@ -155,7 +135,7 @@ public class HardwareArm extends SubsystemBase{
     public double getTopWinchLength() {
         //System.out.println((getTopEncoder()/7)*(WinchDiameter*3.14159));
         //System.out.println((getBottomEncoder()/7)*(WinchDiameter));
-        return (getTopEncoder()/7)*(WinchDiameter);
+        return (TopWinchEncoder.getPosition()/7)*(WinchDiameter);
     
     }
 
@@ -165,7 +145,7 @@ public class HardwareArm extends SubsystemBase{
     public double getBottomWinchLength() {
         //System.out.println((getBottomEncoder()/7)*(WinchDiameter*3.14159));
         //System.out.println((getBottomEncoder()/7)*(WinchDiameter));
-        return (getBottomEncoder()/7)*(WinchDiameter);
+        return (BottomWinchEncoder.getPosition()/7)*(WinchDiameter);
     }
 
     /** 
@@ -182,7 +162,6 @@ public class HardwareArm extends SubsystemBase{
     private double angleFromSensors() {
         final double navxPitch = navx.getPitchDeg();
         final double bnoPitch = i2cHandler.getPitch();
-        // return Math.round(NAVx.clampAngle(bnoPitch - navxPitch)*100.0)/100.0;
         return NAVx.clampAngle(bnoPitch - navxPitch);
     }
 
