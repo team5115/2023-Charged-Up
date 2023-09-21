@@ -9,8 +9,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.team5115.Classes.Software.*;
 import frc.team5115.Classes.Acessory.JoyAxisBoolSupplier;
 import frc.team5115.Classes.Hardware.*;
-import frc.team5115.Commands.Auto.AutoCommandGroup;
-import frc.team5115.Commands.Auto.DockAuto.DockCommandGroup;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj.DigitalOutput;
 
@@ -18,26 +16,20 @@ public class RobotContainer {
     private final Joystick joy;
     private final PhotonVision photonVision;
     private final Drivetrain drivetrain;
-    private final DockCommandGroup dockSequence;
     // private final AutoCommandGroup autoCommandGroup;
 
     public RobotContainer() {
         joy = new Joystick(0);
         photonVision = new PhotonVision();
-        drivetrain = new Drivetrain(photonVision);
-        dockSequence = new DockCommandGroup(drivetrain);
-        // autoCommandGroup = new AutoCommandGroup(drivetrain);
+        drivetrain = new Drivetrain();
         configureButtonBindings();
     }
 
     public void configureButtonBindings() {
-        new JoystickButton(joy, 1).onTrue(new InstantCommand(drivetrain :: toggleSlowMode));
-        new JoystickButton(joy, 2).onTrue(dockSequence);
     }
 
     public void startTeleop(){
         // if(autoCommandGroup != null) autoCommandGroup.cancel();
-        drivetrain.resetNAVx();
         System.out.println("Starting teleop");
     }
 
