@@ -10,8 +10,8 @@ import edu.wpi.first.math.controller.PIDController;
  * The arm subsystem. Provides methods for controlling and getting information about the arm.
  */
 public class Arm extends SubsystemBase{
-    private static final double turnSlower = 0.3;
-    private static final double extendSlower = 0.2;
+    private static final double turnSlower = 1;//0.3;
+    private static final double extendSlower = 1;//0.2;
 
     private static final double TURN_PID_TOLERANCE = 0;
     private static final double TURN_PID_KP = 0.04*turnSlower;
