@@ -10,10 +10,13 @@ import edu.wpi.first.math.controller.PIDController;
  * The arm subsystem. Provides methods for controlling and getting information about the arm.
  */
 public class Arm extends SubsystemBase{
+    private static final double turnSlower = 0.3;
+    private static final double extendSlower = 0.2;
+
     private static final double TURN_PID_TOLERANCE = 0;
-    private static final double TURN_PID_KP = 0.04;
-    private static final double TURN_PID_KI = 0.0;
-    private static final double TURN_PID_KD = 0.0004;
+    private static final double TURN_PID_KP = 0.04*turnSlower;
+    private static final double TURN_PID_KI = 0.0*turnSlower;
+    private static final double TURN_PID_KD = 0.0004*turnSlower;
     
     private HardwareArm hardwareArm;
     public HardwareIntake h;
@@ -21,8 +24,8 @@ public class Arm extends SubsystemBase{
     private double bottomLength = 0;
     private double angle = -90;
 
-    private double topKp = 0.113;
-    private double bottomKp = 0.115;
+    private final double topKp = 0.113*extendSlower;
+    private final double bottomKp = 0.115*extendSlower;
 
 
     private PIDController turnController = new PIDController(TURN_PID_KP, TURN_PID_KI, TURN_PID_KD);
@@ -70,8 +73,8 @@ public class Arm extends SubsystemBase{
     }
 
     public void resetPID(){
-        setTopPID(0.113);
-        setBottomPID(0.115);
+        setTopPID(topKp);
+        setBottomPID(bottomKp);
     }
 
 	/**

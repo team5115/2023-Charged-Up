@@ -53,7 +53,7 @@ public class Drivetrain extends SubsystemBase{
 
     public Drivetrain(PhotonVision photonVision, HardwareDrivetrain hardwareDrivetrain, NAVx nav) {
         this.photonVision = photonVision;
-        throttle = new ThrottleControl(3, -3, 0.2);
+        throttle = new ThrottleControl(0.6, -0.6, 1);
         anglePID = new PIDController(0.019, 0.0001, 0.0012);
         
         drivetrain = hardwareDrivetrain;

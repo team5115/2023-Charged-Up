@@ -160,9 +160,9 @@ public class RobotContainer {
         i2cHandler.updatePitch();
 
         // drivetrain.UpdateOdometry();
-        // double forward = -joy2.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
-        // double turn = joy2.getRawAxis(JOY_Z_AXIS_ID);
-        // drivetrain.TankDrive(forward, turn);
+        double forward = -joy2.getRawAxis(JOY_Y_AXIS_ID); // negated because Y axis on controller is negated
+        double turn = joy2.getRawAxis(JOY_Z_AXIS_ID);
+        drivetrain.TankDrive(forward, turn);
         
         // System.out.println(drivetrain.getEstimatedPose());
     }
