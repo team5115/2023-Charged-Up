@@ -17,20 +17,25 @@ public class IntakeTurn extends CommandBase{
         innerTimer = new Timer();
         innerTimer.start();
     }
+    
+    @Override
     public void initialize() {
         timer.reset();
         //innerTimer.reset();
         arm.turnSetAngle(angle);
     }
 
+    @Override
     public void execute(){
         // System.out.println("Arm Rotation Degrees: " + arm.getAngle());
     }
 
+    @Override
     public void end(boolean interrupted){
         System.out.println("Stopped in IntakeTurn");
     }
 
+    @Override
     public boolean isFinished() {
         
         if((Math.abs(arm.getAngle()-angle)<2)){
