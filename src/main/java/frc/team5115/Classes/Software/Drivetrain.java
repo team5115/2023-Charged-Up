@@ -196,26 +196,33 @@ public class Drivetrain extends SubsystemBase{
 	/**
 	 * Updates the odometry of the robot.
 	 */
-    public void UpdateOdometry() {
-        poseEstimator.update(navx.getYawRotation2D(), getLeftDistance(), getRightDistance());
+     public void updateOdometry() {
+        poseEstimator.update(navx.getYawRotation2D(),drivetrain.getEncoderDistance(1), drivetrain.getEncoderDistance(2));
 
         Optional<EstimatedRobotPose> result = photonVision.getEstimatedGlobalPose(poseEstimator.getEstimatedPosition());
         if (result.isPresent()) {
             EstimatedRobotPose camPose = result.get();
             poseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
-            System.out.println("vision is really working");
+            System.out.println(";) vision is really working :)");
         }
     }
 
 	/**
-	 * @return The estimated pose of the robot
+	 * @return The estimated pose of the robot based on vision measurements COMBINED WITH drive motor measurements
 	 */
     public Pose2d getEstimatedPose() {
-        UpdateOdometry();
         return poseEstimator.getEstimatedPosition();
     }
 
+    Command x = getRamseteCommand(Paths.SideAutoPt3);
+    Command C = getRamseteCommand(Paths.SideAutoPt1);
+    Command J = getRamseteCommand(Paths.SideAutoPt2);
+    Command L = getRamseteCommand(Paths.SideAuto);
+    Command R = getRamseteCommand(Paths.ExitCommunity);
+    Command O = getRamseteCommand(Paths.ScoreHighWithDock);
+
 	/**
+     * 
 	 * Generate a command that will make the robot follow a given trajectory.
 	 * @param trajectory The trajectory to follow
 	 */

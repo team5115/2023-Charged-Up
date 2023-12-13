@@ -53,7 +53,8 @@ public class Constants{
 
      public static class VisionConstants {
         public static final String leftCameraName = "HD_USB_Camera";
-        public static final String rightCameraName = null;
+        public static final String rightCameraName = "Microsoft_LifeCam_HD-3000";
+        public static final String frontCameraName = "OV5647";
 
         private static final double cameraPosX = 0.277813055626;
         private static final double cameraPosY = 0.346869443739;
