@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.networktables.GenericEntry;
 import frc.team5115.Commands.Intake.CombinedIntakeCommands.*;
 import frc.team5115.Commands.Intake.RawIntakeCommands.*;
+import edu.wpi.first.wpilibj2.command.Command;
 
 public class RobotContainer {
     private final Timer timer;
@@ -26,7 +27,7 @@ public class RobotContainer {
     private final HardwareIntake intake;
     private final Arm arm;
     private final HardwareArm hardwareArm;
-    private AutoCommandGroup autoCommandGroup;
+    private Command autoCommandGroup;
     private final DockCommandGroup dockSequence;
     private final Startup startup;
     private ShuffleboardTab tab = Shuffleboard.getTab("SmartDashboard");
@@ -48,6 +49,7 @@ public class RobotContainer {
         timer = new Timer();
         timer.reset();
         configureButtonBindings();
+        autoCommandGroup = drivetrain.C;
     }
 
     public void configureButtonBindings() {
@@ -119,7 +121,6 @@ public class RobotContainer {
         //startup.schedule();
         System.out.println("Good auto? " + goodAuto + "!!!!!!!");
         drivetrain.stop();
-        autoCommandGroup = new AutoCommandGroup(drivetrain, arm, hardwareArm, intake, goodAuto);
         autoCommandGroup.schedule();
     }
 

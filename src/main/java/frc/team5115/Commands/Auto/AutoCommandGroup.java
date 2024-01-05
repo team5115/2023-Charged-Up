@@ -15,16 +15,19 @@ import frc.team5115.Commands.Intake.CombinedIntakeCommands.*;
 import frc.team5115.Commands.Intake.RawIntakeCommands.IntakeTurn;
 
 public class AutoCommandGroup extends SequentialCommandGroup {
-    Drivetrain drivetrain;
-    Arm arm;
-    HardwareArm hArm;
-    HardwareIntake hIntake;
+   final Drivetrain drivetrain;
+   final Arm arm;
+   final HardwareArm hArm;
+   final HardwareIntake hIntake;
+   final Paths paths;
 
     public AutoCommandGroup(Drivetrain drivetrain, Arm arm, HardwareArm hArm, HardwareIntake hIntake, boolean inIdealPosition){
         this.arm = arm;
         this.drivetrain = drivetrain;
         this.hArm = hArm;
         this.hIntake = hIntake;
+
+            this.paths = new Paths();
 /* 
         addCommands(
             new Stow(arm, hArm, hIntake),

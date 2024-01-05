@@ -8,6 +8,11 @@ import com.revrobotics.SparkMaxRelativeEncoder;
 import edu.wpi.first.math.controller.*;
 import frc.team5115.Classes.Software.Arm;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.util.Units;
+
 
 public class HardwareDrivetrain{
     // Competition feedforward values - 6 inch diameter on KITT comp robot with arm and ballasts
@@ -58,6 +63,26 @@ public class HardwareDrivetrain{
         this.arm = arm;
         resetEncoders();
         frontRight.setInverted(true);
+    }
+
+    public ChassisSpeeds getChassisSpeeds(){
+        DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(27.75));
+        ChassisSpeeds x = new ChassisSpeeds();
+        var wheelSpeeds = new DifferentialDriveWheelSpeeds(getEncoderVelocity(BACK_LEFT_MOTOR_ID), getEncoderVelocity(FRONT_LEFT_MOTOR_ID));
+        ChassisSpeeds chassisSpeeds = kinematics.toChassisSpeeds(wheelSpeeds);
+
+        return chassisSpeeds;
+    }
+
+    public void setWheelSpeeds(ChassisSpeeds speeds){
+        DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(27.0));
+        DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speeds);
+
+        double leftVelocity = wheelSpeeds.leftMetersPerSecond;
+        double rightVelocity = wheelSpeeds.rightMetersPerSecond;
+
+        plugandFFDrive(leftVelocity, rightVelocity);
+
     }
 
     /**
