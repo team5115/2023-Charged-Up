@@ -65,16 +65,16 @@ public class HardwareDrivetrain{
         frontRight.setInverted(true);
     }
 
-    public ChassisSpeeds getChassisSpeeds(){
+    public ChassisSpeeds getChassisSpeeds(){ // for autobuilder pathplanner
         DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(27.75));
-        ChassisSpeeds x = new ChassisSpeeds();
+        ChassisSpeeds j = new ChassisSpeeds();
         var wheelSpeeds = new DifferentialDriveWheelSpeeds(getEncoderVelocity(BACK_LEFT_MOTOR_ID), getEncoderVelocity(FRONT_LEFT_MOTOR_ID));
         ChassisSpeeds chassisSpeeds = kinematics.toChassisSpeeds(wheelSpeeds);
 
         return chassisSpeeds;
     }
 
-    public void setWheelSpeeds(ChassisSpeeds speeds){
+    public void setWheelSpeeds(ChassisSpeeds speeds){ // also to be used in pathplanner autobuilder
         DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(27.0));
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speeds);
 

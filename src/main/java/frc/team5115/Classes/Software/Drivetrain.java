@@ -199,15 +199,18 @@ public class Drivetrain extends SubsystemBase{
         return poseEstimator.getEstimatedPosition();
     }
 
-    
+    // new command to follow the paths generated in pathplanner
     public Command C = followPathCommand(Paths.SideAutoPt1);
-
+    
+// below is the pathplanner autobuilder and command to run 
     public Command followPathCommand(PathPlannerPath path){
+
     // You must wrap the path following command in a FollowPathWithEvents command in order for event markers to work
     return new FollowPathWithEvents(
         new FollowPathHolonomic(
             path,
             this::getEstimatedPose, // Robot pose supplier
+         // this:resetPose
             drivetrain::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             drivetrain::setWheelSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
             new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
@@ -221,8 +224,21 @@ public class Drivetrain extends SubsystemBase{
         ),
         path, // FollowPathWithEvents also requires the path
         this::getEstimatedPose // FollowPathWithEvents also requires the robot pose supplier
-    );
+
+     /*    // Boolean supplier that controls when the path will be mirrored for the red alliance
+                    // This will flip the path being followed to the red side of the field.
+                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+                    var alliance = DriverStation.getAlliance();
+                    if (alliance.isPresent()) {
+                        return alliance.get() == DriverStation.Alliance.Red;
+                    }
+                    return false;
+                },
+                this // Reference to this subsystem to set requirements 
+                */  /*uncomment this to check for errors */
+
 }
+
 
 	/**
 	 * @return A `DifferentialDriveWheelSpeeds` object containing the current speeds of the wheels
