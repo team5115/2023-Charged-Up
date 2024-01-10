@@ -1,9 +1,12 @@
 package frc.team5115.Classes.Software;
 
-import static frc.team5115.Constants.*;
+import static frc.team5115.Constants.BACK_LEFT_MOTOR_ID;
+import static frc.team5115.Constants.BACK_RIGHT_MOTOR_ID;
+import static frc.team5115.Constants.TARGET_ANGLE;
+import static frc.team5115.Constants.TRACKING_WIDTH_METERS;
 
-import frc.team5115.Classes.Software.Paths;
 import java.util.Optional;
+
 import org.photonvision.EstimatedRobotPose;
 
 import com.pathplanner.lib.commands.FollowPathHolonomic;
@@ -14,28 +17,22 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team5115.Classes.Acessory.ThrottleControl;
 import frc.team5115.Classes.Hardware.HardwareDrivetrain;
 import frc.team5115.Classes.Hardware.NAVx;
-import edu.wpi.first.math.VecBuilder;
 
 public class Drivetrain extends SubsystemBase{
     
@@ -190,13 +187,12 @@ public class Drivetrain extends SubsystemBase{
     public void UpdateOdometry() {
         poseEstimator.update(navx.getYawRotation2D(), getLeftDistance(), getRightDistance());
 
-        Optional<EstimatedRobotPose> result = photonVision.getEstimatedGlobalPose();
-        if (result.isPresent()) {
+        Optional<EstimatedRobotPose> result = photonVision.getEstimatedGlobalPose(poseEstimator.getEstimatedPosition());
             EstimatedRobotPose camPose = result.get();
             System.out.println("its really working");
             poseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
         }
-    }
+    
 
     public Pose2d getEstimatedPose() {
         UpdateOdometry();
