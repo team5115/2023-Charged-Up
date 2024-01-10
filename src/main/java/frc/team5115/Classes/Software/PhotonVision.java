@@ -13,7 +13,8 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team5115.Constants.*;
-
+//  git config --global user.email "you@example.com"
+//   git config --global user.name "Your Name"
 public class PhotonVision extends SubsystemBase{
      private PhotonCamera photonCameraL;
     // private PhotonCamera photonCameraR;
@@ -26,7 +27,7 @@ public class PhotonVision extends SubsystemBase{
         ArrayList<AprilTag> aprilTagList = new ArrayList<AprilTag>();
 
         // Add all the april tags
-
+// When transfering this to Crescendo 24' we need to put in the new positions of the apriltags
         //Red Grid
         aprilTagList.add(GenerateAprilTag(1, +7.243604, -2.936589, 180));
         aprilTagList.add(GenerateAprilTag(2, +7.243604, -1.260189, 180));
