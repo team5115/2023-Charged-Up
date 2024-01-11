@@ -200,17 +200,16 @@ public class Drivetrain extends SubsystemBase{
     }
 
     // new command to follow the paths generated in pathplanner
-    public Command C = followPathCommand(Paths.SideAutoPt1);
-    
+    public FollowPathWithEvents C = followPathCommand(Paths.SideAutoPt1);
+
 // below is the pathplanner autobuilder and command to run 
-    public Command followPathCommand(PathPlannerPath path){
+    public FollowPathWithEvents followPathCommand(PathPlannerPath path){
 
     // You must wrap the path following command in a FollowPathWithEvents command in order for event markers to work
     return new FollowPathWithEvents(
         new FollowPathHolonomic(
             path,
             this::getEstimatedPose, // Robot pose supplier
-         // this:resetPose
             drivetrain::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             drivetrain::setWheelSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
             new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
@@ -223,7 +222,7 @@ public class Drivetrain extends SubsystemBase{
             this // Reference to this subsystem to set requirements
         ),
         path, // FollowPathWithEvents also requires the path
-        this::getEstimatedPose // FollowPathWithEvents also requires the robot pose supplier
+        this::getEstimatedPose); // FollowPathWithEvents also requires the robot pose supplier
 
      /*    // Boolean supplier that controls when the path will be mirrored for the red alliance
                     // This will flip the path being followed to the red side of the field.
@@ -236,8 +235,8 @@ public class Drivetrain extends SubsystemBase{
                 },
                 this // Reference to this subsystem to set requirements 
                 */  /*uncomment this to check for errors */
-
 }
+
 
 
 	/**

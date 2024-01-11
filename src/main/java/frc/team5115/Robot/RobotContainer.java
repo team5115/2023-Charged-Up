@@ -17,6 +17,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import frc.team5115.Commands.Intake.CombinedIntakeCommands.*;
 import frc.team5115.Commands.Intake.RawIntakeCommands.*;
 import edu.wpi.first.wpilibj2.command.Command;
+import com.pathplanner.lib.commands.FollowPathWithEvents;
 
 public class RobotContainer {
     private final Timer timer;
@@ -27,7 +28,7 @@ public class RobotContainer {
     private final HardwareIntake intake;
     private final Arm arm;
     private final HardwareArm hardwareArm;
-    private Command autoCommandGroup;
+    private FollowPathWithEvents autoCommandGroup;
     private final DockCommandGroup dockSequence;
     private final Startup startup;
     private ShuffleboardTab tab = Shuffleboard.getTab("SmartDashboard");
@@ -44,12 +45,11 @@ public class RobotContainer {
         arm = new Arm(hardwareArm, intake);
         drivetrain = new Drivetrain(photonVision, arm);
         startup = new Startup(arm, hardwareArm, intake);
-        
+        autoCommandGroup = drivetrain.C;
         dockSequence = new DockCommandGroup(drivetrain, false);
         timer = new Timer();
         timer.reset();
         configureButtonBindings();
-        autoCommandGroup = drivetrain.C;
     }
 
     public void configureButtonBindings() {
